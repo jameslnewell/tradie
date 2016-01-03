@@ -1,0 +1,22 @@
+{
+  "name": "build-tool",
+  "version": "1.0.0",
+  "dependencies": {
+    "autoprefixer": "^6.2.3",
+    "browserify": "^12.0.1",
+    "browserify-incremental": "^3.0.1",
+    "chalk": "^1.1.1",
+    "clean-css": "^3.4.8",
+    "commander": "^2.9.0",
+    "envify": "^3.4.0",
+    "mkdirp": "^0.5.1",
+    "postcss": "^5.0.13",
+    "rc": "^1.1.6",
+    "sass-composer": "^2.0.0-beta12",
+    "wait-for-event": "^0.2.0",
+    "watchify": "^3.6.1"
+  },
+  "bin": {
+    "build-tool": "cli.js"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "vendor": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
+    "transform": [["babelify", {"presets": ["es2015"]}]]
+  },
+  "styles": {
+  }
+}
