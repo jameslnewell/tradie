@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict';
-const rc = require('rc');
 const program = require('commander');
 const chalk = require('chalk');
 const mkdirp = require('mkdirp');
+const config = require('../lib/config');
 const bundleStyles = require('../lib/styles/bundle');
 const bundleScripts = require('../lib/scripts/bundle');
 
@@ -13,11 +13,6 @@ program
   .option('--production', 'build scripts and styles for a production environment')
   .parse(process.argv)
 ;
-
-const config = rc('buildtool', {
-  styles: {},
-  scripts: {}
-});
 
 const watch = program.watch;
 const debug = process.env.NODE_ENV !== 'production' && !program.production;
@@ -51,9 +46,7 @@ mkdirp('dist/', err => {
         const scriptTotalTime = (Date.now() - bundleStartTime) / 1000;
         console.log(chalk.green(` => scripts bundled in ${scriptTotalTime}s`)); //TODO: --verbose should show individual times and maybe filesizes too
       },
-      err => {
-        console.log(chalk.red(` => error: ${err}`));
-      }
+      err => console.log(chalk.red(` => error: ${err}`))
     )
   ;
 
