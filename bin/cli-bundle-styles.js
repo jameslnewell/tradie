@@ -22,9 +22,9 @@ const debug = process.env.NODE_ENV !== 'production' && !program.production;
 function logBundleError(type, args) {
   console.erorr(chalk.red(` => en error while occurred bundling ${type} ${path.basename(args.dest)}`))
 }
-chalk.blue(` => ${type} ${path.basename(args.dest)} bundled in ${args.time}s - ${args.size}B`)
+
 function logBundleFinished(type, args) {
-  console.log()
+  console.log(chalk.blue(` => ${type} ${path.basename(args.dest)} bundled in ${args.time}s - ${args.size}B`))
 }
 
 function logBundlesFinished(type, args, ok) {

@@ -1,5 +1,5 @@
 {
-  "name": "build-tool",
+  "name": "build-my-app",
   "version": "1.0.0",
   "dependencies": {
     "autoprefixer": "^6.2.3",
@@ -9,7 +9,13 @@
     "clean-css": "^3.4.8",
     "commander": "^2.9.0",
     "envify": "^3.4.0",
+    "file-size": "^1.0.0",
+    "humanize-duration": "^3.5.0",
+    "i": "^0.3.4",
+    "length-stream": "^0.1.1",
     "mkdirp": "^0.5.1",
+    "moment": "^2.11.1",
+    "npm": "^3.5.3",
     "postcss": "^5.0.13",
     "promised-del": "^1.0.2",
     "rc": "^1.1.6",
@@ -18,6 +24,13 @@
     "watchify": "^3.6.1"
   },
   "bin": {
-    "build-tool": "cli.js"
+    "bma": "bin/cli.js",
+    "bma-clean": "bin/cli-clean.js",
+    "bma-lint": "bin/cli-lint.js",
+    "bma-bundle-scripts": "bin/cli-bundle-scripts.js",
+    "bma-bundle-styles": "bin/cli-bundle-styles.js",
+    "bma-bundle": "bin/cli-bundle.js",
+    "bma-build": "bin/cli-build.js",
+    "bma-test": "bin/cli-test.js"
   }
 }

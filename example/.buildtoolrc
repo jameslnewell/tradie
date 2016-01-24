@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "bundle": ["index.js"],
     "vendor": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
     "transform": [["babelify", {"presets": ["es2015"]}]]
   },
