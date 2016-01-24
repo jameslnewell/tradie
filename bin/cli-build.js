@@ -8,14 +8,10 @@ const cleanScripts = require('../lib/scripts/clean');
 
 program
   .description('Clean bundled scripts and styles')
+  .option('-v, --verbose', 'verbosely list scripts and styles bundled')
   .parse(process.argv)
 ;
 
-Promise.resolve()
-  .then(cleanStyles(config))
-  .then(cleanScripts(config))
-  .then(
-    () => console.log(chalk.green(` => app built`)),
-    err => console.log(chalk.red(` => error: ${err}`))
-  )
-;
+
+require('./cli-lint');
+require('./cli-bundle');

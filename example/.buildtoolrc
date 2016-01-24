@@ -5,5 +5,6 @@
     "transform": [["babelify", {"presets": ["es2015"]}]]
   },
   "styles": {
+    "bundle": ["index.scss", "foo.scss"]
   }
 }
