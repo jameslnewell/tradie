@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 const program = require('commander');
-const mkdirp = require('mkdirp');
 const config = require('../lib/config').styles;
 const log = require('../lib/log');
 const bundleStyles = require('../lib/styles/bundle');
@@ -18,37 +17,28 @@ const watch = program.watch || false;
 const debug = process.env.NODE_ENV !== 'production' && !program.production;
 const verbose = program.verbose || false;
 
-mkdirp(config.dest, err => {
+let ok = true;
+const styles = bundleStyles(config, {
+  watch,
+  debug
+})
+  .on(
+    'error',
+    () => {
+      ok = false;
+      log.styleBundleFinished(ok, {verbose});
+    }
+  )
+  .on(
+    'style:finish',
+    args => log.styleBundleFinished(ok, Object.assign({}, args, {verbose}))
+  )
+  .on(
+    'finish',
+    args => log.styleBundlesFinished(ok, Object.assign({}, args, {verbose}))
+  )
+;
 
-  if (err) {
-    log.error(` => error creating styles destination directory ${config.dest}`);
-    return;
-  }
-
-  let ok = true;
-  const styles = bundleStyles(config, {
-    watch,
-    debug
-  })
-    .on(
-      'error',
-      () => {
-        ok = false;
-        log.styleBundleFinished(ok, {verbose});
-      }
-    )
-    .on(
-      'style:finish',
-      args => log.styleBundleFinished(ok, Object.assign({}, args, {verbose}))
-    )
-    .on(
-      'finish',
-      args => log.styleBundlesFinished(ok, Object.assign({}, args, {verbose}))
-    )
-  ;
-
-});
 
 //todo: handle errors and process.exit(-1) when not watching
-//TODO: check bundle names - vendor.css and common.css are special and not allowed
 //TODO: pass in name of bundle to only bundle a specific bundle
