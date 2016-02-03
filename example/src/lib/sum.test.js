@@ -1,7 +1,7 @@
 import assert from 'assert';
-import sum from './_sum';
+import sum from './sum';
 
-describe('sum', function() {
+describe('sum()', function() {
 
   it('should pass', function() {
     assert.equal(sum(1, 2), 3);
