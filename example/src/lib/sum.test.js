@@ -1,10 +1,14 @@
-'use strict';
-const assert = require('assert');
-const sum = require('./_sum.js');
+import assert from 'assert';
+import sum from './_sum';
 
 describe('sum', function() {
-  it('should fail', function() {
+
+  it('should pass', function() {
     assert.equal(sum(1, 2), 3);
-    assert.equal(sum(1, 3), 3);
   });
+
+  it('should fail', function() {
+    assert.equal(sum(1, 2), 4);
+  });
+
 });

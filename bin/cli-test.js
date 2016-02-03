@@ -14,4 +14,12 @@ const watch = program.watch || false;
 
 const scriptsBuilder = scripts(config.scripts, {watch});
 
-scriptsBuilder.test();
+scriptsBuilder
+  .on('test:error', error => {
+    if (error) {
+      console.error(chalk.red(error));
+    }
+    process.exit(-1);
+  })
+  .test()
+;
