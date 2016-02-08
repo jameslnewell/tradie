@@ -15,15 +15,24 @@ function lint(files) {
 }
 
 module.exports = function(config, options, emitter) {
+  return new Promise((resolve, reject) => {
 
-  emitter.emit('lint:start');
-  const errors = lint(config.src);
-  emitter.emit('lint:finish', {errors});
+    try {
 
-  if (errors > 0) {
-    return Promise.reject(errors);
-  } else {
-    return Promise.resolve(errors);
-  }
+      emitter.emit('lint:start');
+      const errors = lint(config.src);
+      emitter.emit('lint:finish', {errors});
 
+      if (errors > 0) {
+        return reject(errors);
+      } else {
+        return resolve(errors);
+      }
+
+    } catch(error) {
+      emitter.emit('error', error);
+      reject(error);
+    }
+
+  });
 };

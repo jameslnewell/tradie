@@ -47,14 +47,13 @@ module.exports = function(options) {
   /**
    * Log when all the bundles have finished
    * @param {string}  type
-   * @param {bool}    ok
    * @param {object}  args
    * @param {object}  [args.count]
    * @param {object}  [args.time]
    * @param {object}  [args.size]
    * @param {Error}   [args.error]
    */
-  const bundlesFinished = (type, ok, args) => {
+  const bundlesFinished = (type, args) => {
 
     const error = args.error;
     const count = args.count;
@@ -62,7 +61,7 @@ module.exports = function(options) {
     const duration = humanize(args.time);
     let msg = ` => ${count} ${type}s bundled in ${duration} - ${size}`;
 
-    if (ok) {
+    if (!args.error) {
       if (args.count) {
         msg = chalk.green(msg);
       }

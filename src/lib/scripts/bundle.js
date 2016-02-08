@@ -1,9 +1,8 @@
-'use strict';
-const path = require('path');
-const mkdirp = require('mkdirp');
-const waitForAll = require('../waitForAll');
-const createBundle = require('./createBundle');
-const createBundler = require('./createBundler');
+import path from 'path';
+import mkdirp from 'mkdirp';
+import waitForAll from '../waitForAll';
+import createBundle from './createBundle';
+import createBundler from './createBundler';
 
 /**
  * Create an app script bundle
@@ -12,9 +11,8 @@ const createBundler = require('./createBundler');
  * @param {string}        [options.watch]
  * @param {string}        [options.src]       The source file
  * @param {string}        [options.dest]      The destination file
- * @param {array}         [options.vendor]
- * @param {array}         [options.transform]
- * @param {function}      [options.onChange]
+ * @param {array}         [options.libraries]
+ * @param {array}         [options.transforms]
  * @param {EventEmitter}  [options.emitter]
  */
 function createAppBundle(options) {
@@ -23,9 +21,8 @@ function createAppBundle(options) {
   const watch = options.watch;
   const src = options.src;
   const dest = options.dest;
-  const vendor = options.vendor;
-  const transform = options.transform;
-  const onChange = options.onChange;
+  const libraries = options.libraries;
+  const transforms = options.transforms;
   const emitter = options.emitter;
 
   //create the bundler
@@ -34,13 +31,20 @@ function createAppBundle(options) {
     watch,
     src,
     dest,
-    transform,
-    onChange,
+    transforms,
     emitter
   });
 
   //exclude the vendor packages
-  bundler.external(vendor);
+  bundler.external(libraries);
+
+  bundler.on('update', () => createBundle({
+    debug,
+    src,
+    dest,
+    emitter,
+    bundler
+  }));
 
   //bundle the scripts and write to file
   return createBundle({
@@ -59,8 +63,8 @@ function createAppBundle(options) {
  * @param {string}        [options.debug]
  * @param {string}        [options.watch]
  * @param {string}        [options.dest]      The destination file
- * @param {array}         [options.vendor]
- * @param {array}         [options.transform]
+ * @param {array}         [options.libraries]
+ * @param {array}         [options.transforms]
  * @param {EventEmitter}  [options.emitter]
  */
 function createVendorBundle(options) {
@@ -69,8 +73,8 @@ function createVendorBundle(options) {
   const watch = options.watch;
   const src = null;
   const dest = options.dest;
-  const transform = options.transform;
-  const vendor = options.vendor;
+  const libraries = options.libraries;
+  const transforms = options.transforms;
   const emitter = options.emitter;
 
   //create the bundler
@@ -79,36 +83,37 @@ function createVendorBundle(options) {
     watch,
     src,
     dest,
-    emitter,
-    transform
+    transforms,
+    emitter
   });
 
   //include vendor packages
-  bundler.require(vendor);
+  bundler.require(libraries);
 
   //bundle the scripts and write to file
   return createBundle({
     debug,
     src,
     dest,
-    emitter,
-    bundler
+    bundler,
+    emitter
   });
 
 }
 
 /**
  * Create script bundles
- * @param {object}        [config]
+ * @param {object}        config
  * @param {string}        [config.src]       The source directory
  * @param {string}        [config.dest]      The destination directory
- * @param {array}         [config.bundle]
- * @param {array}         [config.vendor]
- * @param {array}         [config.transform]
- * @param {object}        [options]
+ * @param {array}         [config.bundles]
+ * @param {array}         [config.libraries]
+ * @param {array}         [config.transforms]
+ * @param {object}        options
  * @param {string}        [options.debug]
  * @param {string}        [options.watch]
  * @param {function}      [options.onChange]
+ * @param {function}      emitter
  */
 module.exports = function(config, options, emitter) {
   return new Promise((resolve, reject) => {
@@ -117,10 +122,9 @@ module.exports = function(config, options, emitter) {
     const watch = options.watch;
     const src = config.src;
     const dest = config.dest;
-    const bundle = config.bundle;
-    const vendor = config.vendor;
-    const transform = config.transform;
-    const onChange = options.onChange;
+    const bundles = config.bundles;
+    const libraries = config.libraries;
+    const transforms = config.transforms;
 
     let streams = [];
 
@@ -141,21 +145,21 @@ module.exports = function(config, options, emitter) {
           error
         }) && reject(err);
 
-      if (vendor.length) {
+      if (libraries.length) {
         streams = streams.concat([
           createVendorBundle({
             debug,
             watch,
             src: null,
             dest: path.join(dest, 'vendor.js'),
-            vendor,
-            transform,
+            libraries,
+            transforms,
             emitter
           })
         ])
       }
 
-      streams = streams.concat(bundle.map(
+      streams = streams.concat(bundles.map(
         file => {
 
           if (file === 'vendor.js' || file === 'common.js') {
@@ -167,9 +171,8 @@ module.exports = function(config, options, emitter) {
             watch,
             src: path.join(src, file),
             dest: path.join(dest, file),
-            vendor,
-            transform,
-            onChange,
+            libraries,
+            transforms,
             emitter
           });
 

@@ -1,28 +1,29 @@
-'use strict';
-const path = require('path');
-const spawn = require('child_process').spawn;
-const glob = require('glob');
-const moccacino = require('mocaccino');
-const sourceMapper = require('source-mapper');
-const createBundle = require('./createBundle');
-const createBundler = require('./createBundler');
-const colorStream = require('../color-stream');
+import path from 'path';
+import {spawn} from 'child_process';
+import glob from 'glob';
+import moccacino from 'mocaccino';
+import sourceMapper from 'source-mapper';
+import createBundle from './createBundle';
+import createBundler from './createBundler';
+import colorStream from '../color-stream';
 
 /**
  * Run tests
  */
-module.exports = function(config, options, emitter) {
+export default function(config, options, emitter) {
 
+  const watch = options.watch;
   const src = config.src;
-  const transform = config.transform;
+  const transforms = config.transforms;
 
+  //TODO: make glob configurable
   glob('**/*.test.js', {cwd: src, realpath: true}, function(err, files) {
 
     const bundler = createBundler({
       debug: true,
-      watch: false,
+      watch,
       src: files,
-      transform: transform
+      transforms
     });
 
     moccacino(bundler, {
@@ -30,13 +31,12 @@ module.exports = function(config, options, emitter) {
       reporter: 'spec'
     });
 
-    //bundle the tests using browserify
-    bundler.bundle(function(error, buffer) {
-      if (error) return emitter.emit('test:error', error);
+    const runTests = (error, buffer) => {
+      if (error) return emitter.emit('error', error);
 
       const node = spawn('node');
 
-      node.on('error', error => emitter.emit('test:error', error));
+      node.on('error', error => emitter.emit('error', error));
 
       //notify the caller whether the tests where successful
       node.on('exit', code => {
@@ -58,8 +58,12 @@ module.exports = function(config, options, emitter) {
       node.stdin.write(buffer);
       node.stdin.end();
 
-    });
+    };
+
+    bundler.on('update', () => bundler.bundle(runTests));
+
+    bundler.bundle(runTests);
 
   });
 
-};
+}

@@ -3,9 +3,9 @@ module.exports = function(config) {
     {
       src: 'src/',
       dest: 'dist/',
-      bundle: ['index.js'],
-      vendor: [],
-      transform: []
+      bundles: ['index.js'],
+      libraries: [],
+      transforms: []
     },
     config
   );

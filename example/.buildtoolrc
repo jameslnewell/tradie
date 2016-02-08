@@ -1,10 +1,10 @@
 {
   "scripts": {
-    "bundle": ["index.js"],
-    "vendor": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
-    "transform": [["babelify", {"presets": ["es2015"]}]]
+    "bundles": ["index.js"],
+    "libraries": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
+    "transforms": ["babelify"]
   },
   "styles": {
-    "bundle": ["index.scss", "foo.scss"]
+    "bundles": ["index.scss", "foo.scss"]
   }
 }

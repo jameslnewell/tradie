@@ -1,6 +1,8 @@
 #!/usr/bin/env node
-'use strict';
-const program = require('commander');
+import program from 'commander';
+import sourceMapSupport from 'source-map-support';
+
+sourceMapSupport.install();
 
 program
   .command('clean', 'clean scripts and styles')

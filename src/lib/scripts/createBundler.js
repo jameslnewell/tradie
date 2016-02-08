@@ -6,34 +6,31 @@ const incremental = require('browserify-incremental');
 const watchify = require('watchify');
 const createBundle = require('./createBundle');
 
-const extensions = [
+const defaultExtensions = [
   '.js', '.jsx', '.json'
 ];
 
 /**
  * Create a script bundler
- * @param {object}        [options]
- * @param {string}        [options.debug]
- * @param {string}        [options.watch]
- * @param {string}        [options.src]       The source file
- * @param {string}        [options.dest]      The destination file
- * @param {array}         [options.transform]
- * @param {function}      [options.onChange]
- * @param {EventEmitter}  [options.emitter]
+ * @param {object}        options
+ * @param {boolean}       [options.debug]       Whether to bundle debug information
+ * @param {boolean}       [options.watch]       Whether to watch files for changes
+ * @param {string|array}  [options.src]         The source file(s)
+ * @param {string}        [options.dest]        The output file
+ * @param {array}         [options.transforms]  The plugins
+ * @param {array}         [options.plugins]     The transforms
  */
-module.exports = function createBundler(options) {
+export default function(options) {
 
-  const debug = options.debug;
-  const watch = options.watch;
+  const debug = options.debug || false;
+  const watch = options.watch || false;
   const src = options.src;
   const dest = options.dest;
-  const transform = options.transform;
-  const onChange = options.onChange;
-  const emitter = options.emitter;
+  const transforms = options.transforms || [];
 
   const config = {
     debug,
-    extensions
+    extensions: defaultExtensions
   };
 
   //create bundler
@@ -42,7 +39,9 @@ module.exports = function createBundler(options) {
   // => it forces use of full module paths resulting in more bytes
   let bundler = null;
   if (debug) {
-    config.cacheFile = path.join(path.dirname(dest), `.${path.basename(dest)}.cache`);
+    if (dest) {
+      config.cacheFile = path.join(path.dirname(dest), `.${path.basename(dest)}.cache`);
+    }
     bundler = incremental(config);
   } else {
     bundler = browserify(config);
@@ -55,7 +54,7 @@ module.exports = function createBundler(options) {
   }
 
   //configure bundler
-  transform.forEach(transform => {
+  transforms.forEach(transform => {
     if (Array.isArray(transform)) {
       bundler.transform.apply(bundler, transform);
     } else {
@@ -68,22 +67,9 @@ module.exports = function createBundler(options) {
     //watch for changes
     bundler.plugin(watchify);
 
-    //re-bundle when any of the source files change
-    bundler.on('update', files => {
-      onChange(files);
-      createBundle({
-        debug,
-        src,
-        dest,
-        bundler,
-        emitter
-      });
-    });
-
     //stop watching on CTRL-C
     process.on('SIGINT', () => {
       bundler.close();
-      process.exit();
     });
 
   }

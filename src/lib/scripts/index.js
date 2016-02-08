@@ -1,14 +1,12 @@
-'use strict';
-
-const Emitter = require('events').EventEmitter;
-const defaults = require('./defaults');
-const clean = require('./clean');
-const lint = require('./lint');
-const bundle = require('./bundle');
-const test = require('./test');
+import {EventEmitter} from 'events';
+import defaults from './defaults';
+import clean from './clean';
+import lint from './lint';
+import bundle from './bundle';
+import test from './test';
 
 module.exports = function scripts(config, options) {
-  const emitter = new Emitter();
+  const emitter = new EventEmitter();
   const mergedConfig = defaults(config);
   const mergedOptions = Object.assign({debug: true, watch: false}, options);
 

@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-'use strict';
-const program = require('commander');
-const config = require('../lib/config').scripts;
-const log = require('../lib/log');
-const scripts = require('../lib/scripts');
+import program from 'commander';
+import config from '../lib/config';
+import logger from '../lib/logger';
+import scripts from '../lib/scripts';
 
 program
   .description('Bundle scripts')
@@ -17,24 +16,17 @@ const watch = program.watch || false;
 const debug = process.env.NODE_ENV !== 'production' && !program.production;
 const verbose = program.verbose || false;
 
-let ok = true;
-scripts(
-  config,
-  {
-    watch,
-    debug,
-    onChange: function (files) {
-      console.log(files);
-    }
-  }
-)
+const buildLogger = logger({verbose});
+const scriptBuilder = scripts(config.scripts, {watch, debug, verbose});
+
+scriptBuilder
   .on(
     'bundle:finish',
-    args => log.scriptBundleFinished(ok, Object.assign({}, args, {verbose}))
+    args => buildLogger.scriptBundleFinished(args)
   )
   .on(
     'bundles:finish',
-    args => log.scriptBundlesFinished(ok, Object.assign({}, args, {verbose}))
+    args => buildLogger.scriptBundlesFinished(args)
   )
   .bundle()
 ;

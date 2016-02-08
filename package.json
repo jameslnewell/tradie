@@ -22,18 +22,28 @@
     "promised-del": "^1.0.2",
     "rc": "^1.1.6",
     "sass-composer": "^2.0.0-beta12",
+    "source-map-support": "^0.4.0",
     "source-mapper": "^2.0.0",
     "wait-for-event": "^0.2.0",
-    "watchify": "^3.6.1"
+    "watchify": "^3.6.1",
+    "webpack": "^1.12.13"
   },
   "bin": {
-    "bma": "bin/cli.js",
-    "bma-clean": "bin/cli-clean.js",
-    "bma-lint": "bin/cli-lint.js",
-    "bma-bundle-scripts": "bin/cli-bundle-scripts.js",
-    "bma-bundle-styles": "bin/cli-bundle-styles.js",
-    "bma-bundle": "bin/cli-bundle.js",
-    "bma-build": "bin/cli-build.js",
-    "bma-test": "bin/cli-test.js"
+    "bma": "dist/bin/cli.js",
+    "bma-clean": "dist/bin/cli-clean.js",
+    "bma-lint": "dist/bin/cli-lint.js",
+    "bma-bundle-scripts": "dist/bin/cli-bundle-scripts.js",
+    "bma-bundle-styles": "dist/bin/cli-bundle-styles.js",
+    "bma-bundle": "dist/bin/cli-bundle.js",
+    "bma-build": "dist/bin/cli-build.js",
+    "bma-test": "dist/bin/cli-test.js"
+  },
+  "scripts": {
+    "build": "babel --debug --out-dir dist src"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-plugin-transform-object-rest-spread": "^6.5.0",
+    "babel-preset-es2015": "^6.5.0"
   }
 }
