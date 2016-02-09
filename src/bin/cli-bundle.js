@@ -1,10 +1,8 @@
 #!/usr/bin/env node
-'use strict';
-const path = require('path');
-const program = require('commander');
-const chalk = require('chalk');
-const mkdirp = require('mkdirp');
-const config = require('../lib/config');
+import program from 'commander';
+import chalk from 'chalk';
+import mkdirp from 'mkdirp';
+import config from '../lib/config';
 
 program
   .description('Bundle scripts and styles')

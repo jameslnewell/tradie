@@ -161,8 +161,8 @@ module.exports = function(config, options, emitter) {
   const watch = options.watch;
   const src = config.src;
   const dest = config.dest;
-  const bundle = config.bundle;
-  const vendor = config.vendor;
+  const bundles = config.bundles;
+  const libraries = config.libraries;
   const transform = config.transform;
 
   let streams = [];
@@ -179,32 +179,20 @@ module.exports = function(config, options, emitter) {
   mkdirp(dest, err => {
     if (err) return emitter.emit('error', err);
 
-    //if (vendor.length) {
-    //  streams = streams.concat([
-    //    createVendorBundle({
-    //      debug,
-    //      watch,
-    //      src: null,
-    //      dest: path.join(dest, 'vendor.js'),
-    //      vendor,
-    //      transform,
-    //      emitter
-    //    })
-    //  ])
-    //}
+    //TODO: libraries
 
-    streams = streams.concat(bundle.map(
+    streams = streams.concat(bundles.map(
       file => createAppBundle({
         debug,
         watch,
         src: path.join(src, file),
         dest: path.join(dest, file),
-        vendor,
+        libraries,
         emitter
       })
     ));
 
-
+console.log('streams', streams)
     //TODO: waitForAll needs to be updated to handle errors
     waitForAll(
       'finish',

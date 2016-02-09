@@ -20,8 +20,12 @@ module.exports = function(config, options, emitter) {
     try {
 
       emitter.emit('lint:start');
+      const startTime = Date.now();
       const errors = lint(config.src);
-      emitter.emit('lint:finish', {errors});
+      emitter.emit('lint:finish', {
+        time: Date.now() - startTime,
+        errors
+      });
 
       if (errors > 0) {
         return reject(errors);

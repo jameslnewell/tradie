@@ -3,8 +3,8 @@ module.exports = function(config) {
     {
       src: 'src/',
       dest: 'dist/',
-      bundle: ['index.scss'],
-      vendor: []
+      bundles: ['index.scss'],
+      libraries: []
     },
     config
   );

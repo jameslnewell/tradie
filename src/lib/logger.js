@@ -16,6 +16,15 @@ module.exports = function(options) {
     console.log(chalk.red(msg));
   };
 
+  const lintFinished = (args) => {
+    const msg = ` => scripts linted in ${humanize(args.time)}`;
+    if (args.errors === 0) {
+      console.log(chalk.green(msg));
+    } else {
+      console.log(chalk.red(msg));
+    }
+  };
+
   /**
    * Log when a bundle has finished
    * @param {string}  type
@@ -91,10 +100,11 @@ module.exports = function(options) {
 
   return {
     error,
-      scriptBundleFinished,
-      scriptBundlesFinished,
-      styleBundleFinished,
-      styleBundlesFinished
+    lintFinished,
+    scriptBundleFinished,
+    scriptBundlesFinished,
+    styleBundleFinished,
+    styleBundlesFinished
   };
 
 };

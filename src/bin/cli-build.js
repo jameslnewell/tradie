@@ -24,40 +24,51 @@ const scriptsBuilder = scripts(config.scripts, {watch, debug, verbose});
 const stylesBuilder = styles(config.styles);
 
 let failed = false;
-scriptsBuilder.lint()
-  .then(
-    () => {
-
-      Promise.all([
-
-        scriptsBuilder
-          .on('bundle:finish', buildLogger.scriptBundleFinished)
-          .once('bundles:finish', buildLogger.scriptBundlesFinished)
-          .bundle()
-            .catch(() => failed = true)
-        ,
-
-        stylesBuilder
-          .on('bundle:finish', buildLogger.styleBundleFinished)
-          .once('bundles:finish', buildLogger.styleBundlesFinished)
-          .bundle()
-            .catch(() => failed = true)
-
-      ])
-        .then(() => {
-          console.log('finished all');
-          if (failed && !watch) {
-            process.exit(-1);
-          }
-        })
-      ;
-
-    },
-    () => {
-      log.error(' => lint errors found');
+scriptsBuilder
+  .on('error', error => {
+    buildLogger.error(error);
+    process.exit(-1);
+  })
+  .on('lint:finish', result => {
+    buildLogger.lintFinished(result);
+    if (result.errors !== 0) {
       process.exit(-1);
     }
-  )
+  })
+  .lint()
+    .then(
+      () => {
+
+        Promise.all([
+
+          scriptsBuilder
+            .on('bundle:finish', buildLogger.scriptBundleFinished)
+            .once('bundles:finish', buildLogger.scriptBundlesFinished)
+            .bundle()
+              .catch(() => failed = true)
+          ,
+
+          stylesBuilder
+            .on('bundle:finish', buildLogger.styleBundleFinished)
+            .once('bundles:finish', buildLogger.styleBundlesFinished)
+            .bundle()
+              .catch(() => failed = true)
+
+        ])
+          .then(() => {
+            console.log('finished all');
+            if (failed && !watch) {
+              process.exit(-1);
+            }
+          })
+        ;
+
+      },
+      () => {
+        log.error(' => lint errors found');
+        process.exit(-1);
+      }
+    )
 ;
 
 //todo: handle errors and process.exit(-1) when not watching

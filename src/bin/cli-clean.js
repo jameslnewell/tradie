@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-'use strict';
-const program = require('commander');
-const chalk = require('chalk');
-const config = require('../lib/config');
-const scripts = require('../lib/scripts');
-const cleanStyles = require('../lib/styles/clean');
+import program from 'commander';
+import chalk from 'chalk';
+import config from '../lib/config';
+import scripts from '../lib/scripts';
+import cleanStyles from '../lib/styles/clean';
 
 program
   .description('Clean bundled scripts and styles')

@@ -1,13 +1,13 @@
 import assert from 'assert';
 import sum from './sum';
 
-describe('sum()', function() {
+describe('sum()', () => {
 
-  it('should pass', function() {
+  it('should pass', () => {
     assert.equal(sum(1, 2), 3);
   });
 
-  it('should fail', function() {
+  it('should fail', () => {
     assert.equal(sum(1, 2), 4);
   });
 

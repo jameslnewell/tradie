@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import program from 'commander';
+import args from '../lib/args';
 import config from '../lib/config';
 import logger from '../lib/logger';
 import scripts from '../lib/scripts';
@@ -12,14 +13,18 @@ program
   .parse(process.argv)
 ;
 
-const watch = program.watch || false;
-const debug = process.env.NODE_ENV !== 'production' && !program.production;
-const verbose = program.verbose || false;
-
-const buildLogger = logger({verbose});
-const scriptBuilder = scripts(config.scripts, {watch, debug, verbose});
+const buildArgs = args(program);
+const buildLogger = logger(buildArgs);
+const scriptBuilder = scripts(config.scripts, buildArgs);
 
 scriptBuilder
+  .on(
+    'error',
+    error => {
+      buildLogger.error(error);
+      process.exit(-1);
+    }
+  )
   .on(
     'bundle:finish',
     args => buildLogger.scriptBundleFinished(args)

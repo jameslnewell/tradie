@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-'use strict';
-const program = require('commander');
-const config = require('../lib/config').styles;
-const log = require('../lib/log');
-const bundleStyles = require('../lib/styles/bundle');
+import program from 'commander';
+import args from '../lib/args';
+import config from '../lib/config';
+import logger from '../lib/logger';
+import styles from '../lib/styles';
 
 program
   .description('Bundle scripts')
@@ -13,30 +13,27 @@ program
   .parse(process.argv)
 ;
 
-const watch = program.watch || false;
-const debug = process.env.NODE_ENV !== 'production' && !program.production;
-const verbose = program.verbose || false;
+const buildArgs = args(program);
+const buildLogger = logger(buildArgs);
+const styleBuilder = styles(config.styles, buildArgs);
 
-let ok = true;
-const styles = bundleStyles(config, {
-  watch,
-  debug
-})
+styleBuilder
   .on(
     'error',
-    () => {
-      ok = false;
-      log.styleBundleFinished(ok, {verbose});
+    error => {
+      buildLogger.error(error);
+      process.exit(-1);
     }
   )
   .on(
     'style:finish',
-    args => log.styleBundleFinished(ok, Object.assign({}, args, {verbose}))
+    args => buildLogger.styleBundleFinished(args)
   )
   .on(
-    'finish',
-    args => log.styleBundlesFinished(ok, Object.assign({}, args, {verbose}))
+    'bundles:finish',
+    args => buildLogger.styleBundlesFinished(args)
   )
+  .bundle()
 ;
 
 
