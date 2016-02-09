@@ -90,7 +90,6 @@ module.exports = function(options) {
   };
 
   const styleBundleFinished = args => {
-    console.log('bundle styke', args);
     return bundleFinished('style', args);
   };
 

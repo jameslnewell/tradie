@@ -26,7 +26,7 @@ styleBuilder
     }
   )
   .on(
-    'style:finish',
+    'bundle:finish',
     args => buildLogger.styleBundleFinished(args)
   )
   .on(

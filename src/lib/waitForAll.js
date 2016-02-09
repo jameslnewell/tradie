@@ -75,6 +75,7 @@ function waitForAll(event, emitters, each, done) {
   /** the expected event has occurred, check if we're done waiting */
   const onEvent = function() { //using a `function` so `this` is the emitter
     waiting -= 1;
+    console.log('onEvent', waiting);
     removeListener(event, this, onEvent, onError);
 
     if (each) {
@@ -86,10 +87,11 @@ function waitForAll(event, emitters, each, done) {
     finish();
   };
 
-  /** an unexpected event has occurred, check if we're done waiting */
   const onError = function(error) { //using a `function` so `this` is the emitter
+    /** an unexpected event has occurred, check if we're done waiting */
     errors.push(error);
     waiting -= 1; //TODO: add option to ignore errors
+    console.log('onError', waiting);
     removeListener(event, this, onEvent, onError);
     finish();
   };

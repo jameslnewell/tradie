@@ -140,10 +140,10 @@ module.exports = function(config, options, emitter) {
     mkdirp(dest, err => {
 
       if (err) return emitter.emit('bundles:finish', {
-          src,
-          dest,
-          error
-        }) && reject(err);
+        src,
+        dest,
+        error
+      }) && reject(err);
 
       if (libraries.length) {
         streams = streams.concat([

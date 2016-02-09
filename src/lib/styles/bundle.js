@@ -8,6 +8,7 @@ const watcher = require('sass-composer/lib/watcher');
 const autoprefixer = require('../autoprefixer-stream');
 const minify = require('../minify-stream');
 const size = require('../size-stream');
+import pipe from 'promisepipe';
 
 /**
  * Create a style bundle
@@ -30,36 +31,39 @@ function createBundle(options) {
   const startTime = Date.now();
   emitter.emit('bundle:start', args);
 
-  //bundle the styles
-  let stream = bundler.compose()
-    .on('error', error => {
-      args.time = Date.now() - startTime;
-      args.error = error;
-      emitter.emit('bundle:finish', args)
-    })
-  ;
+  let streams = [
 
-  //autoprefix for older browsers
-  stream = stream.pipe(autoprefixer({browsers: 'last 2 versions'}));
+    //bundle the styles
+    bundler.compose(),
+
+    //autoprefix for older browsers
+    autoprefixer({browsers: 'last 2 versions'})
+
+  ];
 
   //minify if we're not debugging
   if (!debug) {
-    stream = stream.pipe(minify());
+    streams.push(minify());
   }
 
+  streams.push(size(size => args.size = size));
+  streams.push(fs.createWriteStream(dest));
+
   //write to a file
-  return stream
-    .pipe(size(size => args.size = size))
-    .pipe(fs.createWriteStream(dest))
-    .on('error', error => {
-      args.time = Date.now() - startTime;
-      args.error = error;
-      emitter.emit('bundle:finish', args)
-    })
-    .on('finish', () => {
-      args.time = Date.now() - startTime;
-      emitter.emit('bundle:finish', args)
-    })
+  return pipe.apply(null, streams)
+    .then(
+      () => {
+        console.log('FINISH BUNDLE');
+        args.time = Date.now() - startTime;
+        emitter.emit('bundle:finish', args)
+      },
+      error => {
+        args.time = Date.now() - startTime;
+        args.error = error;
+        emitter.emit('bundle:finish', args);
+        throw error;
+      }
+    )
   ;
 
 }
@@ -163,7 +167,7 @@ module.exports = function(config, options, emitter) {
   const dest = config.dest;
   const bundles = config.bundles;
   const libraries = config.libraries;
-  const transform = config.transform;
+  const transforms = config.transforms;
 
   let streams = [];
 
@@ -173,7 +177,7 @@ module.exports = function(config, options, emitter) {
   emitter.emit('bundles:start');
   emitter.on('bundle:finish', function(args) {
     totalTime += args.time;
-    totalSize += args.size;
+    totalSize += args.size || 0;
   });
 
   mkdirp(dest, err => {
@@ -181,6 +185,7 @@ module.exports = function(config, options, emitter) {
 
     //TODO: libraries
 
+    //create bundle streams
     streams = streams.concat(bundles.map(
       file => createAppBundle({
         debug,
@@ -192,33 +197,32 @@ module.exports = function(config, options, emitter) {
       })
     ));
 
-console.log('streams', streams)
-    //TODO: waitForAll needs to be updated to handle errors
-    waitForAll(
-      'finish',
-      streams,
-      error => {
-        console.log('styles finished');
-        const args = {
-          src,
-          dest,
-          count: streams.length,
-          time: totalTime,
-          size: totalSize,
-          error
-        };
-        emitter.emit('bundles:finish', {
-          src,
-          dest,
-          count: streams.length,
-          time: totalTime,
-          size: totalSize,
-          error
-        });
-        resolve(args);
-        if (error) return reject(error);
-      }
-    );
+    //wait for all the streams to complete
+    Promise.all(streams)//TODO: http://stackoverflow.com/questions/31424561/wait-until-all-es6-promises-complete-even-rejected-promises
+      .then(
+        () => {
+          console.log('FINISH ALL');
+          emitter.emit('bundles:finish', {
+            src,
+            dest,
+            count: streams.length,
+            time: totalTime,
+            size: totalSize
+          });
+        },
+        error => {
+          console.log('FINISH ALL');
+          emitter.emit('bundles:finish', {
+            src,
+            dest,
+            count: streams.length,
+            time: totalTime,
+            size: totalSize,
+            error
+          });
+        }
+      )
+    ;
 
   });
 
