@@ -18,7 +18,6 @@
     "mocaccino": "^1.8.2",
     "moment": "^2.11.1",
     "multipipe": "^0.3.0",
-    "npm": "^3.5.3",
     "postcss": "^5.0.13",
     "promised-del": "^1.0.2",
     "promisepipe": "^1.0.1",
