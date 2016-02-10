@@ -1,8 +1,8 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const uglify = require('../uglify-stream');
-const size = require('../size-stream');
+import pipe from 'promisepipe';
+import path from 'path';
+import fs from 'fs';
+import uglify from '../uglify-stream';
+import size from '../size-stream';
 
 /**
  * Create a script bundle
@@ -13,7 +13,7 @@ const size = require('../size-stream');
  * @param {EventEmitter}  [options.emitter]
  * @param {object}        [options.bundler]
  */
-module.exports = function createBundle(options) {
+export default function(options) {
 
   const debug = options.debug;
   const src = options.src;
@@ -26,31 +26,31 @@ module.exports = function createBundle(options) {
   emitter.emit('bundle:start', args);
 
   //create bundle
-  let stream = bundler.bundle();
+  let streams = [bundler.bundle()];
 
   //optimise bundle
   if (!debug) {
-    stream = stream.pipe(uglify());
+    streams.push(uglify());
   }
 
   //write bundle
-  return stream
-    .on('error', error => {
-      args.time = Date.now() - startTime;
-      args.error = error;
-      emitter.emit('bundle:finish', args)
-    })
-    .pipe(size(size => args.size = size))
-    .pipe(fs.createWriteStream(dest))//TODO: handle error
-    .on('error', error => {
-      args.time = Date.now() - startTime;
-      args.error = error;
-      emitter.emit('bundle:finish', args)
-    })
-    .on('finish', () => {
-      args.time = Date.now() - startTime;
-      emitter.emit('bundle:finish', args)
-    })
-    ;
+  streams.push(size(size => args.size = size));
+  streams.push(fs.createWriteStream(dest));
+
+  return pipe.apply(null, streams)
+    .then(
+      () => {
+        args.time = Date.now() - startTime;
+        emitter.emit('bundle:finish', args);
+        return {error: null};
+      },
+      error => {
+        args.time = Date.now() - startTime;
+        args.error = error;
+        emitter.emit('bundle:finish', args);
+        return {error};
+      }
+    )
+  ;
 
 };

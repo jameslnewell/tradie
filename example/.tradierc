@@ -5,6 +5,6 @@
     "transforms": ["babelify"]
   },
   "styles": {
-    "bundles": ["index.scss", "foo.scss"]
+    "bundles": ["index.scss"]
   }
 }

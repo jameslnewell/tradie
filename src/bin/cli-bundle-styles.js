@@ -19,21 +19,24 @@ const styleBuilder = styles(config.styles, buildArgs);
 
 styleBuilder
   .on(
-    'error',
-    error => {
-      buildLogger.error(error);
-      process.exit(-1);
-    }
-  )
-  .on(
     'bundle:finish',
     args => buildLogger.styleBundleFinished(args)
   )
   .on(
     'bundles:finish',
-    args => buildLogger.styleBundlesFinished(args)
+    args => {
+      buildLogger.styleBundlesFinished(args);
+      if (args.error) {
+        process.exit(-1);
+      }
+    }
   )
   .bundle()
+    .catch(error => {
+      console.log('ERROR!');
+      buildLogger.error(error);
+      process.exit(-1);
+    })
 ;
 
 

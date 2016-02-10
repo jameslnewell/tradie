@@ -2,13 +2,12 @@
 const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
-const waitForAll = require('../waitForAll');
+import pipe from 'promisepipe';
 const composer = require('sass-composer');
 const watcher = require('sass-composer/lib/watcher');
 const autoprefixer = require('../autoprefixer-stream');
 const minify = require('../minify-stream');
 const size = require('../size-stream');
-import pipe from 'promisepipe';
 
 /**
  * Create a style bundle
@@ -53,15 +52,15 @@ function createBundle(options) {
   return pipe.apply(null, streams)
     .then(
       () => {
-        console.log('FINISH BUNDLE');
         args.time = Date.now() - startTime;
-        emitter.emit('bundle:finish', args)
+        emitter.emit('bundle:finish', args);
+        return {error: null};
       },
       error => {
         args.time = Date.now() - startTime;
         args.error = error;
         emitter.emit('bundle:finish', args);
-        throw error;
+        return {error};
       }
     )
   ;
@@ -180,53 +179,54 @@ module.exports = function(config, options, emitter) {
     totalSize += args.size || 0;
   });
 
-  mkdirp(dest, err => {
-    if (err) return emitter.emit('error', err);
+  return new Promise((resolve, reject) => {
+    mkdirp(dest, err => {
+      if (err) return emitter.emit('error', err);
 
-    //TODO: libraries
+      //TODO: libraries
 
-    //create bundle streams
-    streams = streams.concat(bundles.map(
-      file => createAppBundle({
-        debug,
-        watch,
-        src: path.join(src, file),
-        dest: path.join(dest, file),
-        libraries,
-        emitter
-      })
-    ));
+      //create bundle streams
+      streams = streams.concat(bundles.map(
+        file => createAppBundle({
+          debug,
+          watch,
+          src: path.join(src, file),
+          dest: path.join(dest, file),
+          libraries,
+          emitter
+        })
+      ));
 
-    //wait for all the streams to complete
-    Promise.all(streams)//TODO: http://stackoverflow.com/questions/31424561/wait-until-all-es6-promises-complete-even-rejected-promises
-      .then(
-        () => {
-          console.log('FINISH ALL');
-          emitter.emit('bundles:finish', {
-            src,
-            dest,
-            count: streams.length,
-            time: totalTime,
-            size: totalSize
-          });
-        },
-        error => {
-          console.log('FINISH ALL');
-          emitter.emit('bundles:finish', {
-            src,
-            dest,
-            count: streams.length,
-            time: totalTime,
-            size: totalSize,
-            error
-          });
-        }
-      )
-    ;
+      //wait for all the streams to complete
+      Promise.all(streams)
+        .then(
+          results => {
 
+            const hasErrors = results.reduce(
+              (accum, next) => accum || Boolean(next.error), false
+            );
+
+            emitter.emit('bundles:finish', {
+              src,
+              dest,
+              count: streams.length,
+              time: totalTime,
+              size: totalSize,
+              error: hasErrors
+            });
+
+            resolve();
+          },
+          error => {
+            emitter.emit('error', error);
+            reject(error);
+          }
+        )
+      ;
+
+    });
   });
 
-  return emitter;
 };
 
 //TODO: check bundle names - vendor.js and common.js are special and not allowed

@@ -14,7 +14,10 @@ Promise.resolve()
   .then(scripts(config.scripts).clean())
   .then(cleanStyles(config.styles))
   .then(
-    () => console.log(chalk.green(` => app cleaned`)),
+    () => {
+      console.log(chalk.green(` => scripts cleaned`));
+      console.log(chalk.green(` => styles cleaned`));
+    },
     err => console.log(chalk.red(` => error: ${err}`))
   )
 ;

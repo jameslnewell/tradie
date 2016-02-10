@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-'use strict';
-const program = require('commander');
-const chalk = require('chalk');
-const config = require('../lib/config');
-const logger = require('../lib/logger');
-const scripts = require('../lib/scripts');
-const styles = require('../lib/styles');
+import program from 'commander';
+import args from '../lib/args';
+import config from '../lib/config';
+import logger from '../lib/logger';
+import scripts from '../lib/scripts';
+import styles from '../lib/styles';
 
 program
   .description('Clean bundled scripts and styles')
@@ -15,22 +14,17 @@ program
   .parse(process.argv)
 ;
 
-const watch = program.watch || false;
-const debug = process.env.NODE_ENV !== 'production' && !program.production;
-const verbose = program.verbose || false;
+const buildArgs = args(program);
+const buildLogger = logger(buildArgs);
+const scriptBuilder = scripts(config.scripts, buildArgs);
+const styleBuilder = styles(config.styles, buildArgs);
 
-const buildLogger = logger({verbose});
-const scriptsBuilder = scripts(config.scripts, {watch, debug, verbose});
-const stylesBuilder = styles(config.styles);
-
-let failed = false;
-scriptsBuilder
+scriptBuilder
   .on('error', error => {
     buildLogger.error(error);
     process.exit(-1);
   })
   .on('lint:finish', result => {
-    buildLogger.lintFinished(result);
     if (result.errors !== 0) {
       process.exit(-1);
     }
@@ -39,28 +33,44 @@ scriptsBuilder
     .then(
       () => {
 
+        let scriptResult = null;
+        let styleResult = null;
+
         Promise.all([
-
-          scriptsBuilder
-            .on('bundle:finish', buildLogger.scriptBundleFinished)
-            .once('bundles:finish', buildLogger.scriptBundlesFinished)
-            .bundle()
-              .catch(() => failed = true)
-          ,
-
-          stylesBuilder
-            .on('bundle:finish', buildLogger.styleBundleFinished)
-            .once('bundles:finish', buildLogger.styleBundlesFinished)
-            .bundle()
-              .catch(() => failed = true)
-
-        ])
-          .then(() => {
-            console.log('finished all');
-            if (failed && !watch) {
+            scriptBuilder
+              .on(
+                'bundle:finish',
+                result => buildLogger.scriptBundleFinished(result)
+              )
+              .on(
+                'bundles:finish',
+                result => scriptResult = result
+              )
+              .bundle(),
+            styleBuilder
+              .on(
+                'bundle:finish',
+                result => buildLogger.styleBundleFinished(result)
+              )
+              .on(
+                'bundles:finish',
+                result => styleResult = result
+              )
+              .bundle()
+          ])
+          .then(
+            result => {
+              buildLogger.scriptBundlesFinished(scriptResult);
+              buildLogger.styleBundlesFinished(styleResult);
+              if (scriptResult.error || styleResult.error) {
+                process.exit(-1);
+              }
+            },
+            error => {
+              buildLogger.error(error);
               process.exit(-1);
             }
-          })
+          )
         ;
 
       },
@@ -70,6 +80,3 @@ scriptsBuilder
       }
     )
 ;
-
-//todo: handle errors and process.exit(-1) when not watching
-//TODO: pass in name of bundle to only bundle a specific bundle

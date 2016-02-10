@@ -1,7 +1,9 @@
-const rc = require('rc');
-const scriptDefaults = require('./scripts/defaults');
-const styleDefaults = require('./styles/defaults');
+import rc from 'rc';
+import scriptDefaults from './scripts/defaults';
+import styleDefaults from './styles/defaults';
 
-module.exports = rc('buildtool', {});
-module.exports.scripts = scriptDefaults(module.exports.scripts);
-module.exports.styles = styleDefaults(module.exports.styles);
+const config = rc('tradie', {});
+config.scripts = scriptDefaults(config.scripts);
+config.styles = styleDefaults(config.styles);
+
+export default config;

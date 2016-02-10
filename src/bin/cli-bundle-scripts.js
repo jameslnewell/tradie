@@ -19,22 +19,24 @@ const scriptBuilder = scripts(config.scripts, buildArgs);
 
 scriptBuilder
   .on(
-    'error',
-    error => {
-      buildLogger.error(error);
-      process.exit(-1);
-    }
-  )
-  .on(
     'bundle:finish',
-    args => buildLogger.scriptBundleFinished(args)
+    result => buildLogger.scriptBundleFinished(result)
   )
   .on(
     'bundles:finish',
-    args => buildLogger.scriptBundlesFinished(args)
+    result => {
+      buildLogger.scriptBundlesFinished(result);
+      if (result.error) {
+        process.exit(-1);
+      }
+    }
   )
   .bundle()
+    .then(
+      () => console.log('done'),
+      error => {
+        buildLogger.error(error);
+        process.exit(-1);
+      }
+    )
 ;
-
-//todo: handle errors and process.exit(-1) when not watching
-//TODO: pass in name of bundle to only bundle a specific bundle

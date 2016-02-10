@@ -1,78 +1,68 @@
-# build-my-app
+# tradie
 
-clean
-build --watch
-- lint --watch
-- bundle --watch
-  - bundle-scripts --watch
-  - bundle-styles --watch
-test --watch
+An opinionated CLI for building frontend projects.
 
-plugins:
-- serve - separate task
-- optimise - hook into build
+## Installation
 
-posisble names
-brick/motar/glue
-bake app-bake
-workflow
-bolier room
+    npm install --save tradie
 
-events:
+## Usage
 
-- scripts:clean:start|finish
-  - src
-  - dest
-  - error
+1. Install `tradie` in your project
 
-- scripts:lint
-  - src
-  - dest
-  - error
+    `npm install --save tradie`
 
-- scripts:bundle:start
+2. Configure `tradie` in your project
 
-- script:bundle:start
-  - src
-  - dest
+  - Create a `.tradierc` file:
 
-- script:bundle:finish
-  - src
-  - dest
-  - time
-  - size
-  - error
+  - Setup some `npm` scripts in your `package.json`:
 
-- scripts:bundle:finish
+    ```json
+    {
+      "scripts": {
+        "build": "tradie build",
+        "test": "tradie test"
+      }
+    }
+    ```
 
-- style:bundle:start
-  - src
-  - dest
+3. Build your project with `tradie`
 
-- style:bundle:finish
-  - src
-  - dest
-  - time
-  - size
-  - error
-
+    ```
+    npm run build
+    npm run test
+    ```
 
 ## Tasks
 
 ### Linting
 
-TODO:
-- watching
-- individual files
+Lint scripts.
+
+    tradie lint
+
+Uses settings from your `.eslintrc` file to lint script files in the `src` directory.
 
 ### Bundling
 
+Bundle scripts and styles.
+
+    tradie bundle --watch --verbose --watch --production
+    # OR
+    tradie bundle-scripts --verbose --watch --production
+    tradie bundle-styles --verbose --watch --production
+
 ### Building
 
-Perform linting and bundling of scripts and styles. Will exit with a failure if linting finds an error or if the bundles cannot be created.
+Lint and bundle scripts and styles with a single command.
+
+    tradie build --verbose --watch --production
 
 ### Testing
 
-TODO:
-- watching
-- individual files
+Test scripts.
+
+    tradie test --watch
+
+Uses settings from your `mocha.opts` file to run test files (`*.test.js`) in the `src` directory.

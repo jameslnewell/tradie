@@ -8,7 +8,7 @@ import scripts from '../lib/scripts';
 
 program
   .description('Test scripts')
-  .option('-w, --watch', 're-build script bundles when they change')
+  .option('-w, --watch', 're-run tests when scripts change')
   .parse(process.argv)
 ;
 

@@ -1,6 +1,5 @@
 import path from 'path';
 import mkdirp from 'mkdirp';
-import waitForAll from '../waitForAll';
 import createBundle from './createBundle';
 import createBundler from './createBundler';
 
@@ -116,34 +115,34 @@ function createVendorBundle(options) {
  * @param {function}      emitter
  */
 module.exports = function(config, options, emitter) {
+
+  const debug = options.debug;
+  const watch = options.watch;
+  const src = config.src;
+  const dest = config.dest;
+  const bundles = config.bundles;
+  const libraries = config.libraries;
+  const transforms = config.transforms;
+
+  let streams = [];
+
+  let totalTime = 0;
+  let totalSize = 0;
+
+  emitter.emit('bundles:start');
+  emitter.on('bundle:finish', function(args) {
+    totalTime += args.time;
+    totalSize += args.size || 0;
+  });
+
   return new Promise((resolve, reject) => {
-
-    const debug = options.debug;
-    const watch = options.watch;
-    const src = config.src;
-    const dest = config.dest;
-    const bundles = config.bundles;
-    const libraries = config.libraries;
-    const transforms = config.transforms;
-
-    let streams = [];
-
-    let totalTime = 0;
-    let totalSize = 0;
-
-    emitter.emit('bundles:start');
-    emitter.on('bundle:finish', function(args) {
-      totalTime += args.time;
-      totalSize += args.size;
-    });
-
     mkdirp(dest, err => {
 
       if (err) return emitter.emit('bundles:finish', {
-        src,
-        dest,
-        error
-      }) && reject(err);
+          src,
+          dest,
+          error
+        }) && reject(err);
 
       if (libraries.length) {
         streams = streams.concat([
@@ -179,34 +178,33 @@ module.exports = function(config, options, emitter) {
         }
       ));
 
-      //TODO: waitForAll needs to be updated to handle errors
-      waitForAll(
-        'finish',
-        streams,
-        error => {
-          const args = {
-            src,
-            dest,
-            count: streams.length,
-            time: totalTime,
-            size: totalSize,
-            error
-          };
-          emitter.emit('bundles:finish', {
-            src,
-            dest,
-            count: streams.length,
-            time: totalTime,
-            size: totalSize,
-            error
-          });
-          resolve(args);
-          if (error) return reject(error);
-        }
-      );
+      Promise.all(streams)
+        .then(
+          results => {
+
+            const hasErrors = results.reduce(
+              (accum, next) => accum || Boolean(next.error), false
+            );
+
+            emitter.emit('bundles:finish', {
+              src,
+              dest,
+              count: streams.length,
+              time: totalTime,
+              size: totalSize,
+              error: hasErrors
+            });
+
+            resolve();
+          },
+          error => {
+            emitter.emit('error', error);
+            reject(error);
+          }
+        )
+      ;
 
     });
-
   });
 
 };
