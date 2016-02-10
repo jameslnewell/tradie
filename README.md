@@ -28,6 +28,14 @@ Uses conventions to create a new project.
 
 Use the `--force` flag to write to disk.
 
+### Clean
+
+Delete build files.
+
+    tradie clean
+
+
+
 ### Linting
 
 Lint scripts files.

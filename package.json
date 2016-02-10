@@ -1,6 +1,6 @@
 {
   "name": "tradie",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "dependencies": {
     "autoprefixer": "^6.2.3",
     "browserify": "^12.0.1",
@@ -12,12 +12,8 @@
     "eslint": "^1.10.3",
     "file-size": "^1.0.0",
     "humanize-duration": "^3.5.0",
-    "i": "^0.3.4",
-    "length-stream": "^0.1.1",
     "mkdirp": "^0.5.1",
     "mocaccino": "^1.8.2",
-    "moment": "^2.11.1",
-    "multipipe": "^0.3.0",
     "postcss": "^5.0.13",
     "promised-del": "^1.0.2",
     "promisepipe": "^1.0.1",
@@ -25,9 +21,7 @@
     "sass-composer": "^2.0.0-beta12",
     "source-map-support": "^0.4.0",
     "source-mapper": "^2.0.0",
-    "wait-for-event": "^0.2.0",
-    "watchify": "^3.6.1",
-    "webpack": "^1.12.13"
+    "watchify": "^3.6.1"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",

@@ -61,7 +61,7 @@ function createPackageConfig() {
     name: path.basename(process.cwd()),
     private: true,
     devDependencies: {
-      tradie: "^0.1.0"
+      tradie: "^0.1.1"
     },
     scripts: {
       build: 'tradie build',
