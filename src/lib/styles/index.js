@@ -1,12 +1,11 @@
-'use strict';
-
-const Emitter = require('events').EventEmitter;
-const defaults = require('./defaults');
-const clean = require('./clean');
-const bundle = require('./bundle');
+import {EventEmitter} from 'events';
+import defaults from './defaults';
+import init  from './init';
+import clean from './clean';
+import bundle from './bundle';
 
 module.exports = function styles(config, options) {
-  const emitter = new Emitter();
+  const emitter = new EventEmitter();
   const mergedConfig = defaults(config);
   const mergedOptions = Object.assign({debug: true, watch: false, verbose: false}, options);
 
@@ -15,6 +14,7 @@ module.exports = function styles(config, options) {
 
   return {
 
+    init: () => init(mergedConfig, mergedOptions, emitter),
     clean: () => clean(mergedConfig, mergedOptions, emitter),
     bundle: () => bundle(mergedConfig, mergedOptions, emitter),
 

@@ -1,68 +1,111 @@
 # tradie
 
-An opinionated CLI for building frontend projects.
+Tradie is an opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.
 
 ## Installation
 
-    npm install --save tradie
+    npm install -g tradie
 
 ## Usage
 
-1. Install `tradie` in your project
+1. Create your project
 
-    `npm install --save tradie`
+    `tradie init`
 
-2. Configure `tradie` in your project
+2. Build your project
 
-  - Create a `.tradierc` file:
-
-  - Setup some `npm` scripts in your `package.json`:
-
-    ```json
-    {
-      "scripts": {
-        "build": "tradie build",
-        "test": "tradie test"
-      }
-    }
-    ```
-
-3. Build your project with `tradie`
-
-    ```
-    npm run build
-    npm run test
-    ```
+    `npm run build`
 
 ## Tasks
 
+### Initialise
+
+Create a new project.
+
+    tradie init --force
+
+Uses conventions to create a new project.
+
+Use the `--force` flag to write to disk.
+
 ### Linting
 
-Lint scripts.
+Lint scripts files.
 
     tradie lint
 
-Uses settings from your `.eslintrc` file to lint script files in the `src` directory.
+Uses `eslint` to lint script files.
 
 ### Bundling
 
-Bundle scripts and styles.
+Bundle script and style files.
 
-    tradie bundle --watch --verbose --watch --production
+    tradie bundle --watch --production --verbose
     # OR
-    tradie bundle-scripts --verbose --watch --production
-    tradie bundle-styles --verbose --watch --production
+    tradie bundle-scripts --watch --production --verbose
+    tradie bundle-styles --watch --production --verbose
+
+Uses `browserify` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be specified in your `.tradierc` file. Styling rules are `autoprefix`ed.
+
+Use the `--watch` flag to re-bundle script and style files whenever they change.
+
+Use the `--production` flag to minify script and style files.
 
 ### Building
 
-Lint and bundle scripts and styles with a single command.
+Lint and bundle script and style files with a single command.
 
-    tradie build --verbose --watch --production
+    tradie build --watch --production --verbose
+
+Performs the linting and bundling steps listed above.
 
 ### Testing
 
-Test scripts.
+Test script files.
 
     tradie test --watch
 
-Uses settings from your `mocha.opts` file to run test files (`*.test.js`) in the `src` directory.
+Runs test files (`*.test.js`) with `mocha`.
+
+Use the `--watch` flag to re-test script files whenever they change.
+
+## Configuration
+
+### Scripts
+
+```json
+{
+  "scripts": {
+    "src": "src/", //the directory where script files are sourced
+    "dest": "dist/", //the directory where bundled scripts are output
+    "bundles": ["index.js"], //the script entry files
+    "libraries": [], //the third-party packages placed into `vendor.js` for long term caching
+    "transforms": [] //the browserify transform
+  }
+}
+```
+
+### Styles
+
+```json
+{
+  "styles": {
+    "src": "src/", //the directory where style files are sourced
+    "dest": "dist/", //the directory where bundled styles are output
+    "bundles": ["index.scss"] //the style entry files
+  }
+}
+```
+
+## To do
+
+- `npm install` on init
+- make `mocha` configurable
+- make `autoprefixer` configurable
+- make `uglify` configurable
+- make `sass-composer` configurable
+- make a cache-bust and image optimisation plugin
+- make a live-reload/hmr server plugin
+- make a code-splitting example
+- make an universaljs example
+- add tests

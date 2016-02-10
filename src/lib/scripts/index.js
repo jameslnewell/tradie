@@ -1,5 +1,6 @@
 import {EventEmitter} from 'events';
 import defaults from './defaults';
+import init from './init';
 import clean from './clean';
 import lint from './lint';
 import bundle from './bundle';
@@ -15,6 +16,7 @@ module.exports = function scripts(config, options) {
 
   return {
 
+    init: () => init(mergedConfig, mergedOptions, emitter),
     clean: () => clean(mergedConfig, mergedOptions, emitter),
     lint: () => lint(mergedConfig, mergedOptions, emitter),
     bundle: () => bundle(mergedConfig, mergedOptions, emitter),

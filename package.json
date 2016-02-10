@@ -37,6 +37,7 @@
   },
   "bin": {
     "tradie": "dist/bin/cli.js",
+    "tradie-init": "dist/bin/cli-init.js",
     "tradie-clean": "dist/bin/cli-clean.js",
     "tradie-lint": "dist/bin/cli-lint.js",
     "tradie-bundle-scripts": "dist/bin/cli-bundle-scripts.js",

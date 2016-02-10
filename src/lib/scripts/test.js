@@ -34,7 +34,7 @@ export default function(config, options, emitter) {
     const runTests = (error, buffer) => {
       if (error) return emitter.emit('error', error);
 
-      const node = spawn('node');
+      const node = spawn('node'); //TODO: pass all the same env and args so `mocha` is found
 
       node.on('error', error => emitter.emit('error', error));
 
