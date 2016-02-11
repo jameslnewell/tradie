@@ -1,6 +1,6 @@
 # tradie
 
-Tradie is an opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.
+An opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.
 
 ## Installation
 
