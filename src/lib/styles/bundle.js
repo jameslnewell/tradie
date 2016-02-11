@@ -114,6 +114,7 @@ function createBundler(options) {
  * @param {object}        [options]
  * @param {string}        [options.debug]
  * @param {string}        [options.watch]
+ * @param {string}        [options.dest]      The source file
  * @param {string}        [options.dest]      The destination file
  * @param {array}         [options.vendor]
  * @param {EventEmitter}  [options.emitter]
@@ -191,7 +192,7 @@ module.exports = function(config, options, emitter) {
           debug,
           watch,
           src: path.join(src, file),
-          dest: path.join(dest, file),
+          dest: path.join(dest, path.basename(file, path.extname(file))+'.css'),
           libraries,
           emitter
         })
