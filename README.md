@@ -107,6 +107,7 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ## To do
 
+- re-run linting on build while watching (errors shouldn't exit the process)
 - `npm install` on init
 - make `mocha` configurable
 - make `autoprefixer` configurable
