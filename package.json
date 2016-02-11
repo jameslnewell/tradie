@@ -1,6 +1,6 @@
 {
   "name": "tradie",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "keywords": [
     "tradie", "build", "tool", "bundle", "bundler", "lint", "test", "browserify", "sass-composer", "eslint", "mocha"
   ],
