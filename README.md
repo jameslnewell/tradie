@@ -109,6 +109,7 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 - re-run linting on build while watching (errors shouldn't exit the process)
 - `npm install` on init
+- resolve `eslint` configs relative to the current working npm dir
 - make `mocha` configurable
 - make `autoprefixer` configurable
 - make `uglify` configurable

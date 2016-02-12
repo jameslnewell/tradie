@@ -169,7 +169,7 @@ module.exports = function(config, options, emitter) {
             debug,
             watch,
             src: path.join(src, file),
-            dest: path.join(dest, file),
+            dest: path.join(dest, path.basename(file, path.extname(file))+'.js'),
             libraries,
             transforms,
             emitter
