@@ -13,6 +13,7 @@ import createBundler from './createBundler';
  * @param {array}         [options.libraries]
  * @param {array}         [options.transforms]
  * @param {array}         [options.plugins]
+ * @param {array}         [config.extensions]
  * @param {EventEmitter}  [options.emitter]
  */
 function createAppBundle(options) {
@@ -24,6 +25,7 @@ function createAppBundle(options) {
   const libraries = options.libraries;
   const transforms = options.transforms;
   const plugins = options.plugins;
+  const extensions = options.extensions;
   const emitter = options.emitter;
 
   //create the bundler
@@ -34,6 +36,7 @@ function createAppBundle(options) {
     dest,
     transforms,
     plugins,
+    extensions,
     emitter
   });
 
@@ -68,6 +71,7 @@ function createAppBundle(options) {
  * @param {array}         [options.libraries]
  * @param {array}         [options.transforms]
  * @param {array}         [options.plugins]
+ * @param {array}         [config.extensions]
  * @param {EventEmitter}  [options.emitter]
  */
 function createVendorBundle(options) {
@@ -79,6 +83,7 @@ function createVendorBundle(options) {
   const libraries = options.libraries;
   const transforms = []; //options.transforms; //don't run transforms?
   const plugins = []; //options.plugins; //don't run transforms?
+  const extensions = options.extensions;
   const emitter = options.emitter;
 
   //create the bundler
@@ -89,6 +94,7 @@ function createVendorBundle(options) {
     dest,
     transforms,
     plugins,
+    extensions,
     emitter
   });
 
@@ -115,7 +121,11 @@ function createVendorBundle(options) {
  * @param {array}         [config.bundles]
  * @param {array}         [config.libraries]
  * @param {array}         [config.transforms]
+<<<<<<< HEAD
  * @param {array}         [config.plugins]
+=======
+ * @param {array}         [config.extensions]
+>>>>>>> 704923cba6580d7a00a7ae97f96ec1495ce84e34
  *
  * @param {object}        options
  * @param {string}        [options.debug]
@@ -133,6 +143,7 @@ module.exports = function(config, options, emitter) {
   const libraries = config.libraries;
   const transforms = config.transforms;
   const plugins = config.plugins;
+  const extensions = config.extensions;
 
   let streams = [];
 
@@ -164,6 +175,7 @@ module.exports = function(config, options, emitter) {
             libraries,
             transforms,
             plugins,
+            extensions,
             emitter
           })
         ])
@@ -184,6 +196,7 @@ module.exports = function(config, options, emitter) {
             libraries,
             transforms,
             plugins,
+            extensions,
             emitter
           });
 

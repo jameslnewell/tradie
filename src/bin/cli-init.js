@@ -47,7 +47,7 @@ Promise.all([
 function createIgnoreFile(config) {
   return createFile(
     '.gitignore',
-    `${path.join(config.scripts.dest, '*')}\n${path.join(config.styles.dest, '*')}`
+    `npm-debug.log\nnode_modules\n${path.join(config.scripts.dest, '*')}\n${path.join(config.styles.dest, '*')}`
   );
 }
 

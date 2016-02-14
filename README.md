@@ -88,7 +88,8 @@ Use the `--watch` flag to re-test script files whenever they change.
     "dest": "dist/", //the directory where bundled scripts are output
     "bundles": ["index.js"], //the script entry files
     "libraries": [], //the third-party packages placed into `vendor.js` for long term caching
-    "transforms": [] //the browserify transform
+    "transforms": [], //the browserify transform
+    "extensions": [".js"]
   }
 }
 ```

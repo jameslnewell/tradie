@@ -6,7 +6,8 @@ module.exports = function(config) {
       bundles: ['index.js'],
       libraries: [],
       transforms: [],
-      plugins: []
+      plugins: [],
+      extensions: ['js']
     },
     config
   );

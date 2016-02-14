@@ -17,7 +17,16 @@ export default function(config, options, emitter) {
   const transforms = config.transforms;
 
   //TODO: make glob configurable
-  glob('**/*.test.js', {cwd: src, realpath: true}, function(err, files) {
+
+  let extension = null;
+  if (config.extensions.length > 1) {
+    extension = `{${config.extensions.join(',')}}`;
+  } else {
+    extension = config.extensions.join('');
+  }
+
+  glob(`**/*.test${extension}`, {cwd: src, realpath: true}, function(err, files) {
+    if (err) return emitter.emit('error', err);
 
     const bundler = createBundler({
       debug: true,
@@ -48,14 +57,25 @@ export default function(config, options, emitter) {
         }
       });
 
-      //extract the source map, replace URLs in stack traces from generated bundle with the URLs
-      // from the original source files, and pipe the output to the console
-      //TODO: remove node_modules/browser-pack
-      const result = sourceMapper.extract(buffer.toString());
-      const stream1 = sourceMapper.stream(result.map);
-      const stream2 = sourceMapper.stream(result.map);
-      node.stdout.pipe(stream1).pipe(process.stdout);
-      node.stderr.pipe(stream2).pipe(colorStream()).pipe(process.stderr);
+      let stdout = node.stdout; //TODO: error handling
+      let stderr = node.stderr;
+
+      if (files.length) { //TODO: should we show an error?
+
+        //extract the source map, replace URLs in stack traces from generated bundle with the URLs
+        // from the original source files, and pipe the output to the console
+        //TODO: remove node_modules/browser-pack
+        const result = sourceMapper.extract(buffer.toString()); //FIXME: errors if there are no test files
+        const stream1 = sourceMapper.stream(result.map);
+        const stream2 = sourceMapper.stream(result.map);
+        stdout = stdout.pipe(stream1);
+        stderr = stderr.pipe(stream2);
+
+      }
+
+      stdout.pipe(process.stdout);
+      stderr.pipe(colorStream()).pipe(process.stderr);
+
       node.stdin.write(buffer);
       node.stdin.end();
 
