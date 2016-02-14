@@ -6,10 +6,6 @@ const incremental = require('browserify-incremental');
 const watchify = require('watchify');
 const createBundle = require('./createBundle');
 
-const defaultExtensions = [
-  '.js', '.jsx', '.json'
-];
-
 /**
  * Create a script bundler
  * @param {object}        options
@@ -19,6 +15,7 @@ const defaultExtensions = [
  * @param {string}        [options.dest]        The output file
  * @param {array}         [options.transforms]  The plugins
  * @param {array}         [options.plugins]     The transforms
+ * @param {array}         [options.extensions]     The extensions
  */
 export default function(options) {
 
@@ -27,10 +24,11 @@ export default function(options) {
   const src = options.src;
   const dest = options.dest;
   const transforms = options.transforms || [];
+  const extensions = options.extensions || ['js'];
 
   const config = {
     debug,
-    extensions: defaultExtensions
+    extensions: extensions.concat(['.json'])
   };
 
   //create bundler
