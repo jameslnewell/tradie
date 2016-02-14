@@ -17,8 +17,8 @@ const defaultExtensions = [
  * @param {boolean}       [options.watch]       Whether to watch files for changes
  * @param {string|array}  [options.src]         The source file(s)
  * @param {string}        [options.dest]        The output file
- * @param {array}         [options.transforms]  The plugins
- * @param {array}         [options.plugins]     The transforms
+ * @param {array}         [options.transforms]  The transforms
+ * @param {array}         [options.plugins]     The plugins
  */
 export default function(options) {
 
@@ -27,6 +27,7 @@ export default function(options) {
   const src = options.src;
   const dest = options.dest;
   const transforms = options.transforms || [];
+  const plugins = options.plugins || [];
 
   const config = {
     debug,
@@ -48,17 +49,26 @@ export default function(options) {
     bundler.transform('envify', {global: true, NODE_ENV: 'production'})
   }
 
-  //configure bundler
+  //configure entry file
   if (src) {
     bundler.add(src);
   }
 
-  //configure bundler
+  //configure transforms
   transforms.forEach(transform => {
     if (Array.isArray(transform)) {
       bundler.transform.apply(bundler, transform);
     } else {
       bundler.transform(transform);
+    }
+  });
+
+  //configure plugins
+  plugins.forEach(plugin => {
+    if (Array.isArray(plugin)) {
+      bundler.plugin.apply(bundler, plugin);
+    } else {
+      bundler.plugin(plugin);
     }
   });
 

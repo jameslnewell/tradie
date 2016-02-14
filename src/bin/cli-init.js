@@ -2,9 +2,9 @@
 import path from 'path';
 import program from 'commander';
 import chalk from 'chalk';
-import args from '../lib/args';
+import getArgs from '../lib/getArguments';
+import getConfig from '../lib/getConfig';
 import logger from '../lib/logger';
-import config from '../lib/config';
 import scripts from '../lib/scripts';
 import styles from '../lib/styles';
 import createFile from '../lib/createFile';
@@ -22,10 +22,11 @@ if (!program.force) {
   process.exit(-1);
 }
 
-const buildArgs = args(program);
-const buildLogger = logger(buildArgs);
-const scriptBuilder = scripts(config.scripts, buildArgs);
-const styleBuilder = styles(config.styles, buildArgs);
+const args = getArgs(program);
+const config = getConfig(args);
+const buildLogger = logger(args);
+const scriptBuilder = scripts(config.scripts, args);
+const styleBuilder = styles(config.styles, args);
 
 Promise.all([
   createIgnoreFile(config),

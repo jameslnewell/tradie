@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import program from 'commander';
 import chalk from 'chalk';
-import args from '../lib/args';
-const logger = require('../lib/logger');
-import config from '../lib/config';
+import getArgs from '../lib/getArguments';
+import getConfig from '../lib/getConfig';
+import logger from '../lib/logger';
 import scripts from '../lib/scripts';
 
 program
@@ -12,9 +12,10 @@ program
   .parse(process.argv)
 ;
 
-const buildArgs = args(program);
-const buildLogger = logger(buildArgs);
-const scriptsBuilder = scripts(config.scripts, buildArgs);
+const args = getArgs(program);
+const config = getConfig(args);
+const buildLogger = logger(args);
+const scriptsBuilder = scripts(config.scripts, args);
 
 scriptsBuilder
   .on('error', error => {
@@ -22,7 +23,7 @@ scriptsBuilder
     process.exit(-1);
   })
   .on('test:error', () => {
-    if (!buildArgs.watch) {
+    if (!args.watch) {
       process.exit(-1);
     }
   })

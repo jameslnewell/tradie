@@ -12,6 +12,7 @@ import createBundler from './createBundler';
  * @param {string}        [options.dest]      The destination file
  * @param {array}         [options.libraries]
  * @param {array}         [options.transforms]
+ * @param {array}         [options.plugins]
  * @param {EventEmitter}  [options.emitter]
  */
 function createAppBundle(options) {
@@ -22,6 +23,7 @@ function createAppBundle(options) {
   const dest = options.dest;
   const libraries = options.libraries;
   const transforms = options.transforms;
+  const plugins = options.plugins;
   const emitter = options.emitter;
 
   //create the bundler
@@ -31,6 +33,7 @@ function createAppBundle(options) {
     src,
     dest,
     transforms,
+    plugins,
     emitter
   });
 
@@ -64,6 +67,7 @@ function createAppBundle(options) {
  * @param {string}        [options.dest]      The destination file
  * @param {array}         [options.libraries]
  * @param {array}         [options.transforms]
+ * @param {array}         [options.plugins]
  * @param {EventEmitter}  [options.emitter]
  */
 function createVendorBundle(options) {
@@ -73,7 +77,8 @@ function createVendorBundle(options) {
   const src = null;
   const dest = options.dest;
   const libraries = options.libraries;
-  const transforms = options.transforms;
+  const transforms = []; //options.transforms; //don't run transforms?
+  const plugins = []; //options.plugins; //don't run transforms?
   const emitter = options.emitter;
 
   //create the bundler
@@ -83,6 +88,7 @@ function createVendorBundle(options) {
     src,
     dest,
     transforms,
+    plugins,
     emitter
   });
 
@@ -102,16 +108,19 @@ function createVendorBundle(options) {
 
 /**
  * Create script bundles
+ *
  * @param {object}        config
  * @param {string}        [config.src]       The source directory
  * @param {string}        [config.dest]      The destination directory
  * @param {array}         [config.bundles]
  * @param {array}         [config.libraries]
  * @param {array}         [config.transforms]
+ * @param {array}         [config.plugins]
+ *
  * @param {object}        options
  * @param {string}        [options.debug]
  * @param {string}        [options.watch]
- * @param {function}      [options.onChange]
+ *
  * @param {function}      emitter
  */
 module.exports = function(config, options, emitter) {
@@ -123,6 +132,7 @@ module.exports = function(config, options, emitter) {
   const bundles = config.bundles;
   const libraries = config.libraries;
   const transforms = config.transforms;
+  const plugins = config.plugins;
 
   let streams = [];
 
@@ -153,6 +163,7 @@ module.exports = function(config, options, emitter) {
             dest: path.join(dest, 'vendor.js'),
             libraries,
             transforms,
+            plugins,
             emitter
           })
         ])
@@ -172,6 +183,7 @@ module.exports = function(config, options, emitter) {
             dest: path.join(dest, path.basename(file, path.extname(file))+'.js'),
             libraries,
             transforms,
+            plugins,
             emitter
           });
 

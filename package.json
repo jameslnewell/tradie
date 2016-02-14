@@ -1,8 +1,18 @@
 {
   "name": "tradie",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "keywords": [
-    "tradie", "build", "tool", "bundle", "bundler", "lint", "test", "browserify", "sass-composer", "eslint", "mocha"
+    "tradie",
+    "build",
+    "tool",
+    "bundle",
+    "bundler",
+    "lint",
+    "test",
+    "browserify",
+    "sass-composer",
+    "eslint",
+    "mocha"
   ],
   "description": "An opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.",
   "repository": {
@@ -20,6 +30,7 @@
     "eslint": "^1.10.3",
     "file-size": "^1.0.0",
     "humanize-duration": "^3.5.0",
+    "lodash.mergewith": "^4.1.0",
     "mkdirp": "^0.5.1",
     "mocaccino": "^1.8.2",
     "postcss": "^5.0.13",

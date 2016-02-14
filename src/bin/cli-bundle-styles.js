@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import program from 'commander';
-import args from '../lib/args';
-import config from '../lib/config';
+import getArgs from '../lib/getArguments';
+import getConfig from '../lib/getConfig';
 import logger from '../lib/logger';
 import styles from '../lib/styles';
 
@@ -13,9 +13,10 @@ program
   .parse(process.argv)
 ;
 
-const buildArgs = args(program);
-const buildLogger = logger(buildArgs);
-const styleBuilder = styles(config.styles, buildArgs);
+const args = getArgs(program);
+const config = getConfig(args);
+const buildLogger = logger(args);
+const styleBuilder = styles(config.styles, args);
 
 styleBuilder
   .on(

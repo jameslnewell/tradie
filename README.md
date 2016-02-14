@@ -105,8 +105,16 @@ Use the `--watch` flag to re-test script files whenever they change.
 }
 ```
 
+## Change log
+
+### 0.2.0
+
+ - add: allow environment specific configuration (like in `.babelrc` files)
+ - add: allow `browserify` plugins
+
 ## To do
 
+- handle errors on browserify object (not just the bundle)
 - re-run linting on build while watching (errors shouldn't exit the process)
 - `npm install` on init
 - resolve `eslint` configs relative to the current working npm dir

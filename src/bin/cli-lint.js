@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import program from 'commander';
 import chalk from 'chalk';
-import args from '../lib/args';
+import getArgs from '../lib/getArguments';
+import getConfig from '../lib/getConfig';
 import logger from '../lib/logger';
-import config from '../lib/config';
 import scripts from '../lib/scripts';
 
 program
@@ -11,9 +11,10 @@ program
   .parse(process.argv)
 ;
 
-const buildArgs = args(program);
-const buildLogger = logger(buildArgs);
-const scriptBuilder = scripts(config.scripts, buildArgs);
+const args = getArgs(program);
+const config = getConfig(args);
+const buildLogger = logger(args);
+const scriptBuilder = scripts(config.scripts, args);
 
 scriptBuilder
   .on('error', error => {
