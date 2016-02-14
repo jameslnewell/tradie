@@ -89,7 +89,8 @@ Use the `--watch` flag to re-test script files whenever they change.
     "bundles": ["index.js"], //the script entry files
     "libraries": [], //the third-party packages placed into `vendor.js` for long term caching
     "transforms": [], //the browserify transform
-    "extensions": [".js"]
+    "plugins": [], //the browserify plugins
+    "extensions": [".js"] //the script extensions
   }
 }
 ```
@@ -110,8 +111,9 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ### 0.2.0
 
- - add: allow environment specific configuration (like in `.babelrc` files)
- - add: allow `browserify` plugins
+- add: make script extensions configurable
+- add: allow environment specific configuration (like in `.babelrc` files)
+- add: allow `browserify` plugins
 
 ## To do
 
