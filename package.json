@@ -20,8 +20,8 @@
     "url": "git@github.com:jameslnewell/tradie.git"
   },
   "dependencies": {
-    "autoprefixer": "^6.2.3",
-    "browserify": "^12.0.1",
+    "autoprefixer": "^6.3.3",
+    "browserify": "^13.0.0",
     "browserify-incremental": "^3.0.1",
     "chalk": "^1.1.1",
     "clean-css": "^3.4.8",
@@ -29,18 +29,19 @@
     "envify": "^3.4.0",
     "eslint": "^1.10.3",
     "file-size": "^1.0.0",
-    "humanize-duration": "^3.5.0",
-    "lodash.mergewith": "^4.1.0",
+    "humanize-duration": "^3.6.1",
+    "json5": "^0.4.0",
+    "lodash.mergewith": "^4.3.0",
     "mkdirp": "^0.5.1",
     "mocaccino": "^1.8.2",
-    "postcss": "^5.0.13",
+    "postcss": "^5.0.16",
     "promised-del": "^1.0.2",
     "promisepipe": "^1.0.1",
-    "rc": "^1.1.6",
-    "sass-composer": "^2.0.0-beta12",
+    "sass-composer": "^2.0.0-beta9",
     "source-map-support": "^0.4.0",
     "source-mapper": "^2.0.0",
-    "watchify": "^3.6.1"
+    "watchify": "^3.6.1",
+    "yargs": "^4.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
@@ -48,18 +49,11 @@
     "babel-preset-es2015": "^6.5.0"
   },
   "bin": {
-    "tradie": "dist/bin/cli.js",
-    "tradie-init": "dist/bin/cli-init.js",
-    "tradie-clean": "dist/bin/cli-clean.js",
-    "tradie-lint": "dist/bin/cli-lint.js",
-    "tradie-bundle-scripts": "dist/bin/cli-bundle-scripts.js",
-    "tradie-bundle-styles": "dist/bin/cli-bundle-styles.js",
-    "tradie-bundle": "dist/bin/cli-bundle.js",
-    "tradie-build": "dist/bin/cli-build.js",
-    "tradie-test": "dist/bin/cli-test.js"
+    "tradie": "dist/bin/tradie.js"
   },
   "scripts": {
     "build": "babel --debug --out-dir dist src",
+    "test": "mocha dist/test",
     "prepublish": "npm run build"
   },
   "license": "MIT"

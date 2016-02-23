@@ -11,22 +11,22 @@ import colorStream from '../color-stream';
  * Run tests
  */
 export default function(config, options, emitter) {
-
   const watch = options.watch;
   const src = config.src;
   const transforms = config.transforms;
-
   //TODO: make glob configurable
 
   let extension = null;
+
   if (config.extensions.length > 1) {
     extension = `{${config.extensions.join(',')}}`;
   } else {
     extension = config.extensions.join('');
   }
 
-  glob(`**/*.test${extension}`, {cwd: src, realpath: true}, function(err, files) {
-    if (err) return emitter.emit('error', err);
+  console.log('globbing');
+  glob(`**/*.test${extension}`, {cwd: src, realpath: true}, function(globError, files) {
+    if (globError) return emitter.emit('error', globError);
 
     const bundler = createBundler({
       debug: true,
@@ -40,8 +40,9 @@ export default function(config, options, emitter) {
       reporter: 'spec'
     });
 
-    const runTests = (error, buffer) => {
-      if (error) return emitter.emit('error', error);
+    const runTests = (bundleError, buffer) => {
+      console.log('bundled', bundleError);
+      if (bundleError) return emitter.emit('error', bundleError);
 
       //run in the same dir as `tradie` so that `mocha` is found
       const node = spawn('node', {cwd: __dirname});
@@ -81,10 +82,18 @@ export default function(config, options, emitter) {
 
     };
 
-    bundler.on('update', () => bundler.bundle(runTests));
-
+    console.log('bundling');
     bundler.bundle(runTests);
 
+    if (watch) {
+      bundler.on('update', () => bundler.bundle(runTests));
+    }
+
+  });
+
+
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), 3000);
   });
 
 }

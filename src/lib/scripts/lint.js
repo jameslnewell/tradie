@@ -1,7 +1,12 @@
 'use strict';
 const CLIEngine = require('eslint').CLIEngine;
 
-function lint(files) {
+/**
+ * Eslint script files
+ * @param   {array}   files
+ * @returns {number}
+ */
+function eslint(files) {
 
   const cli = new CLIEngine({});
   const report = cli.executeOnFiles([].concat(files));
@@ -14,26 +19,32 @@ function lint(files) {
   return report.errorCount;
 }
 
-module.exports = function(config, options, emitter) {
+/**
+ * Lint script files
+ * @param   {array}   files
+ * @param   {object}  emitter
+ * @returns {Promise}
+ */
+module.exports = function(files, emitter) {
   return new Promise((resolve, reject) => {
 
     try {
 
-      emitter.emit('lint:start');
+      emitter.emit('scripts:lint:started');
       const startTime = Date.now();
-      const errors = lint(config.src);
-      emitter.emit('lint:finish', {
+      const errors = eslint(files);
+      emitter.emit('scripts:lint:finished', {
         time: Date.now() - startTime,
         errors
       });
 
       if (errors > 0) {
-        return reject(errors);
+        return reject();
       } else {
-        return resolve(errors);
+        return resolve();
       }
 
-    } catch(error) {
+    } catch (error) {
       emitter.emit('error', error);
       reject(error);
     }

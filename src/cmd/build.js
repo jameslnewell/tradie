@@ -1,36 +1,41 @@
-#!/usr/bin/env node
-import program from 'commander';
+
 import getArgs from '../lib/getArguments';
 import getConfig from '../lib/getConfig';
 import logger from '../lib/logger';
 import scripts from '../lib/scripts';
 import styles from '../lib/styles';
 
-program
-  .description('Clean bundled scripts and styles')
-  .option('--production', 'optimise script and style bundles for a production environment')
-  .option('-w, --watch', 're-build script and styles bundles when they change')
-  .option('-v, --verbose', 'verbosely list script and style bundles')
-  .parse(process.argv)
-;
+/**
+ * Build the script and style files
+ * @param {object} context
+ */
+export default function(context) {
 
-const args = getArgs(program);
-const config = getConfig(args);
-const buildLogger = logger(args);
-const scriptBuilder = scripts(config.scripts, args);
-const styleBuilder = styles(config.styles, args);
+  program
+    .description('Clean bundled scripts and styles')
+    .option('--production', 'optimise script and style bundles for a production environment')
+    .option('-w, --watch', 're-build script and styles bundles when they change')
+    .option('-v, --verbose', 'verbosely list script and style bundles')
+    .parse(process.argv)
+  ;
 
-scriptBuilder
-  .on('error', error => {
-    buildLogger.error(error);
-    process.exit(-1);
-  })
-  .on('lint:finish', result => {
-    if (result.errors !== 0) {
+  const args = getArgs(program);
+  const config = getConfig(args);
+  const buildLogger = logger(args);
+  const scriptBuilder = scripts(config.scripts, args);
+  const styleBuilder = styles(config.styles, args);
+
+  scriptBuilder
+    .on('error', error => {
+      buildLogger.error(error);
       process.exit(-1);
-    }
-  })
-  .lint()
+    })
+    .on('lint:finish', result => {
+      if (result.errors !== 0) {
+        process.exit(-1);
+      }
+    })
+    .lint()
     .then(
       () => {
 
@@ -80,4 +85,7 @@ scriptBuilder
         process.exit(-1);
       }
     )
-;
+  ;
+
+
+}

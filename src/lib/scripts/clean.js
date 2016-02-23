@@ -1,19 +1,21 @@
-'use strict';
-const path = require('path');
-const del = require('promised-del');
+import path from 'path';
+import del from 'promised-del';
 
-module.exports = function(config, options, emitter) {
+/**
+ * Clean the scripts directory
+ * @param   {string} dir
+ * @param   {object} emitter
+ * @returns {Promise}
+ */
+export default function(dir, emitter) {
 
-  const src = config.src;
-  const dest = config.dest;
-
-  emitter.emit('clean:start', {src, dest});
+  emitter.emit('scripts:clean:started');
   return del([
-    path.join(dest, '*'),
-    path.join(dest, '.*')
+    path.join(dir, '*'),
+    path.join(dir, '.*')
   ]).then(
-    () => emitter.emit('clean:finish', {src, dest}),
-    error => emitter.emit('clean:finish', {src, dest, error})
+    () => emitter.emit('scripts:clean:finished'),
+    error => emitter.emit('error', error)
   );
 
-};
+}

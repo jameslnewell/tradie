@@ -107,6 +107,15 @@ Use the `--watch` flag to re-test script files whenever they change.
 }
 ```
 
+### Events
+
+- `styles:clean:started`
+- `styles:clean:finished`
+- `scripts:clean:started`
+- `scripts:clean:finished`
+- `scripts:lint:finished`
+- `scripts:lint:finished`
+
 ## Change log
 
 ### 0.2.0

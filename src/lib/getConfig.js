@@ -1,34 +1,38 @@
-import rc from 'rc';
+import fs from 'fs';
+import path from 'path';
+import JSON5 from 'json5';
 import merge from 'lodash.mergewith';
 import scriptDefaults from './scripts/defaults';
 import styleDefaults from './styles/defaults';
 
-export default function(args) {
+/**
+ * Load and merge the user configuration
+ * @param   {string} [environment]
+ * @returns {object}
+ */
+export default function(environment = 'development') {
+  const file = path.join(process.cwd(), '.tradierc');
 
-  function customizer(objValue, srcValue) {
-    if (Array.isArray(objValue)) {
-      return objValue.concat(srcValue);
-    }
-  }
+  //load the user config
+  let config = {};
+  try {
+    config = JSON5.parse(fs.readFileSync(file));
+  } catch (err) {} //eslint-disable-line
 
-  //figure out which env we're in
-  const environment = args.debug ? 'development' : 'production';
+  //override the default config
+  config = {
+    scripts: {...scriptDefaults, ...config.scripts},
+    styles: {...styleDefaults, ...config.styles}
+  };
 
-  //merge the default config
-  let config = rc('tradie', {});
-  config.scripts = scriptDefaults(config.scripts);
-  config.styles = styleDefaults(config.styles);
-
-  //merge the env specific config
+  //merge the environment specific config
   if (config.env && config.env[environment]) {
-    config = merge({}, config, config.env[environment], customizer);
+    config = merge({}, config, config.env[environment], (prev, next) => {
+      if (Array.isArray(prev)) {
+        return prev.concat(next);
+      }
+    });
   }
-
-  //delete `rc` crap
-  delete config._;
-  delete config.env;
-  delete config.config;
-  delete config.configs;
 
   return config;
 }
