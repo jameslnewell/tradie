@@ -14,7 +14,6 @@ export default function(config, options, emitter) {
   const watch = options.watch;
   const src = config.src;
   const transforms = config.transforms;
-  //TODO: make glob configurable
 
   let extension = null;
 
@@ -24,8 +23,8 @@ export default function(config, options, emitter) {
     extension = config.extensions.join('');
   }
 
-  console.log('globbing');
-  glob(`**/*.test${extension}`, {cwd: src, realpath: true}, function(globError, files) {
+  //TODO: make glob configurable?
+  glob(`**/*.test${extension}`, {cwd: src, realpath: true}, (globError, files) => {
     if (globError) return emitter.emit('error', globError);
 
     const bundler = createBundler({
@@ -41,7 +40,6 @@ export default function(config, options, emitter) {
     });
 
     const runTests = (bundleError, buffer) => {
-      console.log('bundled', bundleError);
       if (bundleError) return emitter.emit('error', bundleError);
 
       //run in the same dir as `tradie` so that `mocha` is found
@@ -82,7 +80,6 @@ export default function(config, options, emitter) {
 
     };
 
-    console.log('bundling');
     bundler.bundle(runTests);
 
     if (watch) {
@@ -90,7 +87,6 @@ export default function(config, options, emitter) {
     }
 
   });
-
 
   return new Promise((resolve) => {
     setTimeout(() => resolve(), 3000);

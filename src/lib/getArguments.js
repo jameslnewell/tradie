@@ -6,7 +6,7 @@
  */
 export default function(argv) {
   const args = {};
-  args.debug = typeof argv.production === 'undefined' ? process.env.NODE_ENV !== 'production' : !argv.production;
+  args.debug = process.env.NODE_ENV !== 'production';
   args.watch = argv.watch || false;
   args.verbose = argv.verbose || false;
   return args;

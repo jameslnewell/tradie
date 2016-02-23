@@ -4,10 +4,10 @@ import getArgs from './lib/getArguments';
 import getConfig from './lib/getConfig';
 
 //import initCommand from './cmd/init';
-import cleanCommand from './cmd/clean';
-import lintCommand from './cmd/lint';
+import * as cleanCommand from './cmd/clean';
+import * as lintCommand from './cmd/lint';
 //import buildCommand from './cmd/build';
-import testCommand from './cmd/test';
+import * as testCommand from './cmd/test';
 
 /**
  * Command runner
@@ -35,29 +35,17 @@ export default class Runner {
     //  initCommand
     //);
     //
-    this.cmd(
-      'clean',
-      'Clean script and style bundles',
-      cleanCommand
-    );
-
-    this.cmd(
-      'lint',
-      'Lint script files',
-      lintCommand
-    );
+    this
+      .cmd(cleanCommand)
+      .cmd(lintCommand)
+      .cmd(testCommand)
+    ;
 
     //this.cmd(
     //  'build',
     //  'Lint and bundle script and style files',
     //  buildCommand
     //);
-
-    this.cmd(
-      'test',
-      'Test script files',
-      testCommand
-    );
 
     this.emitter.emit('init', this);
 
@@ -80,25 +68,28 @@ export default class Runner {
 
   /**
    * Add a new command
-   * @param   {string}    name
-   * @param   {string}    description
-   * @param   {function}  action
+   * @param   {object}    command
+   * @param   {string}    command.name
+   * @param   {string}    command.desc
+   * @param   {function}  command.hint
+   * @param   {function}  command.run
    * @returns {Runner}
    */
-  cmd(name, description, action) {
+  cmd(command) {
+
+    const name = command.name;
 
     this.app.command(
-      name,
-      description,
-      yargs => {
-
-        const argv = yargs.argv;
+      command.name,
+      command.desc,
+      command.hint,
+      argv => {
 
         const args = getArgs(argv);
         const config = getConfig(args.debug ? 'development' : 'production');
 
         this.emitter.emit('cmd:enter', {name, args, config});
-        Promise.resolve(action({args, config, emitter: this.emitter}))
+        Promise.resolve(command.run({args, config, emitter: this.emitter}))
           .then(
             () => this.emitter.emit('cmd:exit', {name, args, config, code: 0}),
             () => this.emitter.emit('cmd:exit', {name, args, config, code: -1})

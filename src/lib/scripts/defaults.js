@@ -6,5 +6,5 @@ export default {
   libraries: [],
   transforms: [],
   plugins: [],
-  extensions: ['js']
+  extensions: ['.js']
 };
