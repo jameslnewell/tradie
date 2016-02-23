@@ -28,26 +28,23 @@ export default class Runner {
       .alias('h', 'help')
       .showHelpOnFail()
     ;
-    //
-    //this.cmd(
-    //  'init',
-    //  'Create a new project',
-    //  initCommand
-    //);
-    //
+
     this
+      //.cmd(initCommand)
       .cmd(cleanCommand)
       .cmd(lintCommand)
       .cmd(testCommand)
+      //.cmd(buildCommand)
     ;
 
-    //this.cmd(
-    //  'build',
-    //  'Lint and bundle script and style files',
-    //  buildCommand
-    //);
-
     this.emitter.emit('init', this);
+
+    //track each event
+    this.oldEmitterEmit = this.emitter.emit;
+    this.emitter.emit = (...args) => {
+      console.log('tradie:', args);
+      return this.oldEmitterEmit.apply(this.emitter, args);
+    };
 
   }
 
@@ -72,7 +69,7 @@ export default class Runner {
    * @param   {string}    command.name
    * @param   {string}    command.desc
    * @param   {function}  command.hint
-   * @param   {function}  command.run
+   * @param   {function}  command.exec
    * @returns {Runner}
    */
   cmd(command) {
@@ -88,11 +85,11 @@ export default class Runner {
         const args = getArgs(argv);
         const config = getConfig(args.debug ? 'development' : 'production');
 
-        this.emitter.emit('cmd:enter', {name, args, config});
-        Promise.resolve(command.run({args, config, emitter: this.emitter}))
+        this.emitter.emit('cmd:enter', {cmd: name, args, config});
+        Promise.resolve(command.exec({args, config, emitter: this.emitter}))
           .then(
-            () => this.emitter.emit('cmd:exit', {name, args, config, code: 0}),
-            () => this.emitter.emit('cmd:exit', {name, args, config, code: -1})
+            () => this.emitter.emit('cmd:exit', {cmd: name, args, config, code: 0}),
+            () => this.emitter.emit('cmd:exit', {cmd: name, args, config, code: -1})
           )
         ;
 
@@ -107,7 +104,16 @@ export default class Runner {
    * @returns {Runner}
    */
   run() {
-    this.app.argv;//eslint-disable-line
+
+    /*eslint-disable */
+    this.app
+      .option('v', {
+        alias: 'verbose'
+      })
+      .argv
+    ;
+    /*eslint-enable */
+
     return this;
   }
 

@@ -7,7 +7,7 @@
 export default function(argv) {
   const args = {};
   args.debug = process.env.NODE_ENV !== 'production';
-  args.watch = argv.watch || false;
   args.verbose = argv.verbose || false;
+  //args.watch = argv.watch || false;
   return args;
 }

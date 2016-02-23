@@ -5,19 +5,16 @@ import cleanStyles from '../lib/styles/clean';
 export const name = 'clean';
 export const desc = 'Clean script and style bundles';
 
-/**
- * Clean the project files
- * @param   {object} config
- * @param   {object} emitter
- * @returns {Promise}
- */
-export function run({config, emitter}) {
+export function exec({config, emitter}) {
+
+  emitter
+    .on('scripts.cleaning.finished', () => console.log(chalk.green(` => scripts cleaned`)))
+    .on('styles.cleaning.finished', () => console.log(chalk.green(` => styles cleaned`)))
+  ;
 
   return Promise.all([
-    cleanScripts(config.scripts.dest, emitter)
-      .then(() => console.log(chalk.green(` => scripts cleaned`))),
+    cleanScripts(config.scripts.dest, emitter),
     cleanStyles(config.styles.dest, emitter)
-      .then(() => console.log(chalk.green(` => styles cleaned`)))
   ]);
 
 }

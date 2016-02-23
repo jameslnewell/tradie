@@ -16,6 +16,6 @@ export function hint(yargs) {
  * @param   {object} emitter
  * @returns {Promise}
  */
-export function run({args, config, emitter}) {
+export function exec({args, config, emitter}) {
   return testScripts(config.scripts, args, emitter);
 }

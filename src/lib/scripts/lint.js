@@ -21,8 +21,8 @@ function eslint(files) {
 
 /**
  * Lint script files
- * @param   {array}   files
- * @param   {object}  emitter
+ * @param   {array}         files
+ * @param   {EventEmitter}  emitter
  * @returns {Promise}
  */
 module.exports = function(files, emitter) {
@@ -30,10 +30,10 @@ module.exports = function(files, emitter) {
 
     try {
 
-      emitter.emit('scripts:lint:started');
+      emitter.emit('scripts.linting.started');
       const startTime = Date.now();
       const errors = eslint(files);
-      emitter.emit('scripts:lint:finished', {
+      emitter.emit('scripts.linting.finished', {
         time: Date.now() - startTime,
         errors
       });

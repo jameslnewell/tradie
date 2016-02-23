@@ -5,6 +5,9 @@ import logger from '../lib/logger';
 import scripts from '../lib/scripts';
 import styles from '../lib/styles';
 
+export const name = 'build';
+export const desc = 'Lint and bundle script and style files';
+
 /**
  * Build the script and style files
  * @param {object} context

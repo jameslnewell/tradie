@@ -2,20 +2,16 @@ import path from 'path';
 import del from 'promised-del';
 
 /**
- * Clean the scripts directory
- * @param   {string} dir
- * @param   {object} emitter
+ * Clean up files in the scripts `dest` directory
+ * @param   {string}        directory
+ * @param   {EventEmitter}  emitter
  * @returns {Promise}
  */
-export default function(dir, emitter) {
-
-  emitter.emit('scripts:clean:started');
+export default function(directory, emitter) {
   return del([
-    path.join(dir, '*'),
-    path.join(dir, '.*')
-  ]).then(
-    () => emitter.emit('scripts:clean:finished'),
-    error => emitter.emit('error', error)
-  );
-
+    path.join(directory, '*'),
+    path.join(directory, '.*')
+  ])
+    .then(() => emitter.emit('scripts.cleaning.finished'))
+  ;
 }
