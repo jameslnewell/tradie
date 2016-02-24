@@ -5,17 +5,11 @@ export const desc = 'Test script files';
 
 export function hint(yargs) {
   return yargs.option('w', {
-    alias: 'watch'
+    alias: 'watch',
+    default: false
   });
 }
 
-/**
- * Clean the project files
- * @param   {object} args
- * @param   {object} config
- * @param   {object} emitter
- * @returns {Promise}
- */
 export function exec({args, config, emitter}) {
-  return testScripts(config.scripts, args, emitter);
+  return testScripts({args, config: config.scripts, emitter});
 }

@@ -28,7 +28,7 @@ function createBundle(options) {
 
   let args = {src, dest};
   const startTime = Date.now();
-  emitter.emit('bundle:start', args);
+  emitter.emit('styles.bundle.started', args);
 
   let streams = [
 
@@ -53,7 +53,7 @@ function createBundle(options) {
     .then(
       () => {
         args.time = Date.now() - startTime;
-        emitter.emit('bundle:finish', args);
+        emitter.emit('styles.bundle.finished', args);
         return {error: null};
       },
       error => {
@@ -103,7 +103,7 @@ function createBundler(options) {
       dest,
       bundler,
       emitter
-    }))
+    }));
   }
 
   return bundler;
@@ -154,15 +154,15 @@ function createAppBundle(options) {
  * @param {string}        [config.dest]      The destination directory
  * @param {array}         [config.bundle]
  * @param {array}         [config.vendor]
- * @param {object}        [options]
- * @param {string}        [options.debug]
- * @param {string}        [options.watch]
+ * @param {object}        [args]
+ * @param {string}        [args.env]
+ * @param {string}        [args.watch]
  * @returns {Promise}
  */
-module.exports = function(config, options, emitter) {
+export default function({args, config, emitter}) {
 
-  const debug = options.debug;
-  const watch = options.watch;
+  const debug = args.env !== 'production';
+  const watch = args.watch;
   const src = config.src;
   const dest = config.dest;
   const bundles = config.bundles;
@@ -174,8 +174,8 @@ module.exports = function(config, options, emitter) {
   let totalTime = 0;
   let totalSize = 0;
 
-  emitter.emit('bundles:start');
-  emitter.on('bundle:finish', function(args) {
+  emitter.emit('styles.bundling.started');
+  emitter.on('styles.bundle.finished', args => {
     totalTime += args.time;
     totalSize += args.size || 0;
   });
@@ -207,7 +207,7 @@ module.exports = function(config, options, emitter) {
               (accum, next) => accum || Boolean(next.error), false
             );
 
-            emitter.emit('bundles:finish', {
+            emitter.emit('styles.bundling.finished', {
               src,
               dest,
               count: streams.length,
@@ -216,11 +216,7 @@ module.exports = function(config, options, emitter) {
               error: hasErrors
             });
 
-            resolve();
-          },
-          error => {
-            emitter.emit('error', error);
-            reject(error);
+            resolve(hasErrors ? -1 : 0);
           }
         )
       ;

@@ -44,7 +44,7 @@ export default function(options) {
     bundler = incremental(config);
   } else {
     bundler = browserify(config);
-    bundler.transform('envify', {global: true, NODE_ENV: 'production'})
+    bundler.transform('envify', {global: true, NODE_ENV: 'production'});
   }
 
   //configure entry file
@@ -55,7 +55,7 @@ export default function(options) {
   //configure transforms
   transforms.forEach(transform => {
     if (Array.isArray(transform)) {
-      bundler.transform.apply(bundler, transform);
+      bundler.transform(...transform);
     } else {
       bundler.transform(transform);
     }
@@ -64,23 +64,23 @@ export default function(options) {
   //configure plugins
   plugins.forEach(plugin => {
     if (Array.isArray(plugin)) {
-      bundler.plugin.apply(bundler, plugin);
+      bundler.plugin(...plugin);
     } else {
       bundler.plugin(plugin);
     }
   });
 
-  if (watch) {
-
-    //watch for changes
-    bundler.plugin(watchify);
-
-    //stop watching on CTRL-C
-    process.on('SIGINT', () => {
-      bundler.close();
-    });
-
-  }
+  //if (watch) {
+  //
+  //  //watch for changes
+  //  bundler.plugin(watchify);
+  //
+  //  //stop watching on CTRL-C
+  //  process.on('SIGINT', () => {
+  //    bundler.close();
+  //  });
+  //
+  //}
 
   return bundler;
 };

@@ -16,7 +16,7 @@ module.exports = function(options) {
     console.log(chalk.red(msg));
   };
 
-  const lintFinished = (args) => {
+  const lintingFinished = (args) => {
     const msg = ` => scripts linted in ${humanize(args.time)}`;
     if (args.errors === 0) {
       console.log(chalk.green(msg));
@@ -62,9 +62,8 @@ module.exports = function(options) {
    * @param {object}  [result.size]
    * @param {Error}   [result.error]
    */
-  const bundlesFinished = (type, result) => {
+  const bundlingFinished = (type, result) => {
 
-    const error = result.error;
     const count = result.count;
     const size = filesize(result.size).human('jedec').replace('Bytes', 'B');
     const duration = humanize(result.time);
@@ -81,29 +80,19 @@ module.exports = function(options) {
     console.log(msg);
   };
 
-  const scriptBundleFinished = result => {
-    return bundleFinished('script', result);
-  };
+  const scriptBundleFinished = result => bundleFinished('script', result);
+  const scriptBundlingFinished = result => bundlingFinished('script', result);
 
-  const scriptBundlesFinished = result => {
-    return bundlesFinished('script', result);
-  };
-
-  const styleBundleFinished = result => {
-    return bundleFinished('style', result);
-  };
-
-  const styleBundlesFinished = result => {
-    return bundlesFinished('style', result);
-  };
+  const styleBundleFinished = result => bundleFinished('style', result);
+  const styleBundlingFinished = result => bundlingFinished('style', result);
 
   return {
     error,
-    lintFinished,
+    lintingFinished,
     scriptBundleFinished,
-    scriptBundlesFinished,
+    scriptBundlingFinished,
     styleBundleFinished,
-    styleBundlesFinished
+    styleBundlingFinished
   };
 
 };

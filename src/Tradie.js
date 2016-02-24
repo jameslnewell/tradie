@@ -1,12 +1,14 @@
 import yargs from 'yargs';
 import {EventEmitter} from 'events';
-import getArgs from './lib/getArguments';
 import getConfig from './lib/getConfig';
 
-//import initCommand from './cmd/init';
+//import * as initCommand from './cmd/init';
 import * as cleanCommand from './cmd/clean';
 import * as lintCommand from './cmd/lint';
-//import buildCommand from './cmd/build';
+import * as bundleCommand from './cmd/bundle';
+import * as bundleScriptsCommand from './cmd/bundle-scripts';
+import * as bundleStylesCommand from './cmd/bundle-styles';
+import * as buildCommand from './cmd/build';
 import * as testCommand from './cmd/test';
 
 /**
@@ -33,8 +35,12 @@ export default class Runner {
       //.cmd(initCommand)
       .cmd(cleanCommand)
       .cmd(lintCommand)
+      .cmd(bundleCommand)
+      .cmd(bundleScriptsCommand)
+      .cmd(bundleStylesCommand)
+      .cmd(buildCommand)
       .cmd(testCommand)
-      //.cmd(buildCommand)
+
     ;
 
     this.emitter.emit('init', this);
@@ -42,7 +48,7 @@ export default class Runner {
     //track each event
     this.oldEmitterEmit = this.emitter.emit;
     this.emitter.emit = (...args) => {
-      console.log('tradie:', args);
+      //console.log('tradie:', args);
       return this.oldEmitterEmit.apply(this.emitter, args);
     };
 
@@ -82,14 +88,14 @@ export default class Runner {
       command.hint,
       argv => {
 
-        const args = getArgs(argv);
-        const config = getConfig(args.debug ? 'development' : 'production');
+        const args = {...argv, env: process.env.NODE_ENV || 'development'};
+        const config = getConfig(args.env);
 
-        this.emitter.emit('cmd:enter', {cmd: name, args, config});
+        this.emitter.emit('command.started', {name, args, config});
         Promise.resolve(command.exec({args, config, emitter: this.emitter}))
           .then(
-            () => this.emitter.emit('cmd:exit', {cmd: name, args, config, code: 0}),
-            () => this.emitter.emit('cmd:exit', {cmd: name, args, config, code: -1})
+            code => this.emitter.emit('command.finished', {name, args, config, code}),
+            error => this.emitter.emit('error', error)
           )
         ;
 
@@ -108,7 +114,8 @@ export default class Runner {
     /*eslint-disable */
     this.app
       .option('v', {
-        alias: 'verbose'
+        alias: 'verbose',
+        default: false
       })
       .argv
     ;

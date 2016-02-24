@@ -107,14 +107,6 @@ Use the `--watch` flag to re-test script files whenever they change.
 }
 ```
 
-### Events
-
-- `styles:clean:started`
-- `styles:clean:finished`
-- `scripts:clean:started`
-- `scripts:clean:finished`
-- `scripts:lint:finished`
-- `scripts:lint:finished`
 
 ## Change log
 
@@ -126,6 +118,8 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ## To do
 
+- tradie plugins e.g. `tradie-plugin-livereload`
+- tradie init tempaltes e.g. `tradie-template-react` and `tradie-template-react-universal`
 - handle errors on browserify object (not just the bundle)
 - re-run linting on build while watching (errors shouldn't exit the process)
 - `npm install` on init

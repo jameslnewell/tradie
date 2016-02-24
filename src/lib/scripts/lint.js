@@ -1,5 +1,4 @@
-'use strict';
-const CLIEngine = require('eslint').CLIEngine;
+import {CLIEngine} from 'eslint';
 
 /**
  * Eslint script files
@@ -25,7 +24,7 @@ function eslint(files) {
  * @param   {EventEmitter}  emitter
  * @returns {Promise}
  */
-module.exports = function(files, emitter) {
+export default function(files, emitter) {
   return new Promise((resolve, reject) => {
 
     try {
@@ -39,13 +38,12 @@ module.exports = function(files, emitter) {
       });
 
       if (errors > 0) {
-        return reject();
+        return resolve(-1);
       } else {
-        return resolve();
+        return resolve(0);
       }
 
     } catch (error) {
-      emitter.emit('error', error);
       reject(error);
     }
 

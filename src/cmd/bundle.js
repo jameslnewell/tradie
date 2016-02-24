@@ -1,10 +1,9 @@
 import logger from '../lib/logger';
-import lintScripts from '../lib/scripts/lint';
 import bundleScripts from '../lib/scripts/bundle';
 import bundleStyles from '../lib/styles/bundle';
 
-export const name = 'build';
-export const desc = 'Lint and bundle script and style files';
+export const name = 'bundle';
+export const desc = 'Bundle script and style files';
 
 
 export function hint(yargs) {
@@ -25,10 +24,6 @@ export function exec({args, config, emitter}) {
 
   emitter
     .on(
-      'scripts.linting.finished',
-      result => buildLogger.lintingFinished(result)
-    )
-    .on(
       'scripts.bundle.finished',
       result => buildLogger.scriptBundleFinished(result)
     )
@@ -46,27 +41,17 @@ export function exec({args, config, emitter}) {
     )
   ;
 
-  return lintScripts(config.scripts.src, emitter)
-    .then(code => {
-
-      if (code !== 0) {
-        return code;
+  return Promise.all([
+    bundleScripts({args, config: config.scripts, emitter}),
+    bundleStyles({args, config: config.styles, emitter})
+  ])
+    .then(codes => codes.reduce((accum, next) => {
+      if (next !== 0) {
+        return next;
+      } else {
+        return accum;
       }
-
-      return Promise.all([
-        bundleScripts({args, config: config.scripts, emitter}),
-        bundleStyles({args, config: config.styles, emitter})
-      ])
-        .then(codes => codes.reduce((accum, next) => {
-          if (next !== 0) {
-            return next;
-          } else {
-            return accum;
-          }
-        }, 0))
-      ;
-
-    })
+    }, 0))
   ;
 
 }

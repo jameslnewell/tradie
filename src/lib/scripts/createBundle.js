@@ -23,7 +23,7 @@ export default function(options) {
 
   let args = {src, dest};
   const startTime = Date.now();
-  emitter.emit('bundle:start', args);
+  emitter.emit('scripts.bundle.started', args);
 
   //create bundle
   let streams = [bundler.bundle()];
@@ -41,13 +41,13 @@ export default function(options) {
     .then(
       () => {
         args.time = Date.now() - startTime;
-        emitter.emit('bundle:finish', args);
+        emitter.emit('scripts.bundle.finished', args);
         return {error: null};
       },
       error => {
         args.time = Date.now() - startTime;
         args.error = error;
-        emitter.emit('bundle:finish', args);
+        emitter.emit('scripts.bundle.finished', args);
         return {error};
       }
     )

@@ -121,22 +121,19 @@ function createVendorBundle(options) {
  * @param {array}         [config.bundles]
  * @param {array}         [config.libraries]
  * @param {array}         [config.transforms]
-<<<<<<< HEAD
  * @param {array}         [config.plugins]
-=======
  * @param {array}         [config.extensions]
->>>>>>> 704923cba6580d7a00a7ae97f96ec1495ce84e34
  *
- * @param {object}        options
- * @param {string}        [options.debug]
- * @param {string}        [options.watch]
+ * @param {object}        args
+ * @param {string}        [args.env]
+ * @param {string}        [args.watch]
  *
  * @param {function}      emitter
  */
-module.exports = function(config, options, emitter) {
+export default function({args, config, emitter}) {
 
-  const debug = options.debug;
-  const watch = options.watch;
+  const debug = args.env !== 'production';
+  const watch = args.watch;
   const src = config.src;
   const dest = config.dest;
   const bundles = config.bundles;
@@ -150,8 +147,8 @@ module.exports = function(config, options, emitter) {
   let totalTime = 0;
   let totalSize = 0;
 
-  emitter.emit('bundles:start');
-  emitter.on('bundle:finish', function(args) {
+  emitter.emit('scripts.bundling.started');
+  emitter.on('scripts.bundle.finished', args => {
     totalTime += args.time;
     totalSize += args.size || 0;
   });
@@ -160,10 +157,10 @@ module.exports = function(config, options, emitter) {
     mkdirp(dest, err => {
 
       if (err) return emitter.emit('bundles:finish', {
-          src,
-          dest,
-          error
-        }) && reject(err);
+        src,
+        dest,
+        error
+      }) && reject(err);
 
       if (libraries.length) {
         streams = streams.concat([
@@ -178,7 +175,7 @@ module.exports = function(config, options, emitter) {
             extensions,
             emitter
           })
-        ])
+        ]);
       }
 
       streams = streams.concat(bundles.map(
@@ -192,7 +189,7 @@ module.exports = function(config, options, emitter) {
             debug,
             watch,
             src: path.join(src, file),
-            dest: path.join(dest, path.basename(file, path.extname(file))+'.js'),
+            dest: path.join(dest, path.basename(file, path.extname(file)) + '.js'),
             libraries,
             transforms,
             plugins,
@@ -211,7 +208,7 @@ module.exports = function(config, options, emitter) {
               (accum, next) => accum || Boolean(next.error), false
             );
 
-            emitter.emit('bundles:finish', {
+            emitter.emit('scripts.bundling.finished', {
               src,
               dest,
               count: streams.length,
@@ -220,11 +217,10 @@ module.exports = function(config, options, emitter) {
               error: hasErrors
             });
 
-            resolve();
-          },
-          error => {
-            emitter.emit('error', error);
-            reject(error);
+            if (!watch) {
+              resolve(hasErrors ? -1 : 0);
+            }
+
           }
         )
       ;
