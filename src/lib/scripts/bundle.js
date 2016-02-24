@@ -58,7 +58,9 @@ function createAppBundle(options) {
     dest,
     emitter,
     bundler
-  });
+  })
+    .then(result => ({...result, bundler}))
+  ;
 
 }
 
@@ -108,7 +110,9 @@ function createVendorBundle(options) {
     dest,
     bundler,
     emitter
-  });
+  })
+    .then(result => ({...result, bundler}))
+  ;
 
 }
 
@@ -217,7 +221,15 @@ export default function({args, config, emitter}) {
               error: hasErrors
             });
 
-            if (!watch) {
+            if (watch) {
+
+              //stop watching and exit on CTL-C
+              process.on('SIGINT', () => {
+                results.forEach(({bundler}) => bundler.close());
+                resolve(0);
+              });
+
+            } else {
               resolve(hasErrors ? -1 : 0);
             }
 
@@ -228,6 +240,6 @@ export default function({args, config, emitter}) {
     });
   });
 
-};
+}
 
 //TODO: check bundle names - vendor.js and common.js are special and not allowed

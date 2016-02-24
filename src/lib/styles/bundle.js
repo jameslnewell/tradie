@@ -1,13 +1,12 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const mkdirp = require('mkdirp');
+import fs from 'fs';
+import path from 'path';
+import mkdirp from 'mkdirp';
 import pipe from 'promisepipe';
-const composer = require('sass-composer');
-const watcher = require('sass-composer/lib/watcher');
-const autoprefixer = require('../autoprefixer-stream');
-const minify = require('../minify-stream');
-const size = require('../size-stream');
+import composer from 'sass-composer';
+import watcher from 'sass-composer/lib/watcher';
+import autoprefixer from '../autoprefixer-stream';
+import minify from '../minify-stream';
+import size from '../size-stream';
 
 /**
  * Create a style bundle
@@ -49,7 +48,7 @@ function createBundle(options) {
   streams.push(fs.createWriteStream(dest));
 
   //write to a file
-  return pipe.apply(null, streams)
+  return pipe(...streams)
     .then(
       () => {
         args.time = Date.now() - startTime;
@@ -96,6 +95,7 @@ function createBundler(options) {
   ;
 
   if (watch) {
+
     bundler = watcher(bundler);
     bundler.on('change', () => createBundle({
       debug,
@@ -104,6 +104,7 @@ function createBundler(options) {
       bundler,
       emitter
     }));
+
   }
 
   return bundler;
@@ -143,7 +144,9 @@ function createAppBundle(options) {
     dest,
     emitter,
     bundler
-  });
+  })
+    .then(result => ({...result, bundler}))
+  ;
 
 }
 
@@ -182,7 +185,7 @@ export default function({args, config, emitter}) {
 
   return new Promise((resolve, reject) => {
     mkdirp(dest, err => {
-      if (err) return emitter.emit('error', err);
+      if (err) return reject(err);
 
       //TODO: libraries
 
@@ -192,7 +195,7 @@ export default function({args, config, emitter}) {
           debug,
           watch,
           src: path.join(src, file),
-          dest: path.join(dest, path.basename(file, path.extname(file))+'.css'),
+          dest: path.join(dest, path.basename(file, path.extname(file)) + '.css'),
           libraries,
           emitter
         })
@@ -216,14 +219,26 @@ export default function({args, config, emitter}) {
               error: hasErrors
             });
 
-            resolve(hasErrors ? -1 : 0);
+            if (watch) {
+
+              //stop watching and exit on CTL-C
+              process.on('SIGINT', () => {
+                results.forEach(({bundler}) => bundler.close());
+                resolve(0);
+              });
+
+            } else {
+              resolve(hasErrors ? -1 : 0);
+            }
+
           }
         )
+        .catch(reject)
       ;
 
     });
   });
 
-};
+}
 
 //TODO: check bundle names - vendor.js and common.js are special and not allowed

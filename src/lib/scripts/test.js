@@ -141,12 +141,7 @@ export default function({args, config, emitter}) {
 
           //stop watching and exit on CTL-C
           process.on('SIGINT', () => {
-
-            //if we're watching then stop watching
-            if (watch) {
-              bundler.close();
-            }
-
+            bundler.close();
             resolve(0);
           });
 

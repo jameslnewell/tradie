@@ -37,7 +37,7 @@ export default function(options) {
   streams.push(size(size => args.size = size));
   streams.push(fs.createWriteStream(dest));
 
-  return pipe.apply(null, streams)
+  return pipe(...streams)
     .then(
       () => {
         args.time = Date.now() - startTime;

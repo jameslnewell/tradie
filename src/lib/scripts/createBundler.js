@@ -70,17 +70,11 @@ export default function(options) {
     }
   });
 
-  //if (watch) {
-  //
-  //  //watch for changes
-  //  bundler.plugin(watchify);
-  //
-  //  //stop watching on CTRL-C
-  //  process.on('SIGINT', () => {
-  //    bundler.close();
-  //  });
-  //
-  //}
+  //watch for changes
+  if (watch) {
+    console.log('scripts!');
+    bundler.plugin(watchify);
+  }
 
   return bundler;
 };
