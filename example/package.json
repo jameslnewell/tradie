@@ -6,11 +6,16 @@
     "react-dom": "^0.14.5",
     "react-redux": "^4.0.6",
     "redux": "^3.0.5",
-    "redux-thunk": "^1.0.3"
+    "redux-thunk": "^1.0.3",
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
-    "eslint-config-jameslnewell": "^0.4.3"
+    "eslint-config-jameslnewell": "^0.4.3",
+    "tradie-plugin-livereload": "^0.1.1"
+  },
+  "scripts": {
+    "build": "tradie build",
+    "test": "tradie test"
   }
 }
