@@ -2,6 +2,8 @@
 
 An opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.
 
+> Warning: This project is still experimental!
+
 ## Installation
 
     npm install -g tradie
@@ -81,6 +83,8 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ### Scripts
 
+Configure script bundling.
+
 ```json
 {
   "scripts": {
@@ -97,6 +101,8 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ### Styles
 
+Configure style bundling.
+
 ```json
 {
   "styles": {
@@ -109,6 +115,8 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ### Plugins
 
+Configure plugins.
+
 ```json
 {
   "plugins": []
@@ -119,11 +127,20 @@ For example:
 
 ```json
 {
-  "plugins": ["tradie-plugin-livereload", "livereload", ["tradie-plugin-livereload", {"scripts": false}]]
+  "plugins": [
+    "tradie-plugin-livereload", // OR
+    "livereload", // OR
+    ["tradie-plugin-livereload", {"scripts": false}]
+  ]
 }
 ```
 
 ## Change log
+
+### 0.3.0
+
+- add: ability to write plugins for tradie
+- break: large refactoring of the "API"
 
 ### 0.2.0
 
@@ -133,17 +150,17 @@ For example:
 
 ## To do
 
-- tradie init tempaltes e.g. `tradie-template-react` and `tradie-template-react-universal`
-- handle errors on browserify object (not just the bundle)
+- `tradie init` templates e.g. `tradie-template-react` and `tradie-template-react-universal`
 - re-run linting on build while watching (errors shouldn't exit the process)
-- `npm install` on init
+- make `mocha` configurable e.g. require bootstrap file
 - resolve `eslint` configs relative to the current working npm dir
-- make `mocha` configurable
+- handle errors on browserify object (not just the bundle)
+- `npm install` on init
 - make `autoprefixer` configurable
 - make `uglify` configurable
 - make `sass-composer` configurable
 - make a cache-bust and image optimisation plugin
 - make a live-reload/hmr server plugin
 - make a code-splitting example
-- make an universaljs example
+- make a universaljs example
 - add tests

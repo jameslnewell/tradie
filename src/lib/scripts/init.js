@@ -26,7 +26,7 @@ function createTestFile(config) {
   return createFile(path.join(config.src, 'index.test.js'));
 }
 
-export default function(config, options, emitter) {
+export default function(config) {
   return Promise.all([
     createEslintConfig(),
     createSourceDirectory(config)

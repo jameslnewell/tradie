@@ -3,7 +3,7 @@ import {EventEmitter} from 'events';
 import getConfig from './lib/getConfig';
 import loadPlugins from './lib/loadPlugins';
 
-//import * as initCommand from './cmd/init';
+import * as initCommand from './cmd/init';
 import * as cleanCommand from './cmd/clean';
 import * as lintCommand from './cmd/lint';
 import * as bundleCommand from './cmd/bundle';
@@ -41,10 +41,9 @@ export default function() {
       env: environment,
 
       on: (...args) => emitter.on(...args),
-
       once: (...args) => emitter.once(...args),
-
       off: (...args) => emitter.off(...args),
+      emit: (...args) => emitter.emit(...args),
 
       /**
        * Register a new command
@@ -97,7 +96,7 @@ export default function() {
 
     //load the commands
     tradie
-      //.cmd(initCommand)
+      .cmd(initCommand)
       .cmd(cleanCommand)
       .cmd(lintCommand)
       .cmd(bundleCommand)

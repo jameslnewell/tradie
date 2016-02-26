@@ -10,7 +10,7 @@ function createStyleFile(config) {
   return createFile(path.join(config.src, 'index.scss'));
 }
 
-export default function(config, options, emitter) {
+export default function(config) {
   return createSourceDirectory(config)
     .then(() => createStyleFile(config))
   ;
