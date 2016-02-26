@@ -37,7 +37,7 @@ export default function(options) {
   // => it doesn't notice when `envify` variables change and the cache should be busted
   // => it forces use of full module paths resulting in more bytes
   let bundler = null;
-  if (debug) {
+  if (debug && !watch) { //not using cache while watching - issues watching sometimes?
     if (dest) {
       config.cacheFile = path.join(path.dirname(dest), `.${path.basename(dest)}.cache`);
     }
