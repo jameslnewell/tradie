@@ -48,22 +48,22 @@ Uses `eslint` to lint script files.
 
 Bundle script and style files.
 
-    tradie bundle --watch --production --verbose
+    tradie bundle --watch --verbose
     # OR
-    tradie bundle-scripts --watch --production --verbose
-    tradie bundle-styles --watch --production --verbose
+    tradie bundle-scripts --watch --verbose
+    tradie bundle-styles --watch --verbose
 
 Uses `browserify` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be specified in your `.tradierc` file. Styling rules are `autoprefix`ed.
 
 Use the `--watch` flag to re-bundle script and style files whenever they change.
 
-Use the `--production` flag to minify script and style files.
+Set `NODE_ENV=production` to minify script and style files e.g. `cross-env NODE_ENV=production tradie build`
 
 ### Building
 
 Lint and bundle script and style files with a single command.
 
-    tradie build --watch --production --verbose
+    tradie build --watch --verbose
 
 Performs the linting and bundling steps listed above.
 
@@ -107,6 +107,21 @@ Use the `--watch` flag to re-test script files whenever they change.
 }
 ```
 
+### Plugins
+
+```json
+{
+  "plugins": []
+}
+```
+
+For example:
+
+```json
+{
+  "plugins": ["tradie-plugin-livereload", "livereload", ["tradie-plugin-livereload", {"scripts": false}]]
+}
+```
 
 ## Change log
 
@@ -118,7 +133,6 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ## To do
 
-- tradie plugins e.g. `tradie-plugin-livereload`
 - tradie init tempaltes e.g. `tradie-template-react` and `tradie-template-react-universal`
 - handle errors on browserify object (not just the bundle)
 - re-run linting on build while watching (errors shouldn't exit the process)

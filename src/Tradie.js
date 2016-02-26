@@ -1,6 +1,7 @@
 import yargs from 'yargs';
 import {EventEmitter} from 'events';
 import getConfig from './lib/getConfig';
+import loadPlugins from './lib/loadPlugins';
 
 //import * as initCommand from './cmd/init';
 import * as cleanCommand from './cmd/clean';
@@ -11,18 +12,14 @@ import * as bundleStylesCommand from './cmd/bundle-styles';
 import * as buildCommand from './cmd/build';
 import * as testCommand from './cmd/test';
 
-/**
- * Command runner
- */
-export default class Runner {
+export default function() {
+  return new Promise((resolve, reject) => {
 
-  /**
-   * Construct the runner
-   * @returns {void}
-   */
-  constructor() {
-    this.emitter = new EventEmitter();
-    this.app = yargs
+    const environment = process.env.NODE_ENV || 'development';
+
+    const emitter = new EventEmitter();
+
+    const argParser = yargs
       .usage('\nUsage: \n  $0 <command> [options]')
       .demand(1)
       .strict()
@@ -31,7 +28,75 @@ export default class Runner {
       .showHelpOnFail()
     ;
 
-    this
+    //load the config
+    let config = {};
+    try {
+      config = getConfig(environment);
+    } catch (error) {
+      return reject(error);
+    }
+
+    const tradie = {
+
+      env: environment,
+
+      on: (...args) => emitter.on(...args),
+
+      once: (...args) => emitter.once(...args),
+
+      off: (...args) => emitter.off(...args),
+
+      /**
+       * Register a new command
+       * @param   {object}    command
+       * @param   {string}    command.name
+       * @param   {string}    command.desc
+       * @param   {function}  command.hint
+       * @param   {function}  command.exec
+       * @returns {Runner}
+       */
+      cmd: (command) => {
+
+        const name = command.name;
+
+        argParser.command(
+          command.name,
+          command.desc,
+          command.hint,
+          argv => {
+
+            try {
+
+              const args = {
+                ...argv,
+                env: environment
+              };
+
+              emitter.emit('command.started', {name, args, config});
+              Promise.resolve(command.exec({args, config, emitter}))
+                .then(
+                  code => {
+                    emitter.emit('command.finished', {name, args, config, code});
+                    resolve(code);
+                  },
+                  error => reject(error)
+                )
+              ;
+
+            } catch (error) {
+              reject(error);
+            }
+
+          }
+        );
+
+        return tradie;
+      }
+
+    };
+
+    //load the commands
+    tradie
       //.cmd(initCommand)
       .cmd(cleanCommand)
       .cmd(lintCommand)
@@ -40,88 +105,31 @@ export default class Runner {
       .cmd(bundleStylesCommand)
       .cmd(buildCommand)
       .cmd(testCommand)
-
     ;
 
-    this.emitter.emit('init', this);
-
-    //track each event
-    this.oldEmitterEmit = this.emitter.emit;
-    this.emitter.emit = (...args) => {
+    //log each event
+    const oldEmitterEmit = emitter.emit;
+    emitter.emit = (...args) => {
       //console.log('tradie:', args);
-      return this.oldEmitterEmit.apply(this.emitter, args);
+      return oldEmitterEmit.apply(emitter, args);
     };
 
-  }
+    //load the plugins
+    loadPlugins(config.plugins, tradie)
+      .then(() => {
 
-  on(...args) {
-    this.emitter.on(...args);
-    return this;
-  }
-
-  once(...args) {
-    this.emitter.once(...args);
-    return this;
-  }
-
-  off(...args) {
-    this.emitter.off(...args);
-    return this;
-  }
-
-  /**
-   * Add a new command
-   * @param   {object}    command
-   * @param   {string}    command.name
-   * @param   {string}    command.desc
-   * @param   {function}  command.hint
-   * @param   {function}  command.exec
-   * @returns {Runner}
-   */
-  cmd(command) {
-
-    const name = command.name;
-
-    this.app.command(
-      command.name,
-      command.desc,
-      command.hint,
-      argv => {
-
-        const args = {...argv, env: process.env.NODE_ENV || 'development'};
-        const config = getConfig(args.env);
-
-        this.emitter.emit('command.started', {name, args, config});
-        Promise.resolve(command.exec({args, config, emitter: this.emitter}))
-          .then(
-            code => this.emitter.emit('command.finished', {name, args, config, code}),
-            error => this.emitter.emit('error', error)
-          )
+        //parse the command line arguments and run the appropriate command
+        argParser
+          .option('v', {
+            alias: 'verbose',
+            default: false
+          })
+          .argv
         ;
 
-      }
-    );
-
-    return this;
-  }
-
-  /**
-   * Run the current command
-   * @returns {Runner}
-   */
-  run() {
-
-    /*eslint-disable */
-    this.app
-      .option('v', {
-        alias: 'verbose',
-        default: false
       })
-      .argv
+      .catch(reject)
     ;
-    /*eslint-enable */
 
-    return this;
-  }
-
+  });
 }

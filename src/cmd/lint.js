@@ -8,7 +8,7 @@ export function exec({args, config, emitter}) {
 
   emitter.on(
     'scripts.linting.finished',
-    result => logger(args).lintFinished(result)
+    result => logger(args).lintingFinished(result)
   );
 
   return lint(config.scripts.src, emitter);

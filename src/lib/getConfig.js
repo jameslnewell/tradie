@@ -14,15 +14,21 @@ export default function(environment = 'development') {
   const file = path.join(process.cwd(), '.tradierc');
 
   //load the user config
-  let config = {};
-  try {
-    config = JSON5.parse(fs.readFileSync(file));
-  } catch (err) {} //eslint-disable-line
+  let userConfig = {};
+
+  if (fs.existsSync(file)) {
+    try {
+      userConfig = JSON5.parse(fs.readFileSync(file));
+    } catch (err) {
+      throw new Error(`Error reading config file ${file}`);
+    }
+  }
 
   //override the default config
-  config = {
-    scripts: {...scriptDefaults, ...config.scripts},
-    styles: {...styleDefaults, ...config.styles}
+  let config = {
+    scripts: {...scriptDefaults, ...userConfig.scripts},
+    styles: {...styleDefaults, ...userConfig.styles},
+    plugins: userConfig.plugins || []
   };
 
   //merge the environment specific config

@@ -1,3 +1,3 @@
 import sum from './lib/sum';
 
-sum(1, 2, 3);
+console.log(sum(1, 2, 4));

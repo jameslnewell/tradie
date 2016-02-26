@@ -72,7 +72,6 @@ export default function(options) {
 
   //watch for changes
   if (watch) {
-    console.log('scripts!');
     bundler.plugin(watchify);
   }
 

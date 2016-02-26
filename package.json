@@ -37,6 +37,7 @@
     "postcss": "^5.0.16",
     "promised-del": "^1.0.2",
     "promisepipe": "^1.0.1",
+    "resolve": "^1.1.7",
     "sass-composer": "^2.0.0-beta14",
     "source-map-support": "^0.4.0",
     "source-mapper": "^2.0.0",

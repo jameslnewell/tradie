@@ -6,5 +6,6 @@
   },
   "styles": {
     "bundles": ["index.scss"]
-  }
+  },
+  "plugins": ["livereload"]
 }
