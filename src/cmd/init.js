@@ -27,7 +27,7 @@ function executeTemplate(fn, config) {
   const fs = memFsEditor.create(store);
 
   return Promise.resolve(fn(fs, config))
-    .then(() => new Promise((resolve, reject) => fs.commit(() => resolve()))) //FIXME: mem-fs-editor callback doesn't handle errors??
+    .then(() => new Promise(resolve => fs.commit(() => resolve()))) //FIXME: mem-fs-editor callback doesn't handle errors??
     .then(() => console.log(chalk.green(' => project created')))
   ;
 
@@ -36,7 +36,7 @@ function executeTemplate(fn, config) {
 }
 
 export function exec({args, config}) {
-  let {template} = args;
+  const {template} = args;
 
   if (!args.force) {
     console.log(chalk.yellow('Specify the --force flag if you wish to write files to disk. This action will not be reversable!'));
@@ -47,9 +47,14 @@ export function exec({args, config}) {
   if (template === null) {
     return executeTemplate(defaultTemplate, config);
   } else {
-    return requireExtension(template, 'template')
-      .then((templateFn => executeTemplate(templateFn, config)))
+
+    //look for templates relative to the tradie dir
+    const basedir = path.join(__dirname, '..', '..');
+
+    return requireExtension(template, 'template', {basedir})
+      .then(templateFn => executeTemplate(templateFn, config))
     ;
+
   }
 
 }

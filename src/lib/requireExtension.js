@@ -6,12 +6,14 @@ import TradieError from './TradieError';
  * @param   {string}    name                The extension name
  * @param   {string}    type                The extension type
  * @param   {options}   [options]
+ * @param   {function}  [options.basedir]
  * @param   {function}  [options.resolve]
  * @param   {function}  [options.require]
  * @returns {Promise<Function>}
  */
 export default function(name, type, options) {
 
+  const basedir = options && options.basedir || process.cwd();
   const resolveModule = options && options.resolve || resolve;
   const requireModule = options && options.require || require;
 
@@ -23,7 +25,7 @@ export default function(name, type, options) {
   return new Promise((resolvePromise, rejectPromise) => {
 
     //resolve the plugin
-    resolveModule(name, {basedir: process.cwd()}, (resolveError, file) => {
+    resolveModule(name, {basedir}, (resolveError, file) => {
 
       if (resolveError) {
         return rejectPromise(new TradieError(`Cannot resolve ${type} "${name}".`, resolveError));
