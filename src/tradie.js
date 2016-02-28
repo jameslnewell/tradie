@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 import {EventEmitter} from 'events';
-import getConfig from './lib/getConfig';
+import readConfig from './lib/readConfig';
 import executePlugins from './lib/executePlugins';
 
 import * as initCommand from './cmd/init';
@@ -31,7 +31,7 @@ export default function() {
     //load the config
     let config = {};
     try {
-      config = getConfig(env);
+      config = readConfig(env);
     } catch (error) {
       return reject(error);
     }

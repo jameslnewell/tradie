@@ -4,6 +4,7 @@ const path = require('path');
 const browserify = require('browserify');
 const incremental = require('browserify-incremental');
 const watchify = require('watchify');
+const envify = require('envify');
 const createBundle = require('./createBundle');
 
 /**
@@ -30,7 +31,7 @@ export default function(options) {
   const config = {
     debug,
     extensions: extensions.concat(['.json'])
-  };
+  };//TODO: for vendor try turning off ignoreGlobals, detectGlobals to speed things up
 
   //create bundler
   //use `browserify-incremental` for development builds but not production
@@ -41,10 +42,10 @@ export default function(options) {
     if (dest) {
       config.cacheFile = path.join(path.dirname(dest), `.${path.basename(dest)}.cache`);
     }
-    bundler = incremental(config);
+    bundler = incremental(config); //TODO: other options to consider: persistify,
   } else {
     bundler = browserify(config);
-    bundler.transform('envify', {global: true, NODE_ENV: 'production'});
+    bundler.transform(envify, {global: true, NODE_ENV: 'production'});
   }
 
   //configure entry file

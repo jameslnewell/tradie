@@ -2,7 +2,7 @@
 
 An opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.
 
-> Warning: This project is still experimental!
+> Warning: This project is still experimental! Please [report any issues](https://github.com/jameslnewell/tradie/issues).
 
 ## Installation
 
@@ -10,13 +10,17 @@ An opinionated build tool for frontend projects. Use it to lint, bundle and test
 
 ## Usage
 
-1. Create your project
+1. Create your project with:
 
     `tradie init`
 
-2. Build your project
+2. Build your project with:
 
     `npm run build`
+
+3. Test your project with:
+
+    `npm run test`
 
 ## Tasks
 
@@ -24,7 +28,7 @@ An opinionated build tool for frontend projects. Use it to lint, bundle and test
 
 Create a new project.
 
-    tradie init --force
+    tradie init --force --template=tradie-template-react
 
 Uses conventions to create a new project.
 
@@ -35,8 +39,6 @@ Use the `--force` flag to write to disk.
 Delete build files.
 
     tradie clean
-
-
 
 ### Linting
 
@@ -115,7 +117,7 @@ Configure style bundling.
 
 ### Plugins
 
-Configure plugins.
+Configure tradie plugins.
 
 ```json
 {
@@ -135,11 +137,26 @@ For example:
 }
 ```
 
+## Related packages
+
+### Templates
+
+- [tradie-template-react](https://www.npmjs.com/package/tradie-template-react)
+
+### Plugins
+
+- [tradie-template-livereload](https://www.npmjs.com/package/tradie-plugin-livereload)
+
 ## Change log
+
+### 0.4.0
+
+- add: ability to write templates for initialising tradie
+- add: started writing unit-tests for tradie
 
 ### 0.3.0
 
-- add: ability to write plugins for tradie
+- add: ability to write plugins for extending tradie
 - break: large refactoring of the "API"
 
 ### 0.2.0
@@ -150,17 +167,16 @@ For example:
 
 ## To do
 
-- `tradie init` templates e.g. `tradie-template-react` and `tradie-template-react-universal`
 - re-run linting on build while watching (errors shouldn't exit the process)
-- make `mocha` configurable e.g. require bootstrap file
+- make `mocha` configurable e.g. requiring a bootstrap file
 - resolve `eslint` configs relative to the current working npm dir
 - handle errors on browserify object (not just the bundle)
-- `npm install` on init
+- `npm install` after init
+- make a cache-bust and image optimisation plugin
+- finish writing unit and integration tests
+- make a hmr plugin
 - make `autoprefixer` configurable
 - make `uglify` configurable
 - make `sass-composer` configurable
-- make a cache-bust and image optimisation plugin
-- make a live-reload/hmr server plugin
 - make a code-splitting example
 - make a universaljs example
-- add tests

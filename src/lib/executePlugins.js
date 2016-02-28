@@ -9,7 +9,7 @@ import requireExtension from './requireExtension';
  * @returns {Promise.<Function>}
  */
 function executePlugin(name, options, tradie) {
-  return requireExtension(name, {type: 'plugin'})
+  return requireExtension(name, 'plugin')
     .then((fn) => {
 
       //execute the plugin

@@ -1,6 +1,6 @@
 {
   "name": "tradie",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "keywords": [
     "tradie",
     "build",
@@ -33,6 +33,8 @@
     "json5": "^0.4.0",
     "lodash.mergewith": "^4.3.0",
     "make-error-cause": "^1.0.2",
+    "mem-fs": "^1.1.2",
+    "mem-fs-editor": "^2.1.0",
     "mkdirp": "^0.5.1",
     "mocaccino": "^1.8.2",
     "postcss": "^5.0.16",
@@ -53,7 +55,7 @@
     "sinon": "^1.17.3"
   },
   "bin": {
-    "tradie": "dist/bin/tradie.js"
+    "tradie": "./dist/bin/tradie.js"
   },
   "scripts": {
     "build": "babel -s --out-dir ./dist/ src",

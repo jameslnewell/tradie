@@ -4,17 +4,16 @@ import TradieError from './TradieError';
 /**
  * Require an extension
  * @param   {string}    name                The extension name
- * @param   {options}   options
- * @param   {string}    options.type        The extension type
+ * @param   {string}    type                The extension type
+ * @param   {options}   [options]
  * @param   {function}  [options.resolve]
  * @param   {function}  [options.require]
  * @returns {Promise<Function>}
  */
-export default function(name, options) {
-  const {type} = options;
+export default function(name, type, options) {
 
-  const resolveModule = options.resolve || resolve;
-  const requireModule = options.require || require;
+  const resolveModule = options && options.resolve || resolve;
+  const requireModule = options && options.require || require;
 
   //get the full name of the extension
   if (!name.startsWith(`tradie-${type}-`)) {
@@ -31,15 +30,23 @@ export default function(name, options) {
       }
 
       //require the plugin
-      let fn = null;
+      let extension = null;
       try {
-        fn = requireModule(file); //eslint-disable-line
-        fn = fn.default || fn;    //require modules written in both ES5 and ES6
+        extension = requireModule(file); //eslint-disable-line
       } catch (requireError) {
         return rejectPromise(new TradieError(`Cannot require ${type} "${name}".`, requireError));
       }
 
-      resolvePromise(fn);
+      //accept modules written in both ES5 and ES6
+      if (typeof extension !== 'function') {
+        if (typeof extension.default === 'function') {
+          extension = extension.default;
+        } else {
+          return rejectPromise(new TradieError(`Invalid ${type} "${name}".`));
+        }
+      }
+
+      resolvePromise(extension);
     });
   });
 

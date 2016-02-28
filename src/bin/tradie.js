@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import sourceMapSupport from 'source-map-support';
 import chalk from 'chalk';
-import tradie from '../Tradie';
+import tradie from '../tradie';
 
 sourceMapSupport.install();
 
