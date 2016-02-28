@@ -1,7 +1,7 @@
 import yargs from 'yargs';
 import {EventEmitter} from 'events';
 import getConfig from './lib/getConfig';
-import loadPlugins from './lib/loadPlugins';
+import executePlugins from './lib/executePlugins';
 
 import * as initCommand from './cmd/init';
 import * as cleanCommand from './cmd/clean';
@@ -15,7 +15,7 @@ import * as testCommand from './cmd/test';
 export default function() {
   return new Promise((resolve, reject) => {
 
-    const environment = process.env.NODE_ENV || 'development';
+    const env = process.env.NODE_ENV || 'development';
 
     const emitter = new EventEmitter();
 
@@ -31,14 +31,15 @@ export default function() {
     //load the config
     let config = {};
     try {
-      config = getConfig(environment);
+      config = getConfig(env);
     } catch (error) {
       return reject(error);
     }
 
     const tradie = {
 
-      env: environment,
+      env,
+      config,
 
       on: (...args) => emitter.on(...args),
       once: (...args) => emitter.once(...args),
@@ -52,7 +53,7 @@ export default function() {
        * @param   {string}    command.desc
        * @param   {function}  command.hint
        * @param   {function}  command.exec
-       * @returns {Runner}
+       * @returns {tradie}
        */
       cmd: (command) => {
 
@@ -68,7 +69,7 @@ export default function() {
 
               const args = {
                 ...argv,
-                env: environment
+                env: env
               };
 
               emitter.emit('command.started', {name, args, config});
@@ -114,7 +115,7 @@ export default function() {
     };
 
     //load the plugins
-    loadPlugins(config.plugins, tradie)
+    executePlugins(tradie)
       .then(() => {
 
         //parse the command line arguments and run the appropriate command

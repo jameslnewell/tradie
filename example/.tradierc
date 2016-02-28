@@ -1,11 +1,7 @@
 {
   "scripts": {
-    "bundles": ["index.js"],
     "libraries": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
     "transforms": ["babelify"]
   },
-  "styles": {
-    "bundles": ["index.scss"]
-  },
-//  "plugins": ["livereload"]
+  "plugins": ["livereload"]
 }
