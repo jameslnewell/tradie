@@ -25,6 +25,10 @@ export default function() {
       .strict()
       .help('h')
       .alias('h', 'help')
+      .option('v', {
+        alias: 'verbose',
+        default: false
+      })
       .showHelpOnFail()
     ;
 
@@ -65,26 +69,44 @@ export default function() {
           command.hint,
           argv => {
 
-            try {
+            const args = {
+              ...argv,
+              env: env
+            };
 
-              const args = {
-                ...argv,
-                env: env
-              };
+            const run = () => {
+              try {
 
-              emitter.emit('command.started', {name, args, config});
-              Promise.resolve(command.exec({args, config, emitter}))
-                .then(
-                  code => {
-                    emitter.emit('command.finished', {name, args, config, code});
-                    resolve(code);
-                  },
-                  error => reject(error)
-                )
+                emitter.emit('command.started', {name, args, config});
+                Promise.resolve(command.exec({args, config, emitter}))
+                  .then(
+                    code => {
+                      emitter.emit('command.finished', {name, args, config, code});
+                      resolve(code);
+                    },
+                    error => reject(error)
+                  )
+                ;
+
+              } catch (error) {
+                reject(error);
+              }
+            };
+
+            if (command.name === 'init') {
+
+              //don't load plugins, init isn't a project specific command
+              run();
+            } else {
+
+              //load the plugins
+              executePlugins(tradie)
+                .then(() => {
+                  run();
+                })
+                .catch(reject)
               ;
 
-            } catch (error) {
-              reject(error);
             }
 
           }
@@ -108,28 +130,14 @@ export default function() {
     ;
 
     //log each event
-    const oldEmitterEmit = emitter.emit;
-    emitter.emit = (...args) => {
-      //console.log('tradie:', args);
-      return oldEmitterEmit.apply(emitter, args);
-    };
+    //const oldEmitterEmit = emitter.emit;
+    //emitter.emit = (...args) => {
+    //  console.log('tradie:', args);
+    //  return oldEmitterEmit.apply(emitter, args);
+    //};
 
-    //load the plugins
-    executePlugins(tradie)
-      .then(() => {
-
-        //parse the command line arguments and run the appropriate command
-        argParser
-          .option('v', {
-            alias: 'verbose',
-            default: false
-          })
-          .argv
-        ;
-
-      })
-      .catch(reject)
-    ;
+    //parse the command line arguments and run the appropriate command
+    argParser.argv; //eslint-disable-line
 
   });
 }
