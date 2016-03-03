@@ -166,6 +166,7 @@ For example:
 
 - add: ability to pass in `mocha` options via `.mocharc` file
 - fix: made bundling of tests more reliable, but slower by not using `browserify-incremental`
+- fix: while watching with the build command, linting failures were preventing the bundle from being built (and watching starting) and linting was not re-run on change
 
 ### 0.4.0
 
@@ -185,8 +186,8 @@ For example:
 
 ## To do
 
-- re-run linting on build while watching (errors shouldn't exit the process)
-- resolve `eslint` configs relative to the current working npm dir
+- do we need to lint all files on re-bundle while watching? test files aren't watched so it makes it hard to check linting of test files. maybe we need to add a watch arg to the lint command that watches everything, not just what's being bundled
+- resolve `eslint` configs relative to the current working dir
 - handle errors on browserify object (not just the bundle)
 - `npm install` after init
 - make a cache-bust and image optimisation plugin

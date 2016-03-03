@@ -21,6 +21,7 @@ export function hint(yargs) {
 }
 
 export function exec({args, config, emitter}) {
+  const {watch} = args;
   const buildLogger = logger(args);
 
   emitter
@@ -49,12 +50,14 @@ export function exec({args, config, emitter}) {
   return lintScripts(config.scripts.src, emitter)
     .then(code => {
 
-      if (code !== 0) {
+      if (!watch && code !== 0) {
         return code;
       }
 
       return Promise.all([
-        bundleScripts({args, config: config.scripts, emitter}),
+        bundleScripts({args, config: config.scripts, emitter,
+          onChange: (files) => lintScripts(files, emitter)
+        }),
         bundleStyles({args, config: config.styles, emitter})
       ])
         .then(codes => codes.reduce((accum, next) => {

@@ -13,8 +13,9 @@ import createBundler from './createBundler';
  * @param {array}         [options.libraries]
  * @param {array}         [options.transforms]
  * @param {array}         [options.plugins]
- * @param {array}         [config.extensions]
+ * @param {array}         [options.extensions]
  * @param {EventEmitter}  [options.emitter]
+ * @param {function}      [options.onChange]
  */
 function createAppBundle(options) {
 
@@ -27,6 +28,7 @@ function createAppBundle(options) {
   const plugins = options.plugins;
   const extensions = options.extensions;
   const emitter = options.emitter;
+  const onChange = options.onChange;
 
   //create the bundler
   const bundler = createBundler({
@@ -43,13 +45,16 @@ function createAppBundle(options) {
   //exclude the vendor packages
   bundler.external(libraries);
 
-  bundler.on('update', () => createBundle({
-    debug,
-    src,
-    dest,
-    emitter,
-    bundler
-  }));
+  bundler.on('update', files => {
+    if (typeof onChange === 'function') onChange(files);
+    createBundle({
+      debug,
+      src,
+      dest,
+      emitter,
+      bundler
+    });
+  });
 
   //bundle the scripts and write to file
   return createBundle({
@@ -133,8 +138,9 @@ function createVendorBundle(options) {
  * @param {string}        [args.watch]
  *
  * @param {function}      emitter
+ * @param {function}      onChange
  */
-export default function({args, config, emitter}) {
+export default function({args, config, emitter, onChange}) {
 
   const debug = args.env !== 'production';
   const watch = args.watch;
@@ -198,7 +204,8 @@ export default function({args, config, emitter}) {
             transforms,
             plugins,
             extensions,
-            emitter
+            emitter,
+            onChange
           });
 
         }
