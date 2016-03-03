@@ -36,13 +36,13 @@ Use the `--force` flag to write to disk.
 
 ### Clean
 
-Delete build files.
+Delete bundled script and style files.
 
     tradie clean
 
 ### Linting
 
-Lint scripts files.
+Lint script files.
 
     tradie lint
 
@@ -77,7 +77,19 @@ Test script files.
 
     tradie test --watch
 
-Bundles your test files (`*.test.js`) with `browserify` and then runs them with `mocha`.
+There's no need to setup any compilers for `mocha`, this command bundles all your test files (`*.test.js`) using your `browserify` transforms/plugins, then runs the generated test bundle with `mocha`.
+
+Mocha options may be configured in a `.mocharc` file:
+
+```json
+{
+  "reporter": "spec",
+  "timeout": 2000,
+  "ui": "bdd",
+  "colors": true,
+  "require": []
+}
+```
 
 Use the `--watch` flag to re-test script files whenever they change.
 
@@ -174,7 +186,6 @@ For example:
 ## To do
 
 - re-run linting on build while watching (errors shouldn't exit the process)
-- make `mocha` configurable e.g. requiring a bootstrap file
 - resolve `eslint` configs relative to the current working npm dir
 - handle errors on browserify object (not just the bundle)
 - `npm install` after init
