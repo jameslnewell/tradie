@@ -162,6 +162,11 @@ For example:
 ## Change log
 
 
+### 0.5.1
+
+- fix: linter wasn't using script extensions
+- fix: init command would fail if there was an existing `.tradierc` file that had an error in it
+
 ### 0.5.0
 
 - add: ability to pass in `mocha` options via `.mocharc` file
