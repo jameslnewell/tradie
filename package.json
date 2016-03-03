@@ -1,6 +1,7 @@
 {
   "name": "tradie",
-  "version": "0.4.1",
+  "version": "0.5.0",
+  "description": "An opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.",
   "keywords": [
     "tradie",
     "build",
@@ -14,7 +15,6 @@
     "eslint",
     "mocha"
   ],
-  "description": "An opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.",
   "repository": {
     "type": "git",
     "url": "git@github.com:jameslnewell/tradie.git"

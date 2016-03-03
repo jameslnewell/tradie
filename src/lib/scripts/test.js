@@ -1,10 +1,11 @@
 import path from 'path';
 import {spawn} from 'child_process';
 import glob from 'glob';
-import moccacino from 'mocaccino';
+import mocaccino from 'mocaccino';
 import sourceMapper from 'source-mapper';
 import createBundler from './createBundler';
 import colorStream from '../color-stream';
+import readMochaOptions from '../readMochaOptions';
 
 /**
  * Find all the test files
@@ -87,6 +88,10 @@ function bundleAndRunTests(bundler) {
 export default function({args, config, emitter}) {
   const watch = args.watch;
   const transforms = config.transforms;
+  const plugins = config.plugins;
+
+  const options = readMochaOptions();
+  const requires = [].concat(options.require);
 
   return new Promise((resolve, reject) => {
     findTestFiles(config.src, config.extensions)
@@ -97,16 +102,23 @@ export default function({args, config, emitter}) {
         }
 
         const bundler = createBundler({
+          test: true,
           debug: true,
           watch,
-          src: files,
-          transforms
+          transforms,
+          plugins
         });
 
-        moccacino(bundler, {
-          node: true,
-          reporter: 'spec'
+        mocaccino(bundler, {
+          ...options,
+          node: true
         });
+
+        //require setup files
+        requires.forEach(require => bundler.add(path.join(config.src, require)));
+
+        //require test files
+        bundler.add(files);
 
         //bundle
         emitter.emit('scripts.testing.started');

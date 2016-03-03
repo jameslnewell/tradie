@@ -10,6 +10,7 @@ const createBundle = require('./createBundle');
 /**
  * Create a script bundler
  * @param {object}        options
+ * @param {boolean}       [options.test]        Whether this is for a test build
  * @param {boolean}       [options.debug]       Whether to bundle debug information
  * @param {boolean}       [options.watch]       Whether to watch files for changes
  * @param {string|array}  [options.src]         The source file(s)
@@ -20,6 +21,7 @@ const createBundle = require('./createBundle');
  */
 export default function(options) {
 
+  const test = options.test || false;
   const debug = options.debug || false;
   const watch = options.watch || false;
   const src = options.src;
@@ -35,17 +37,32 @@ export default function(options) {
 
   //create bundler
   //use `browserify-incremental` for development builds but not production
-  // => it doesn't notice when `envify` variables change and the cache should be busted
-  // => it forces use of full module paths resulting in more bytes
+
   let bundler = null;
-  if (debug && !watch) { //not using cache while watching - issues watching sometimes?
+  if (!debug) {
+
+    //browserify incremental is a bit dodgey
+    // - it doesn't notice when `envify` variables change and the cache should be busted
+    // - it forces use of full module paths resulting in more bytes
+    bundler = browserify(config);
+    bundler.transform(envify, {global: true, NODE_ENV: 'production'});
+
+  } else if (watch || test || !dest) {
+
+    //browserify incremental is a bit dodgey while watching or testing
+    // - while watching file change events aren't triggered
+    // - while testing the bundle callback may never be called
+    config.cache = {};
+    config.packageCache = {};
+    bundler = browserify(config);
+
+  } else {
+
     if (dest) {
       config.cacheFile = path.join(path.dirname(dest), `.${path.basename(dest)}.cache`);
     }
-    bundler = incremental(config); //TODO: other options to consider: persistify,
-  } else {
-    bundler = browserify(config);
-    bundler.transform(envify, {global: true, NODE_ENV: 'production'});
+    bundler = incremental(config); //TODO: other options to consider: persistify - nowhere as good caching???
+
   }
 
   //configure entry file

@@ -77,7 +77,7 @@ Test script files.
 
     tradie test --watch
 
-Runs test files (`*.test.js`) with `mocha`.
+Bundles your test files (`*.test.js`) with `browserify` and then runs them with `mocha`.
 
 Use the `--watch` flag to re-test script files whenever they change.
 
@@ -148,6 +148,12 @@ For example:
 - [tradie-template-livereload](https://www.npmjs.com/package/tradie-plugin-livereload)
 
 ## Change log
+
+
+### 0.5.0
+
+- add: ability to pass in `mocha` options via `.mocharc` file
+- fix: made bundling of tests more reliable, but slower by not using `browserify-incremental`
 
 ### 0.4.0
 
