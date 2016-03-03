@@ -3,11 +3,12 @@ import {CLIEngine} from 'eslint';
 /**
  * Eslint script files
  * @param   {array}   files
+ * @param   {array}   extensions
  * @returns {number}
  */
-function eslint(files) {
+function eslint(files, extensions) {
 
-  const cli = new CLIEngine({});
+  const cli = new CLIEngine({extensions});
   const report = cli.executeOnFiles([].concat(files));
   const formatter = cli.getFormatter('stylish');
 
@@ -21,17 +22,18 @@ function eslint(files) {
 /**
  * Lint script files
  * @param   {array}         files
+ * @param   {array}         extensions
  * @param   {EventEmitter}  emitter
  * @returns {Promise}
  */
-export default function(files, emitter) {
+export default function(files, extensions, emitter) {
   return new Promise((resolve, reject) => {
 
     try {
 
       emitter.emit('scripts.linting.started');
       const startTime = Date.now();
-      const errors = eslint(files);
+      const errors = eslint(files, extensions);
       emitter.emit('scripts.linting.finished', {
         time: Date.now() - startTime,
         errors

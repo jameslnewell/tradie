@@ -47,7 +47,7 @@ export function exec({args, config, emitter}) {
     )
   ;
 
-  return lintScripts(config.scripts.src, emitter)
+  return lintScripts(config.scripts.src, config.scripts.extensions, emitter)
     .then(code => {
 
       if (!watch && code !== 0) {
@@ -56,7 +56,7 @@ export function exec({args, config, emitter}) {
 
       return Promise.all([
         bundleScripts({args, config: config.scripts, emitter,
-          onChange: (files) => lintScripts(files, emitter)
+          onChange: (files) => lintScripts(files, config.scripts.extensions, emitter)
         }),
         bundleStyles({args, config: config.styles, emitter})
       ])

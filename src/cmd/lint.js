@@ -11,5 +11,5 @@ export function exec({args, config, emitter}) {
     result => logger(args).lintingFinished(result)
   );
 
-  return lint(config.scripts.src, emitter);
+  return lint(config.scripts.src, config.scripts.extensions, emitter);
 }
