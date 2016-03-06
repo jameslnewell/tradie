@@ -58,7 +58,7 @@ function createBundle(options) {
       error => {
         args.time = Date.now() - startTime;
         args.error = error;
-        emitter.emit('bundle:finish', args);
+        emitter.emit('styles.bundle.finished', args);
         return {error};
       }
     )

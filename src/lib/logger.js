@@ -45,7 +45,7 @@ module.exports = function(options) {
 
     if (result.error) {
       msg = chalk.red(msg);
-      msg += '\n\t'+chalk.red(result.error);
+      msg += '\n\t'+chalk.red(result.error.stack);
     } else {
       msg = chalk.blue(msg);
     }

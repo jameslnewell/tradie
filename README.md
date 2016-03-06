@@ -161,6 +161,9 @@ For example:
 
 ## Change log
 
+### 0.5.2
+
+- fix: emitting the wrong event when a style bundle errored which meant the error wasn't displaying
 
 ### 0.5.1
 
