@@ -157,9 +157,16 @@ For example:
 
 ### Plugins
 
-- [tradie-template-livereload](https://www.npmjs.com/package/tradie-plugin-livereload)
+- [tradie-plugin-livereload](https://www.npmjs.com/package/tradie-plugin-livereload)
+- [tradie-plugin-serve](https://www.npmjs.com/package/tradie-plugin-serve)
+- [tradie-plugin-copy](https://www.npmjs.com/package/tradie-plugin-copy)
 
 ## Change log
+
+### 0.5.3
+
+- fix: incorrect plugin doco
+
 
 ### 0.5.2
 
