@@ -163,6 +163,10 @@ For example:
 
 ## Change log
 
+### 0.6.1
+
+- fix: don't use `String.startsWith()` cause node v4
+
 ### 0.6.0
 
 - break: template/plugin names starting with `@` will no longer be prefxed with `tradie-template`/`tradie-plugin` in order
