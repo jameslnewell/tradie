@@ -163,10 +163,14 @@ For example:
 
 ## Change log
 
+### 0.6.0
+
+- break: template/plugin names starting with `@` will no longer be prefxed with `tradie-template`/`tradie-plugin` in order
+to allow privately scoped templates/plugins
+
 ### 0.5.3
 
 - fix: incorrect plugin doco
-
 
 ### 0.5.2
 

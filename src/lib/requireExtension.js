@@ -18,7 +18,7 @@ export default function(name, type, options) {
   const requireModule = options && options.require || require;
 
   //get the full name of the extension
-  if (!name.startsWith(`tradie-${type}-`)) {
+  if (!name.startsWith(`@`) && !name.startsWith(`tradie-${type}-`)) {
     name = `tradie-${type}-${name}`;
   }
 

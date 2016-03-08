@@ -67,6 +67,17 @@ describe('requireExtension()', () => {
 
   });
 
+  it('should call resolve() with the full template name when I use a scoped package', () => {
+
+    const resolve = sinon.stub().callsArgWith(2, null, '');
+    const require = sinon.stub().returns(() => {/*do nothing*/});
+
+    return requireExtension('@nib/tradie-template-react', 'template', {resolve, require})
+      .then(() => assert(resolve.calledWith('@nib/tradie-template-react')))
+    ;
+
+  });
+
   it('should call resolve() with the full plugin name when I use the prefix', () => {
 
     const resolve = sinon.stub().callsArgWith(2, null, '');
@@ -85,6 +96,17 @@ describe('requireExtension()', () => {
 
     return requireExtension('livereload', 'plugin', {resolve, require})
       .then(() => assert(resolve.calledWith('tradie-plugin-livereload')))
+    ;
+
+  });
+
+  it('should call resolve() with the full plugin name when I use a scoped package', () => {
+
+    const resolve = sinon.stub().callsArgWith(2, null, '');
+    const require = sinon.stub().returns(() => {/*do nothing*/});
+
+    return requireExtension('@nib/tradie-template-react', 'plugin', {resolve, require})
+      .then(() => assert(resolve.calledWith('@nib/tradie-template-react')))
     ;
 
   });
