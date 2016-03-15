@@ -1,6 +1,6 @@
 # tradie
 
-An opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.
+A semi-opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.
 
 > Warning: This project is still experimental! Please [report any issues](https://github.com/jameslnewell/tradie/issues).
 
@@ -154,6 +154,7 @@ For example:
 ### Templates
 
 - [tradie-template-react](https://www.npmjs.com/package/tradie-template-react)
+- [tradie-template-react-redux](https://www.npmjs.com/package/tradie-template-react-redux)
 
 ### Plugins
 
