@@ -219,12 +219,11 @@ to allow privately scoped templates/plugins
 - do we need to lint all files on re-bundle while watching? test files aren't watched so it makes it hard to check linting of test files. maybe we need to add a watch arg to the lint command that watches everything, not just what's being bundled
 - resolve `eslint` configs relative to the current working dir
 - handle errors on browserify object (not just the bundle)
+- make/find cache-bust and image optimisation CLIs
 - `npm install` after init
-- make a cache-bust and image optimisation plugin
 - finish writing unit and integration tests
 - make a hmr plugin
 - make `autoprefixer` configurable
 - make `uglify` configurable
 - make `sass-composer` configurable
 - make a code-splitting example
-- make a universaljs example
