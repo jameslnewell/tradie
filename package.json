@@ -1,6 +1,6 @@
 {
   "name": "tradie",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "A semi-opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.",
   "keywords": [
     "tradie",
@@ -29,6 +29,7 @@
     "envify": "^3.4.0",
     "eslint": "^1.10.3",
     "file-size": "^1.0.0",
+    "glob": "^7.0.3",
     "humanize-duration": "^3.6.1",
     "json5": "^0.4.0",
     "lodash.mergewith": "^4.3.0",
@@ -37,6 +38,7 @@
     "mem-fs-editor": "^2.1.0",
     "mkdirp": "^0.5.1",
     "mocaccino": "^1.8.2",
+    "mocha": "^2.4.5",
     "postcss": "^5.0.16",
     "promised-del": "^1.0.2",
     "promisepipe": "^1.0.1",
@@ -44,6 +46,7 @@
     "sass-composer": "^2.0.0-beta14",
     "source-map-support": "^0.4.0",
     "source-mapper": "^2.0.0",
+    "through2": "^2.0.1",
     "uglify-js": "^2.6.2",
     "watchify": "^3.6.1",
     "yargs": "^4.1.0"

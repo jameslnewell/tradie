@@ -164,6 +164,11 @@ For example:
 
 ## Change log
 
+### 0.6.3
+
+- fix: added missing deps to `package.json`
+
+
 ### 0.6.1
 
 - fix: don't use `String.startsWith()` cause node v4
