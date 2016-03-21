@@ -155,6 +155,7 @@ For example:
 
 - [tradie-template-react](https://www.npmjs.com/package/tradie-template-react)
 - [tradie-template-react-redux](https://www.npmjs.com/package/tradie-template-react-redux)
+- [tradie-template-react-redux-universal](https://www.npmjs.com/package/tradie-template-react-redux-universal)
 
 ### Plugins
 
