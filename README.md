@@ -77,7 +77,7 @@ Test script files.
 
     tradie test --watch
 
-There's no need to setup any compilers for `mocha`, this command bundles all your test files (`*.test.js`) using your `browserify` transforms/plugins, then runs the generated test bundle with `mocha`.
+There's no need to setup extensions or compilers for `mocha`, this command bundles all your test files (`*.test{.js,.jsx,etc`) using your `browserify` transforms/plugins, then runs the generated test bundle with `mocha`.
 
 Mocha options may be configured in a `.mocharc` file:
 
