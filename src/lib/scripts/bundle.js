@@ -16,7 +16,7 @@ import createBundler from './createBundler';
  * @param {array}         [options.extensions]
  * @param {EventEmitter}  [options.emitter]
  * @param {function}      [options.onChange]
- * @param {function}      [options.server]
+ * @param {function}      [options.node]
  */
 function createAppBundle(options) {
 
@@ -30,7 +30,7 @@ function createAppBundle(options) {
   const extensions = options.extensions;
   const emitter = options.emitter;
   const onChange = options.onChange;
-  const server = options.server;
+  const node = options.node;
 
   //create the bundler
   const bundler = createBundler({
@@ -42,7 +42,7 @@ function createAppBundle(options) {
     plugins,
     extensions,
     emitter,
-    server
+    node
   });
 
   //exclude the vendor packages

@@ -38,7 +38,7 @@ export default function(options) {
     extensions: extensions.concat(['.json'])
   };
 
-  //configure for the server
+  //configure for node
   if (node) {
 
     //--bare
