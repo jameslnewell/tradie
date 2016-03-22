@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const browserify = require('browserify');
+const insertGlobals = require('insert-module-globals');
 const incremental = require('browserify-incremental');
 const watchify = require('watchify');
 const envify = require('envify');
@@ -18,6 +19,7 @@ const createBundle = require('./createBundle');
  * @param {array}         [options.transforms]  The transforms
  * @param {array}         [options.plugins]     The transforms
  * @param {array}         [options.extensions]  The extensions
+ * @param {array}         [options.server]      Whether we should bundle for the server
  */
 export default function(options) {
 
@@ -29,11 +31,29 @@ export default function(options) {
   const transforms = options.transforms || [];
   const plugins = options.plugins || [];
   const extensions = options.extensions || ['js'];
+  const server = options.server || false;
 
   const config = {
     debug,
     extensions: extensions.concat(['.json'])
-  };//TODO: for vendor try turning off ignoreGlobals, detectGlobals to speed things up
+  };
+
+  //configure for the server
+  if (server) {
+
+    //--bare
+    config.builtins = false; //--no-builtins
+    config.commondir = false; //--no-commondir
+    config.detectGlobals = false;
+    config.insertGlobalVars = { //--insert-global-vars=__filename, __dirname
+      __filename: insertGlobals.vars.__filename,
+      __dirname: insertGlobals.vars.__dirname
+    };
+
+    //--no-browser-field
+    config.browserField = false;
+
+  }
 
   //create bundler
   //use `browserify-incremental` for development builds but not production

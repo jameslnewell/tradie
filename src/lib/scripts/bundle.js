@@ -16,6 +16,7 @@ import createBundler from './createBundler';
  * @param {array}         [options.extensions]
  * @param {EventEmitter}  [options.emitter]
  * @param {function}      [options.onChange]
+ * @param {function}      [options.server]
  */
 function createAppBundle(options) {
 
@@ -29,6 +30,7 @@ function createAppBundle(options) {
   const extensions = options.extensions;
   const emitter = options.emitter;
   const onChange = options.onChange;
+  const server = options.server;
 
   //create the bundler
   const bundler = createBundler({
@@ -39,7 +41,8 @@ function createAppBundle(options) {
     transforms,
     plugins,
     extensions,
-    emitter
+    emitter,
+    server
   });
 
   //exclude the vendor packages
@@ -205,7 +208,8 @@ export default function({args, config, emitter, onChange}) {
             plugins,
             extensions,
             emitter,
-            onChange
+            onChange,
+            server: path.basename(file, path.extname(file)) === 'server'
           });
 
         }

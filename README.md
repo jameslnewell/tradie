@@ -165,10 +165,13 @@ For example:
 
 ## Change log
 
+### 0.7.0-alpha1
+
+- add: if a script entry point is named `server.js` then it is bundled to run on nodejs
+
 ### 0.6.3
 
 - fix: added missing deps to `package.json`
-
 
 ### 0.6.1
 

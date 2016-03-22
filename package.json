@@ -1,6 +1,6 @@
 {
   "name": "tradie",
-  "version": "0.6.3",
+  "version": "0.7.0-alpha1",
   "description": "A semi-opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.",
   "keywords": [
     "tradie",
