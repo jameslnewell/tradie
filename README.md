@@ -168,7 +168,8 @@ For example:
 
 ### 0.7.0-alpha*
 
-- fix: bug with tests - the tests were being bundled for the browser, not node
+- fix: bug with tests - the test bundler was not using extensions configured by the user
+- fix: bug with tests - the test bundler was bundling for the browser, not node where they're being run
 - add: if a script entry point is named `server.js` then it is bundled to run on nodejs
 
 ### 0.6.3

@@ -87,14 +87,16 @@ function bundleAndRunTests(bundler) {
  */
 export default function({args, config, emitter}) {
   const watch = args.watch;
+  const src = config.src;
   const transforms = config.transforms;
   const plugins = config.plugins;
+  const extensions = config.extensions;
 
   const options = readMochaOptions();
   const requires = [].concat(options.require);
 
   return new Promise((resolve, reject) => {
-    findTestFiles(config.src, config.extensions)
+    findTestFiles(src, extensions)
       .then(files => {
 
         if (files.length === 0) {
@@ -107,6 +109,7 @@ export default function({args, config, emitter}) {
           watch,
           transforms,
           plugins,
+          extensions,
           node: true
         });
 
