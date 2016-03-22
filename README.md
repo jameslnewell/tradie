@@ -165,6 +165,10 @@ For example:
 
 ## Change log
 
+### 0.7.0-alpha2
+
+- fix: bug with tests - the tests were being bundled for the browser, not node
+
 ### 0.7.0-alpha1
 
 - add: if a script entry point is named `server.js` then it is bundled to run on nodejs
