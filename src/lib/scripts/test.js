@@ -106,7 +106,8 @@ export default function({args, config, emitter}) {
           debug: true,
           watch,
           transforms,
-          plugins
+          plugins,
+          node: true
         });
 
         mocaccino(bundler, {

@@ -209,7 +209,7 @@ export default function({args, config, emitter, onChange}) {
             extensions,
             emitter,
             onChange,
-            server: path.basename(file, path.extname(file)) === 'server'
+            node: path.basename(file, path.extname(file)) === 'server'
           });
 
         }
