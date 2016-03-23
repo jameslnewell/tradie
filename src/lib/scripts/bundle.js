@@ -45,8 +45,10 @@ function createAppBundle(options) {
     node
   });
 
-  //exclude the vendor packages
-  bundler.external(libraries);
+  //exclude the vendor packages so they're only in vendor.js - what about their deps?
+  if (!node) {
+    bundler.external(libraries);
+  }
 
   bundler.on('update', files => {
     if (typeof onChange === 'function') onChange(files);
