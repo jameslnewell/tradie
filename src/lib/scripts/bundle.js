@@ -162,8 +162,13 @@ export default function({args, config, emitter, onChange}) {
 
   emitter.emit('scripts.bundling.started');
   emitter.on('scripts.bundle.finished', args => {
-    totalTime += args.time;
+
+    if (args.time > totalTime) {
+      totalTime = args.time;
+    }
+
     totalSize += args.size || 0;
+
   });
 
   return new Promise((resolve, reject) => {

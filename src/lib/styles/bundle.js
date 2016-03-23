@@ -170,7 +170,7 @@ export default function({args, config, emitter}) {
   const dest = config.dest;
   const bundles = config.bundles;
   const libraries = config.libraries;
-  const transforms = config.transforms;
+  //const transforms = config.transforms;
 
   let streams = [];
 
@@ -179,7 +179,11 @@ export default function({args, config, emitter}) {
 
   emitter.emit('styles.bundling.started');
   emitter.on('styles.bundle.finished', args => {
-    totalTime += args.time;
+
+    if (args.time > totalTime) {
+      totalTime = args.time;
+    }
+
     totalSize += args.size || 0;
   });
 
