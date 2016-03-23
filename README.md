@@ -168,6 +168,7 @@ For example:
 
 ### 0.7.0-alpha*
 
+- fix: bug with script/style build times - was reporting sum of times instead of reporting the largest timegi
 - fix: bug with tests - the test bundler was not using extensions configured by the user
 - fix: bug with tests - the test bundler was bundling for the browser, not node where they're being run
 - add: if a script entry point is named `server.js` then it is bundled to run on nodejs
