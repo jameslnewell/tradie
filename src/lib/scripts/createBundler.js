@@ -1,12 +1,9 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const browserify = require('browserify');
-const insertGlobals = require('insert-module-globals');
-const incremental = require('browserify-incremental');
-const watchify = require('watchify');
-const envify = require('envify');
-const createBundle = require('./createBundle');
+import path from 'path';
+import browserify from 'browserify';
+import insertGlobals from 'insert-module-globals';
+import incremental from 'browserify-incremental';
+import watchify from 'watchify';
+import envify from 'envify';
 
 /**
  * Create a script bundler
@@ -114,4 +111,4 @@ export default function(options) {
   }
 
   return bundler;
-};
+}

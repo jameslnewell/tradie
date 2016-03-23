@@ -161,9 +161,9 @@ export default function({args, config, emitter, onChange}) {
   let totalSize = 0;
 
   emitter.emit('scripts.bundling.started');
-  emitter.on('scripts.bundle.finished', args => {
-    totalTime += args.time;
-    totalSize += args.size || 0;
+  emitter.on('scripts.bundle.finished', p => {
+    totalTime += p.time;
+    totalSize += p.size || 0;
   });
 
   return new Promise((resolve, reject) => {

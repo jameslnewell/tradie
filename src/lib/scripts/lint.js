@@ -50,4 +50,4 @@ export default function(files, extensions, emitter) {
     }
 
   });
-};
+}

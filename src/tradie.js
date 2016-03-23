@@ -71,7 +71,7 @@ export default function() {
 
             const args = {
               ...argv,
-              env: env
+              env
             };
 
             const run = () => {

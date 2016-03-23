@@ -25,11 +25,11 @@ function createBundle(options) {
   const bundler = options.bundler;
   const emitter = options.emitter;
 
-  let args = {src, dest};
+  const args = {src, dest};
   const startTime = Date.now();
   emitter.emit('styles.bundle.started', args);
 
-  let streams = [
+  const streams = [
 
     //bundle the styles
     bundler.compose(),
@@ -44,7 +44,7 @@ function createBundle(options) {
     streams.push(minify());
   }
 
-  streams.push(size(size => args.size = size));
+  streams.push(size(s => args.size = s));
   streams.push(fs.createWriteStream(dest));
 
   //write to a file
@@ -63,7 +63,6 @@ function createBundle(options) {
       }
     )
   ;
-
 }
 /**
  * Create a style bundler
@@ -127,7 +126,6 @@ function createAppBundle(options) {
   const watch = options.watch;
   const src = options.src;
   const dest = options.dest;
-  const vendor = options.vendor;
   const emitter = options.emitter;
 
   const bundler = createBundler({
@@ -170,7 +168,6 @@ export default function({args, config, emitter}) {
   const dest = config.dest;
   const bundles = config.bundles;
   const libraries = config.libraries;
-  const transforms = config.transforms;
 
   let streams = [];
 
@@ -178,9 +175,9 @@ export default function({args, config, emitter}) {
   let totalSize = 0;
 
   emitter.emit('styles.bundling.started');
-  emitter.on('styles.bundle.finished', args => {
-    totalTime += args.time;
-    totalSize += args.size || 0;
+  emitter.on('styles.bundle.finished', p => {
+    totalTime += p.time;
+    totalSize += p.size || 0;
   });
 
   return new Promise((resolve, reject) => {
@@ -240,5 +237,4 @@ export default function({args, config, emitter}) {
   });
 
 }
-
 //TODO: check bundle names - vendor.js and common.js are special and not allowed

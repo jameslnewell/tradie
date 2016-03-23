@@ -1,5 +1,4 @@
 import pipe from 'promisepipe';
-import path from 'path';
 import fs from 'fs';
 import uglify from '../uglify-stream';
 import size from '../size-stream';
@@ -12,6 +11,7 @@ import size from '../size-stream';
  * @param {string}        [options.dest]      The destination file
  * @param {EventEmitter}  [options.emitter]
  * @param {object}        [options.bundler]
+ * @returns {object}      a piped stream
  */
 export default function(options) {
 
@@ -21,12 +21,12 @@ export default function(options) {
   const bundler = options.bundler;
   const emitter = options.emitter;
 
-  let args = {src, dest};
+  const args = {src, dest};
   const startTime = Date.now();
   emitter.emit('scripts.bundle.started', args);
 
   //create bundle
-  let streams = [bundler.bundle()];
+  const streams = [bundler.bundle()];
 
   //optimise bundle
   if (!debug) {
@@ -34,7 +34,7 @@ export default function(options) {
   }
 
   //write bundle
-  streams.push(size(size => args.size = size));
+  streams.push(size(s => args.size = s));
   streams.push(fs.createWriteStream(dest));
 
   return pipe(...streams)
@@ -50,7 +50,5 @@ export default function(options) {
         emitter.emit('scripts.bundle.finished', args);
         return {error};
       }
-    )
-  ;
-
-};
+    );
+}

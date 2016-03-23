@@ -1,22 +1,21 @@
-'use strict';
-const through = require('through2');
-const postcss = require('postcss');
-const autoprefixer = require('autoprefixer');
+import through from 'through2';
+import postcss from 'postcss';
+import autoprefixer from 'autoprefixer';
 
 module.exports = function(options) {
   let data = '';
 
   return through(
-    function(chunk, enc, callback) {
+    chunk, enc, callback => {
       data += chunk.toString();
       callback();
     },
-    function(callback) {
+    callback => {
       postcss([autoprefixer(options)]).process(data).then(result => {
-        result.warnings().forEach(function (warn) {
+        result.warnings().forEach(warn => {
           console.warn(warn.toString());
         });
-        this.push(result.css);
+        push(result.css);
         callback();
       });
     }

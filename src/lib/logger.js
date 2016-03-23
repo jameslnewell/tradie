@@ -1,4 +1,3 @@
-'use strict';
 import path from 'path';
 import chalk from 'chalk';
 import humanize from 'humanize-duration';
@@ -45,7 +44,7 @@ module.exports = function(options) {
 
     if (result.error) {
       msg = chalk.red(msg);
-      msg += '\n\t'+chalk.red(result.error.stack);
+      msg += '\n\t' + chalk.red(result.error.stack);
     } else {
       msg = chalk.blue(msg);
     }

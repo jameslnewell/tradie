@@ -1,20 +1,20 @@
-'use strict';
-const through = require('through2');
-const clean = require('clean-css');
+import through from 'through2';
+import clean from 'clean-css';
 
 module.exports = function(options) {
   let data = '';
 
   return through(
-    function(chunk, enc, callback) {
+    chunk, enc, callback => {
       data += chunk.toString();
       callback();
     },
-    function(callback) {
+    callback => {
+      /* eslint-disable new-cap */
       const cleaner = new clean(options);
       cleaner.minify(data, (err, result) => {
         if (err) return callback(err);
-        this.push(result.styles);
+        push(result.styles);
         callback();
       });
     }

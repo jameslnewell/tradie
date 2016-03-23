@@ -1,19 +1,16 @@
-'use strict';
-const through = require('through2');
-const uglify = require('uglify-js');
+import through from 'through2';
 
 module.exports = function(done) {
   let length = 0;
   return through(
-    function(chunk, enc, callback) {
+    chunk, enc, callback => {
       length += chunk.length;
-      this.push(chunk);
+      push(chunk);
       callback();
     },
-    function(callback) {
+    callback => {
       done(length);
-      callback();
+      return callback();
     }
   );
-
 };

@@ -1,11 +1,10 @@
-'use strict';
-const chalk = require('chalk');
-const through = require('through2');
+import chalk from 'chalk';
+import through from 'through2';
 
-module.exports = function(options) {
+module.exports = function() {
   return through(
-    function(chunk, enc, callback) {
-      this.push(chalk.red(chunk.toString()));
+    chunk, enc, callback => {
+      push(chalk.red(chunk.toString()));
       callback();
     }
   );
