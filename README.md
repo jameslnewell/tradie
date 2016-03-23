@@ -168,6 +168,7 @@ For example:
 
 ### 0.7.0-alpha*
 
+- fix: bug with linting attempting to lint the `package.json` file after `watchify` reports it as changed
 - fix: bug with bundles targeting for nodejs shouldn't exclude vendor libs because there's no way to include them like on the client'
 - fix: bug with script/style build times - was reporting sum of times instead of reporting the largest time
 - fix: bug with tests - the test bundler was not using extensions configured by the user

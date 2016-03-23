@@ -1,3 +1,4 @@
+import path from 'path';
 import {CLIEngine} from 'eslint';
 
 /**
@@ -8,8 +9,16 @@ import {CLIEngine} from 'eslint';
  */
 function eslint(files, extensions) {
 
+  let filteredFiles = [].concat(files);
+
+  //exclude files which don't have an extension (directories) or aren't on the extension list
+  filteredFiles = filteredFiles.filter(file => {
+    const ext = path.extname(file);
+    return ext === '' || extensions.indexOf(ext) !== -1;
+  });
+
   const cli = new CLIEngine({extensions});
-  const report = cli.executeOnFiles([].concat(files));
+  const report = cli.executeOnFiles(filteredFiles);
   const formatter = cli.getFormatter('stylish');
 
   if (report.errorCount + report.warningCount > 0) {
