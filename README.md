@@ -166,8 +166,9 @@ For example:
 ## Change log
 
 
-### 0.7.0-alpha*
+### 0.7.0
 
+- fix: bug with bundling for node - `incremental-browserify` seems to force it to be bundled for the browser
 - fix: bug with linting attempting to lint the `package.json` file after `watchify` reports it as changed
 - fix: bug with bundles targeting for nodejs shouldn't exclude vendor libs because there's no way to include them like on the client'
 - fix: bug with script/style build times - was reporting sum of times instead of reporting the largest time
