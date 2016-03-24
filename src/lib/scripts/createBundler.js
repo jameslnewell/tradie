@@ -20,7 +20,7 @@ import envify from 'envify';
  */
 export default function(options) {
 
-  const test = options.test || false;
+  //const test = options.test || false;
   const debug = options.debug || false;
   const watch = options.watch || false;
   const src = options.src;
@@ -30,14 +30,29 @@ export default function(options) {
   const extensions = options.extensions || ['js'];
   const node = options.node || false;
 
-  const config = {
+  let config = {
     debug,
-    extensions: extensions.concat(['.json'])
+    extensions: extensions.concat(['.json']),
+    entries: src,
+    transform: [],
+    plugin: []
   };
 
-  //configure for node
-  if (node) {
+  //configure for prod build
+  if (!debug) {
+    config.transform.push([envify, {global: true, NODE_ENV: 'production'}]);
+  }
 
+  //configure for watch build
+  if (watch) {
+    config.cache = {};
+    config.packageCache = {};
+    config.plugin.push(watchify);
+  }
+
+  //configure for node build
+  if (node) {
+    //--node === --bare --no-browser-field
     //--bare
     config.builtins = false; //--no-builtins
     config.commondir = false; //--no-commondir
@@ -46,46 +61,18 @@ export default function(options) {
       __filename: insertGlobals.vars.__filename,
       __dirname: insertGlobals.vars.__dirname
     };
-
     //--no-browser-field
     config.browserField = false;
-
   }
 
-  //create bundler
-  //use `browserify-incremental` for development builds but not production
-
-  let bundler = null;
-  if (!debug) {
-
-    //browserify incremental is a bit dodgey
-    // - it doesn't notice when `envify` variables change and the cache should be busted
-    // - it forces use of full module paths resulting in more bytes
-    bundler = browserify(config);
-    bundler.transform(envify, {global: true, NODE_ENV: 'production'});
-
-  } else if (watch || test || !dest) {
-
-    //browserify incremental is a bit dodgey while watching or testing
-    // - while watching file change events aren't triggered
-    // - while testing the bundle callback may never be called
-    config.cache = {};
-    config.packageCache = {};
-    bundler = browserify(config);
-
-  } else {
-
-    if (dest) {
-      config.cacheFile = path.join(path.dirname(dest), `.${path.basename(dest)}.cache`);
-    }
-    bundler = incremental(config); //TODO: other options to consider: persistify - nowhere as good caching???
-
+  //configure for incremental build
+  if (debug && dest && !node && !watch) { //FIXME: incremental breaks node and watch bundling for some reason - submit a bug/test!
+    config = Object.assign({}, config, incremental.args);
+    config.plugin.push([incremental, {cacheFile: path.join(path.dirname(dest), `.${path.basename(dest)}.cache`)}]);
   }
 
-  //configure entry file
-  if (src) {
-    bundler.add(src);
-  }
+  //create the bundler
+  const bundler = browserify(config);
 
   //configure transforms
   transforms.forEach(transform => {
@@ -104,11 +91,6 @@ export default function(options) {
       bundler.plugin(plugin);
     }
   });
-
-  //watch for changes
-  if (watch) {
-    bundler.plugin(watchify);
-  }
 
   return bundler;
 }
