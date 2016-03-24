@@ -16,7 +16,7 @@ import envify from 'envify';
  * @param {array}         [options.transforms]  The transforms
  * @param {array}         [options.plugins]     The transforms
  * @param {array}         [options.extensions]  The extensions
- * @param {array}         [options.server]      Whether we should bundle for the server
+ * @param {array}         [options.node]        Whether we should bundle for node instead of the browser
  */
 export default function(options) {
 
@@ -28,15 +28,15 @@ export default function(options) {
   const transforms = options.transforms || [];
   const plugins = options.plugins || [];
   const extensions = options.extensions || ['js'];
-  const server = options.server || false;
+  const node = options.node || false;
 
   const config = {
     debug,
     extensions: extensions.concat(['.json'])
   };
 
-  //configure for the server
-  if (server) {
+  //configure for node
+  if (node) {
 
     //--bare
     config.builtins = false; //--no-builtins

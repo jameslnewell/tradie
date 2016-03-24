@@ -16,6 +16,7 @@ import size from '../size-stream';
  * @param {string}        [options.dest]      The destination file
  * @param {EventEmitter}  [options.emitter]
  * @param {object}        [options.bundler]
+ * @returns {object}      [bundle]
  */
 function createBundle(options) {
 
@@ -44,7 +45,7 @@ function createBundle(options) {
     streams.push(minify());
   }
 
-  streams.push(size(s => args.size = s));
+  streams.push(size(s => args.s = s));
   streams.push(fs.createWriteStream(dest));
 
   //write to a file
@@ -63,6 +64,7 @@ function createBundle(options) {
       }
     )
   ;
+
 }
 /**
  * Create a style bundler
@@ -72,6 +74,7 @@ function createBundle(options) {
  * @param {string}        [options.src]       The source file
  * @param {string}        [options.dest]      The destination file
  * @param {EventEmitter}  [options.emitter]
+ * @returns {object}      [bundle]
  */
 function createBundler(options) {
 
@@ -143,9 +146,7 @@ function createAppBundle(options) {
     emitter,
     bundler
   })
-    .then(result => ({...result, bundler}))
-  ;
-
+    .then(result => ({...result, bundler}));
 }
 
 /**
@@ -168,6 +169,7 @@ export default function({args, config, emitter}) {
   const dest = config.dest;
   const bundles = config.bundles;
   const libraries = config.libraries;
+  //const transforms = config.transforms;
 
   let streams = [];
 
@@ -176,7 +178,11 @@ export default function({args, config, emitter}) {
 
   emitter.emit('styles.bundling.started');
   emitter.on('styles.bundle.finished', p => {
-    totalTime += p.time;
+
+    if (p.time > totalTime) {
+      totalTime = p.time;
+    }
+
     totalSize += p.size || 0;
   });
 
@@ -192,7 +198,7 @@ export default function({args, config, emitter}) {
           debug,
           watch,
           src: path.join(src, file),
-          dest: path.join(dest, path.basename(file, path.extname(file)) + '.css'),
+          dest: path.join(dest, path.basename(file, path.extname(file)), '.css'),
           libraries,
           emitter
         })
@@ -237,4 +243,5 @@ export default function({args, config, emitter}) {
   });
 
 }
+
 //TODO: check bundle names - vendor.js and common.js are special and not allowed

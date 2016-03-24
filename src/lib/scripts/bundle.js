@@ -16,7 +16,7 @@ import createBundler from './createBundler';
  * @param {array}         [options.extensions]
  * @param {EventEmitter}  [options.emitter]
  * @param {function}      [options.onChange]
- * @param {function}      [options.server]
+ * @param {function}      [options.node]
  */
 function createAppBundle(options) {
 
@@ -30,7 +30,7 @@ function createAppBundle(options) {
   const extensions = options.extensions;
   const emitter = options.emitter;
   const onChange = options.onChange;
-  const server = options.server;
+  const node = options.node;
 
   //create the bundler
   const bundler = createBundler({
@@ -42,11 +42,13 @@ function createAppBundle(options) {
     plugins,
     extensions,
     emitter,
-    server
+    node
   });
 
-  //exclude the vendor packages
-  bundler.external(libraries);
+  //exclude the vendor packages so they're only in vendor.js - what about their deps?
+  if (!node) {
+    bundler.external(libraries);
+  }
 
   bundler.on('update', files => {
     if (typeof onChange === 'function') onChange(files);
@@ -162,8 +164,13 @@ export default function({args, config, emitter, onChange}) {
 
   emitter.emit('scripts.bundling.started');
   emitter.on('scripts.bundle.finished', p => {
-    totalTime += p.time;
+
+    if (p.time > totalTime) {
+      totalTime = p.time;
+    }
+
     totalSize += p.size || 0;
+
   });
 
   return new Promise((resolve, reject) => {
@@ -202,14 +209,14 @@ export default function({args, config, emitter, onChange}) {
             debug,
             watch,
             src: path.join(src, file),
-            dest: path.join(dest, path.basename(file, path.extname(file)) + '.js'),
+            dest: path.join(dest, path.basename(file, path.extname(file)), '.js'),
             libraries,
             transforms,
             plugins,
             extensions,
             emitter,
             onChange,
-            server: path.basename(file, path.extname(file)) === 'server'
+            node: path.basename(file, path.extname(file)) === 'server'
           });
 
         }
@@ -243,11 +250,8 @@ export default function({args, config, emitter, onChange}) {
             } else {
               resolve(hasErrors ? -1 : 0);
             }
-
           }
-        )
-      ;
-
+        );
     });
   });
 
