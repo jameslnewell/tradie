@@ -163,13 +163,13 @@ export default function({args, config, emitter, onChange}) {
   let totalSize = 0;
 
   emitter.emit('scripts.bundling.started');
-  emitter.on('scripts.bundle.finished', p => {
+  emitter.on('scripts.bundle.finished', result => {
 
-    if (p.time > totalTime) {
-      totalTime = p.time;
+    if (result.time > totalTime) {
+      totalTime = result.time;
     }
 
-    totalSize += p.size || 0;
+    totalSize += result.size || 0;
 
   });
 

@@ -1,5 +1,6 @@
 import path from 'path';
-import version from '../../package.json';
+import {version} from '../../package.json'; //eslint-disable-line import/named
+// TODO: report import/named trying to parse json as js
 
 export default function(fs, config) {
 

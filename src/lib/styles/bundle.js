@@ -177,13 +177,13 @@ export default function({args, config, emitter}) {
   let totalSize = 0;
 
   emitter.emit('styles.bundling.started');
-  emitter.on('styles.bundle.finished', p => {
+  emitter.on('styles.bundle.finished', result => {
 
-    if (p.time > totalTime) {
-      totalTime = p.time;
+    if (result.time > totalTime) {
+      totalTime = result.time;
     }
 
-    totalSize += p.size || 0;
+    totalSize += result.size || 0;
   });
 
   return new Promise((resolve, reject) => {
