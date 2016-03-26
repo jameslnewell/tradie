@@ -7,8 +7,10 @@ import MemoryFS from 'memory-fs';
 import ConcatSource from 'webpack-core/lib/ConcatSource';
 import sourceMapper from 'source-mapper';
 
+import readMochaOptions from '../readMochaOptions';
+
 const mochaSetup = `
-'use strict';
+//'use strict';
 
 const Mocha = require('mocha');
 Mocha.reporters.Base.window.width = ${process.stdout.columns || 80};
@@ -55,7 +57,7 @@ class MochaSetupPlugin {
  */
 export default function({args, config, emitter}) {
   const {watch} = args;
-  const {src, extensions} = config;
+  const {src, dest, extensions, transforms} = config;
 
   const mochaOptions = readMochaOptions();
   const mochaRequire = mochaOptions.require;
@@ -75,7 +77,7 @@ export default function({args, config, emitter}) {
         if (error) {
           reject(error);
         } else {
-          resolve(files.map(file => path.resolve(src, file)));
+          resolve(files);
         }
       });
     });
@@ -89,20 +91,37 @@ export default function({args, config, emitter}) {
       findTestFiles()
         .then(files => {
 
-          const entries = [].concat(mochaRequire, files);
+          const entries = [].concat(
+            mochaRequire,
+            files
+          ).map(entry => './'+entry); //make the entries local files
 
           const webpackConfig = {
             target: 'node',
             devtool: 'inline-source-map',
+            context: path.resolve(src),
             entry: entries,
             output: {
-              path: dest,
+              path: path.resolve(dest),
               filename: 'bundle.js'
+            },
+            resolve: {
+              extensions: [''].concat(extensions)
+            },
+            module: {
+              loaders: [
+                transforms.map(name => ({
+                  exclude: /(node_modules)/,
+                  loader: 'babel-loader'
+                }))
+              ],
             },
             plugins: [
               new MochaSetupPlugin()
             ]
           };
+
+          console.log(webpackConfig.loaders);
 
           const fs = new MemoryFS();
           const compiler = webpack(webpackConfig);
@@ -112,12 +131,20 @@ export default function({args, config, emitter}) {
           compiler.run((err, stats) => {
             if (err) return reject(err);
 
-            //TODO: what if webpack splits it in more than one chunk?)
-            resolve(fs.readFileSync(path.join(dest, 'bundle.js')).toString());
+            const jsonStats = stats.toJson();
+
+            if (jsonStats.errors.length > 0) {
+              console.log(jsonStats.errors.join('\n'));
+              reject(jsonStats.errors);
+            } else {
+              //TODO: what if webpack splits it in more than one chunk?)
+              resolve(fs.readFileSync(path.join(path.resolve(dest), 'bundle.js')).toString());
+            }
 
           });
 
         })
+        .catch(reject)
       ;
 
     });
@@ -126,7 +153,7 @@ export default function({args, config, emitter}) {
   //run the test bundle on nodejs
   const runTestBundle = (bundle) => {
     return new Promise((resolve, reject) => {
-
+console.log('running');
       //run in a sub-directory of `tradie` so that the `mocha` package is found
       //FIXME: should probably be run in the `.tradierc` directory
       const node = spawn('node', {cwd: __dirname});
