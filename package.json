@@ -36,7 +36,6 @@
     "mem-fs": "^1.1.2",
     "mem-fs-editor": "^2.1.0",
     "mkdirp": "^0.5.1",
-    "mocaccino": "^1.8.2",
     "mocha": "^2.4.5",
     "postcss": "^5.0.16",
     "promised-del": "^1.0.2",
@@ -48,6 +47,7 @@
     "through2": "^2.0.1",
     "uglify-js": "^2.6.2",
     "watchify": "^3.7.0",
+    "webpack": "^1.12.14",
     "yargs": "^4.1.0"
   },
   "devDependencies": {

@@ -1,170 +1,182 @@
 import path from 'path';
 import {spawn} from 'child_process';
+
 import glob from 'glob';
-import mocaccino from 'mocaccino';
+import webpack from 'webpack';
+import MemoryFS from 'memory-fs';
+import ConcatSource from 'webpack-core/lib/ConcatSource';
 import sourceMapper from 'source-mapper';
-import createBundler from './createBundler';
-import colorStream from '../color-stream';
-import readMochaOptions from '../readMochaOptions';
 
-/**
- * Find all the test files
- * @param   {string}        src
- * @param   {Array<string>} extensions
- * @returns {Promise<Array<string>>}
- */
-function findTestFiles(src, extensions) {
+const mochaSetup = `
+'use strict';
 
-  let extension = null;
+const Mocha = require('mocha');
+Mocha.reporters.Base.window.width = ${process.stdout.columns || 80};
+Mocha.reporters.Base.symbols.dot = '.';
 
-  if (extensions.length > 1) {
-    extension = `{${extensions.join(',')}}`;
-  } else {
-    extension = extensions.join('');
+const _mocha = new Mocha({});
+_mocha.ui('bdd');
+_mocha.reporter('spec');
+_mocha.useColors(true);
+_mocha.suite.emit('pre-require', global, '', _mocha);
+
+setTimeout(() => {
+  _mocha.run(errors => {
+    process.exit(errors ? 1 : 0);
+  });
+}, 1);
+
+`;
+
+class MochaSetupPlugin {
+  apply(compiler) {
+    compiler.plugin('compilation', function(compilation) {
+      compilation.plugin('optimize-chunk-assets', function(chunks, callback) {
+        chunks.forEach(function(chunk) {
+          chunk.files.forEach(function(file, i) {
+            compilation.assets[file] = new ConcatSource(
+              mochaSetup,
+              compilation.assets[file]
+            );
+          });
+        });
+        callback();
+      });
+    });
   }
-
-  return new Promise((resolve, reject) => {
-    glob(`**/*.test${extension}`, {cwd: src, realpath: true}, (error, files) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(files);
-      }
-    });
-  });
-
 }
 
 /**
- * Bundle and run tests
- * @param   {browserify} bundler
- * @returns {Promise}
- */
-function bundleAndRunTests(bundler) {
-  return new Promise((resolve, reject) => {
-
-    bundler.bundle((bundleError, buffer) => {
-      if (bundleError) return reject(bundleError);
-
-      //run in the same directory as `tradie` so that `mocha` is found
-      const node = spawn('node', {cwd: __dirname});
-
-      node.on('error', runError => reject(runError));
-
-      //notify the caller whether the tests where successful
-      node.on('exit', code => resolve(code));
-
-      //TODO: error handling of streams
-      let stdout = node.stdout;
-      let stderr = node.stderr;
-
-      //extract the source map, replace URLs in stack traces from generated bundle with the URLs
-      // from the original source files, and pipe the output to the console
-      //TODO: remove node_modules/browser-pack
-      const result = sourceMapper.extract(buffer.toString());
-      const stream1 = sourceMapper.stream(result.map);
-      const stream2 = sourceMapper.stream(result.map);
-      stdout = stdout.pipe(stream1);
-      stderr = stderr.pipe(stream2);
-
-      stdout.pipe(process.stdout);
-      stderr.pipe(colorStream()).pipe(process.stderr);
-
-      node.stdin.write(buffer);
-      node.stdin.end();
-
-    });
-
-  });
-}
-
-/**
- * Bundle and run tests
+ * Bundle and run test files
  * @param   {object} args
  * @param   {object} config
  * @param   {object} emitter
  * @returns {Promise}
  */
 export default function({args, config, emitter}) {
-  const watch = args.watch;
-  const src = config.src;
-  const transforms = config.transforms;
-  const plugins = config.plugins;
-  const extensions = config.extensions;
+  const {watch} = args;
+  const {src, extensions} = config;
 
-  const options = readMochaOptions();
-  const requires = [].concat(options.require);
+  const mochaOptions = readMochaOptions();
+  const mochaRequire = mochaOptions.require;
+
+  const findTestFiles = () => {
+
+    let extension = null;
+
+    if (extensions.length > 1) {
+      extension = `{${extensions.join(',')}}`;
+    } else {
+      extension = extensions.join('');
+    }
+
+    return new Promise((resolve, reject) => {
+      glob(`**/*.test${extension}`, {cwd: src}, (error, files) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(files.map(file => path.resolve(src, file)));
+        }
+      });
+    });
+
+  };
+
+  //bundle the test files
+  const createTestBundle = () => {
+    return new Promise((resolve, reject) => {
+
+      findTestFiles()
+        .then(files => {
+
+          const entries = [].concat(mochaRequire, files);
+
+          const webpackConfig = {
+            target: 'node',
+            devtool: 'inline-source-map',
+            entry: entries,
+            output: {
+              path: dest,
+              filename: 'bundle.js'
+            },
+            plugins: [
+              new MochaSetupPlugin()
+            ]
+          };
+
+          const fs = new MemoryFS();
+          const compiler = webpack(webpackConfig);
+
+          compiler.outputFileSystem = fs;
+
+          compiler.run((err, stats) => {
+            if (err) return reject(err);
+
+            //TODO: what if webpack splits it in more than one chunk?)
+            resolve(fs.readFileSync(path.join(dest, 'bundle.js')).toString());
+
+          });
+
+        })
+      ;
+
+    });
+  };
+
+  //run the test bundle on nodejs
+  const runTestBundle = (bundle) => {
+    return new Promise((resolve, reject) => {
+
+      //run in a sub-directory of `tradie` so that the `mocha` package is found
+      //FIXME: should probably be run in the `.tradierc` directory
+      const node = spawn('node', {cwd: __dirname});
+
+      node
+        .on('error', reject)
+        .on('exit', resolve)
+      ;
+
+      //TODO: handle stream errors
+      let stdout = node.stdout;
+      let stderr = node.stderr;
+
+      //extract the source map, replace URLs in stack traces from generated bundle with the URLs
+      // from the original source files, and pipe the output to the console
+      const result = sourceMapper.extract(bundle);
+      const stream1 = sourceMapper.stream(result.map);
+      const stream2 = sourceMapper.stream(result.map);
+      stdout = stdout.pipe(stream1);
+      stderr = stderr.pipe(stream2);
+
+      //pipe test results to the console
+      stdout.pipe(process.stdout);
+      stderr.pipe(process.stderr);
+
+      //write the test bundle to node to start executing tests
+      node.stdin.write(bundle);
+      node.stdin.end();
+
+    });
+  };
 
   return new Promise((resolve, reject) => {
-    findTestFiles(src, extensions)
-      .then(files => {
 
-        if (files.length === 0) {
-          return reject(new Error('No script files to test.'));
-        }
+    emitter.emit('scripts.testing.started');
+    createTestBundle()
+      .then(runTestBundle)
+      .then(exitCode => {
 
-        const bundler = createBundler({
-          test: true,
-          debug: true,
-          watch,
-          transforms,
-          plugins,
-          extensions,
-          node: true
-        });
+        emitter.emit('scripts.testing.finished');
 
-        mocaccino(bundler, {
-          ...options,
-          node: true
-        });
-
-        //require setup files
-        requires.forEach(require => bundler.add(path.join(config.src, require)));
-
-        //require test files
-        bundler.add(files);
-
-        //bundle
-        emitter.emit('scripts.testing.started');
-        bundleAndRunTests(bundler)
-          .then(
-            code => {
-
-              emitter.emit('scripts.testing.finished');
-
-              //if we're not watching then we're done
-              if (!watch) {
-                resolve(code);
-              }
-
-            },
-            error => reject(error)
-          )
-        ;
-
-        if (watch) {
-
-          //re-bundle
-          bundler.on('update', () => {
-            emitter.emit('scripts.testing.started');
-            bundleAndRunTests(bundler)
-              .then(
-                () => emitter.emit('scripts.testing.finished'),
-                error => reject(error)
-              )
-            ;
-          });
-
-          //stop watching and exit on CTL-C
-          process.on('SIGINT', () => {
-            bundler.close();
-            resolve(0);
-          });
-
+        //if we're not watching then we're done
+        if (!watch) {
+          resolve(exitCode);
         }
 
       })
+      .catch(reject)
     ;
+
   });
 
-}
+};

@@ -25,8 +25,10 @@ export default function() {
     }
   }
 
+  //TODO: cast `require` to be an array
   return {
     ...defaultOptions,
     ...userOptions
   };
+
 }
