@@ -3,8 +3,8 @@ import through from 'through2';
 
 module.exports = function() {
   return through(
-    chunk, enc, callback => {
-      push(chalk.red(chunk.toString()));
+    function(chunk, enc, callback) {
+      this.push(chalk.red(chunk.toString()));
       callback();
     }
   );

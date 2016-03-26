@@ -3,12 +3,12 @@ import through from 'through2';
 module.exports = function(done) {
   let length = 0;
   return through(
-    chunk, enc, callback => {
+    function(chunk, enc, callback) {
       length += chunk.length;
-      push(chunk);
+      this.push(chunk);
       callback();
     },
-    callback => {
+    function(callback) {
       done(length);
       return callback();
     }

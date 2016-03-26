@@ -6,16 +6,16 @@ module.exports = function(options) {
   let data = '';
 
   return through(
-    chunk, enc, callback => {
+    function(chunk, enc, callback) {
       data += chunk.toString();
       callback();
     },
-    callback => {
+    function(callback) {
       postcss([autoprefixer(options)]).process(data).then(result => {
         result.warnings().forEach(warn => {
           console.warn(warn.toString());
         });
-        push(result.css);
+        this.push(result.css);
         callback();
       });
     }
