@@ -5,16 +5,16 @@ module.exports = function(options) {
   let data = '';
 
   return through(
-    chunk, enc, callback => {
+    function(chunk, enc, callback) {
       data += chunk.toString();
       callback();
     },
-    callback => {
+    function(callback) {
       /* eslint-disable new-cap */
       const cleaner = new clean(options);
       cleaner.minify(data, (err, result) => {
         if (err) return callback(err);
-        push(result.styles);
+        this.push(result.styles);
         callback();
       });
     }

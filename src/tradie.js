@@ -43,6 +43,7 @@ export default function() {
     const tradie = {
 
       env,
+      root: process.cwd(),
       config,
 
       on: (...args) => emitter.on(...args),
