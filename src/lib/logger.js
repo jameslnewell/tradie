@@ -39,7 +39,7 @@ module.exports = function(options) {
 
     const basename = path.basename(result.dest);
     const size = filesize(result.size).human('jedec').replace('Bytes', 'B');
-    const duration = humanize(result.time);
+    const duration = result.time ? humanize(result.time) : '? seconds';
     let msg = ` => ${type} ${chalk.underline(basename)} bundled in ${duration} - ${size}`;
 
     if (result.error) {
@@ -54,12 +54,12 @@ module.exports = function(options) {
 
   /**
    * Log when all the bundles have finished
-   * @param {string}  type
-   * @param {object}  result
-   * @param {object}  [result.count]
-   * @param {object}  [result.time]
-   * @param {object}  [result.size]
-   * @param {Error}   [result.error]
+   * @param {string}        type
+   * @param {object}        result
+   * @param {object}        [result.count]
+   * @param {object}        [result.time]
+   * @param {object}        [result.size]
+   * @param {Array<string>} [result.errors]
    */
   const bundlingFinished = (type, result) => {
 
@@ -68,12 +68,10 @@ module.exports = function(options) {
     const duration = humanize(result.time);
     let msg = ` => ${count} ${type}s bundled in ${duration} - ${size}`;
 
-    if (!result.error) {
-      if (result.count) {
-        msg = chalk.green(msg);
-      }
-    } else {
-      msg = chalk.bold.red(msg);
+    if (result.errors) {
+      msg = chalk.bold.red(msg) + result.errors;
+    } else if (result.count) {
+      msg = chalk.green(msg);
     }
 
     console.log(msg);

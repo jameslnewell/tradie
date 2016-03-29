@@ -77,4 +77,4 @@ A `Promise`:
     - non-`0` on failure e.g. linting/testing failed
  - `reject(error)`s with an error when the command e.g. failed to spawn the `mocha` cli
 
-> Note: Commands that watch files should not `resolve()` until they finish watching files.
+> Note: Commands that watch files should not `resolve()` until they stop watching files.

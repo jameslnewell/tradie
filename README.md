@@ -105,9 +105,9 @@ Configure script bundling.
     "src": "src/", //the directory where script files are sourced
     "dest": "dist/", //the directory where bundled scripts are output
     "bundles": ["index.js"], //the script entry files
-    "libraries": [], //the third-party packages placed into `vendor.js` for long term caching
-    "transforms": [], //the browserify transform
-    "plugins": [], //the browserify plugins
+    "vendor": [], //the third-party packages placed into `vendor.js` for long term caching
+    "loaders": [], //the webpack loaders
+    "plugins": [], //the webpack plugins
     "extensions": [".js"] //the script extensions
   }
 }
@@ -165,6 +165,21 @@ For example:
 
 ## Change log
 
+### webpack
+
+**user:**
+
+- break: bundle paths must be prefixed with `./` otherwise webpack will look for them in `./node_modules`  e.g. `index.js` must be changed to `./index.js`
+- break: vendor bundle configuration has changed from `scripts.libraries` to `scripts.vendor`
+- break: browserify transform configuration has changed from `scripts.transforms` to `scripts.loaders` (a webpack loader name)
+- break: browserify plugin configuration has changed from `scripts.plugins` to `scripts.plugins` (a webpack plugin instance)
+- break: script bundle information is reported slightly differently (due to changes below)
+
+**plugin:**
+
+- break: the `scripts.bundle.finished` event no longer returns the time elapsed for creating an individual bundle (have to run webpack with profiling enabled to get that information)
+- break: the `scripts.bundle.finished` event no longer returns the error encountered whilst creating an individual bundle (webpack lumps them all in one error object)
+- break: the `scripts.bundling.finished` event no longer returns whether an error occurred but an array of all the error strings - overly verbose
 
 ### 0.7.0
 

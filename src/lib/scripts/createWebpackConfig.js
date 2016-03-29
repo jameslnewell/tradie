@@ -1,22 +1,13 @@
 import path from 'path';
 import webpack from 'webpack';
 
-export function configureTarget(options) {
-  const target = options.target;
-  return {
-    target
-  };
-}
-
-export function configureSourceMaps(tradie) {
-  const env = tradie.env;
+function configureSourceMaps(env) {
   return {
     devtool: env === 'production' ? 'hidden-source-map' : 'eval'
   };
 }
 
-export function configureResolver(tradie) {
-  const extensions = tradie.config.scripts.extensions;
+function configureResolver(extensions) {
   return {
     resolve: {
       extensions: [''].concat(extensions)
@@ -24,8 +15,7 @@ export function configureResolver(tradie) {
   };
 }
 
-export function configureLoaders(tradie) {
-  const loaders = tradie.config.scripts.loaders;
+function configureLoaders(loaders) {
   return {
     module: {
       loaders: [
@@ -38,11 +28,34 @@ export function configureLoaders(tradie) {
   };
 }
 
-export function configurePlugins(tradie) {
-  let plugins = tradie.config.scripts.plugins;
+function configurePlugins(env, vendor, plugins) {
+  let allPlugins = [];
 
-  if (tradie.env === 'production') {
-    plugins = plugins.concat([
+  // --- vendor bundle ---
+
+  //create a vendor bundle
+  if (vendor.length > 0) {
+    //FIXME: for long-term-caching we need to use https://github.com/diurnalist/chunk-manifest-webpack-plugin
+    // according to http://webpack.github.io/docs/list-of-plugins.html#2-explicit-vendor-chunk
+    //TODO: move to DllPlugin and DllReferencePlugin for faster builds
+    allPlugins = allPlugins.concat([
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        filename: env === 'production' ? 'vendor.[hash].js' : 'vendor.js',
+        //prevent any other packages, other than those specified in the vendor array, from being included
+        minChunks: Infinity
+      })
+    ]);
+  }
+
+  // --- common bundle ---
+
+  //TODO: use CommonsChunkPlugin to produce common.js if there is more than 1 bundle
+
+  // --- production ---
+
+  if (env === 'production') {
+    allPlugins = allPlugins.concat([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production')
       }),
@@ -50,54 +63,138 @@ export function configurePlugins(tradie) {
       new webpack.optimize.OccurrenceOrderPlugin(true),
       new webpack.optimize.UglifyJsPlugin({output: {comments: false}})
     ]);
-    //TODO: create rev-manifest.json
+    //TODO: create rev-manifest.json to map hashed files to their original names
   }
 
-  //TODO: use CommonsChunkPlugin to produce common.js if more than 1 bundle
-  //TODO: use ChunkManifestWebpackPlugin to create a vendor.js bundle => can use a DLLReferencePlugin for faster builds?
+  // --- user plugins ---
 
-  return {
-    plugins
-  };
-  //webpack.optimize.CommonsChunkPlugin
+  allPlugins = allPlugins.concat(plugins);
+
+  return {plugins: allPlugins};
 }
 
-export function configureEntries(tradie) {
-  const env = tradie.env;
-  const root = tradie.root;
-  const src = tradie.config.scripts.src;
-  const dest = tradie.config.scripts.dest;
-  const bundles = tradie.config.scripts.bundles;
+function configureEntries(env, root, src, dest, bundles, vendor) {
+
+  //TODO: error if bundle name contains "vendor.js" or "common.js"
+
+  const entries = bundles.reduce((accum, bundle) => ({
+    ...accum,
+    [path.join(
+      path.dirname(bundle),
+      path.basename(bundle, path.extname(bundle))
+    )]: bundle
+  }), {});
+
+  if (vendor.length > 0) {
+    entries.vendor = vendor;
+  }
 
   return {
+
     context: path.resolve(path.join(root, src)),
-    entry: bundles.reduce((accum, next) => {
-      console.log('next', next);
-      return {
-        ...accum,
-        [path.join(
-          path.dirname(next),
-          path.basename(next, path.extname(next))
-        )]: next
-      }
-    }, {}),
+
+    entry: entries,
+
     output: {
       path: path.join(root, dest),
       filename: env === 'production' ? '[name].[hash].js' : '[name].js'
     }
+
   };
 }
 
-export default function(tradie, options) {
+/**
+ * Create a webpack config object for all the client-side scripts
+ * @param   {object} options
+ * @param   {string} options.env
+ * @param   {string} options.root
+ * @param   {object} options.args
+ * @param   {object} options.config
+ * @returns {object}
+ */
+export function createClientConfig(options) {
+
+  const {env, root} = options;
+  const {src, dest, bundles, vendor, loaders, plugins, extensions} = options.config.scripts;
+
+  return {
+    target: 'web',
+    ...configureSourceMaps(env),
+    ...configureResolver(extensions),
+    ...configureLoaders(loaders),
+    ...configurePlugins(env, vendor, plugins),
+    ...configureEntries(env, root, src, dest, bundles.filter(
+      bundle => path.basename(bundle, path.extname(bundle)) !== 'server' //exclude **/server.js bundles
+    ), vendor)
+  };
+
+}
+
+/**
+ * Create a webpack config object for all the server-side scripts
+ * @param   {object} options
+ * @param   {string} options.env
+ * @param   {string} options.root
+ * @param   {object} options.args
+ * @param   {object} options.config
+ * @returns {object}
+ */
+export function createServerConfig(options) {
+
+  const {env, root} = options;
+  const {src, dest, bundles, loaders, plugins, extensions} = options.config.scripts;
+
+  return {
+    target: 'node',
+    ...configureSourceMaps(env),
+    ...configureResolver(extensions),
+    ...configureLoaders(loaders),
+    ...configurePlugins(env, [], plugins),
+    ...configureEntries(
+      env, root, src, dest, bundles.filter(
+        bundle => path.basename(bundle, path.extname(bundle)) === 'server' //only include **/server.js bundles
+      ), []
+    )
+  };
+
+}
+
+/**
+ * Create a webpack config object for all the server-side scripts
+ * @param   {object}  options
+ * @param   {string}  options.env
+ * @param   {string}  options.root
+ * @param   {object}  options.args
+ * @param   {array}   options.files
+ * @param   {array}   options.requires
+ * @returns {object}
+ */
+export function createTestConfig(options) {
+
+  const {env, root} = options;
+  const {src, dest, loaders, plugins, extensions} = options.config.scripts;
 
   const config = {
-    ...configureTarget(options),
-    ...configureSourceMaps(tradie),
-    ...configureResolver(tradie),
-    ...configureLoaders(tradie),
-    ...configurePlugins(tradie),
-    ...configureEntries(tradie)
-  };
 
+    target: 'node',
+    devtool: 'inline-source-map',
+
+    context: path.resolve(src, root),
+
+    entry: {
+      test: [].concat(files, requires)
+    },
+
+    output: {
+      path: path.resolve(dest, root),
+      filename: '[name].js'
+    },
+
+    ...configureResolver(extensions),
+    ...configureLoaders(loaders),
+    ...configurePlugins(null, [], plugins.concat(new MochaSetupPlugin())) //TODO: evaluate RewirePlugin
+
+  };
   return config;
 }
+

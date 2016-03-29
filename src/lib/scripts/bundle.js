@@ -1,4 +1,5 @@
-import createWebpackConfig from './createWebpackConfig';
+import path from 'path';
+import {createClientConfig, createServerConfig} from './createWebpackConfig';
 import runWebpack from './runWebpack';
 
 /**
@@ -21,23 +22,75 @@ import runWebpack from './runWebpack';
  * @param {function}      onChange
  */
 export default function({args, config, emitter, onChange}) {
+  const {env, watch} = args;
+  const {src, dest} = config;
 
-  const debug = args.env !== 'production';
-  const watch = args.watch;
-  const src = config.src;
-  const dest = config.dest;
-  const bundles = config.bundles;
-  const libraries = config.libraries;
-  const transforms = config.transforms;
-  const plugins = config.plugins;
-  const extensions = config.extensions;
+  //TODO: check for server.js and run a server build too
 
-  const webpackConfig = createWebpackConfig(
-    {root: '.', env: args.env, config: {scripts: config}},
-    {}
-  );
-  return runWebpack(webpackConfig, {watch, afterCompile: (err, stats, fs) => console.log('compiled', err, stats, fs)});
+  function afterCompile(err, stats) {
 
+    if (err) {
+      //FIXME:
+      console.log(err);
+      console.log(stats);
+      return;
+    }
+
+    //emit synthetic (cause webpack) end of bundling events for script bundles
+
+    let scriptCount = 0;
+    let scriptTotalSize = 0;
+    stats.assets
+      .filter(asset => path.extname(asset.name) === '.js')
+      .forEach(asset => {
+
+        scriptCount += 1;
+        scriptTotalSize += asset.size;
+
+        emitter.emit('scripts.bundle.finished', {
+          src: path.join(src, asset.name),
+          dest: path.join(dest, asset.name),
+          size: asset.size
+        });
+
+      })
+    ;
+
+    emitter.emit('scripts.bundling.finished', {
+      src,
+      dest,
+      count: scriptCount,
+      time: stats.time,
+      size: scriptTotalSize,
+      errors: stats.errors
+    });
+
+    if (onChange) onChange();
+  }
+
+  function bundleForClient() {
+
+    const webpackConfig = createClientConfig(
+      {env, root: '.', config: {scripts: config}}
+    );
+
+    return runWebpack(webpackConfig, {
+      watch, afterCompile
+    });
+
+  }
+
+  function bundleForServer() {
+
+    const webpackConfig = createServerConfig(
+      {env: args.env, root: '.', config: {scripts: config}}
+    );
+
+    return runWebpack(webpackConfig, {
+      watch, afterCompile
+    });
+
+  }
+
+  return bundleForClient();
 }
-
-//TODO: check bundle names - vendor.js and common.js are special and not allowed

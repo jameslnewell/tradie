@@ -1,4 +1,4 @@
-import createWebpackConfig from './createWebpackConfig';
+import {createClientConfig} from './createWebpackConfig';
 
 describe('createWebpackConfig', () => {
 

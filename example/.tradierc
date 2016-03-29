@@ -1,7 +1,7 @@
 {
   "scripts": {
+//    "bundles": ["foobar"],
     "vendor": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
     "loaders": ["babel"]
-  },
-  "plugins": ["livereload"]
+  }
 }
