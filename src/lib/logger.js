@@ -68,7 +68,7 @@ module.exports = function(options) {
     const duration = humanize(result.time);
     let msg = ` => ${count} ${type}s bundled in ${duration} - ${size}`;
 
-    if (result.errors) {
+    if (result.errors && result.errors.length > 0) {
       msg = chalk.bold.red(msg) + result.errors;
     } else if (result.count) {
       msg = chalk.green(msg);

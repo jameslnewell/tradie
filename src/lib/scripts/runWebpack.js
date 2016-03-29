@@ -29,7 +29,7 @@ export default function(config, options) {
       } else {
         const jsonStats = stats.toJson();
         afterCompile(err, jsonStats, fs);
-        if (!watch) resolve();
+        if (!watch) resolve(jsonStats.errors.length > 0 ? -1 : 0);
       }
     };
 
