@@ -21,11 +21,8 @@
   },
   "dependencies": {
     "autoprefixer": "^6.3.3",
-    "browserify": "^13.0.0",
-    "browserify-incremental": "^3.1.1",
     "chalk": "^1.1.1",
     "clean-css": "^3.4.8",
-    "envify": "^3.4.0",
     "eslint": "^1.10.3",
     "file-size": "^1.0.0",
     "glob": "^7.0.3",
@@ -46,7 +43,6 @@
     "source-mapper": "^2.0.0",
     "through2": "^2.0.1",
     "uglify-js": "^2.6.2",
-    "watchify": "^3.7.0",
     "webpack": "^1.12.14",
     "yargs": "^4.1.0"
   },
