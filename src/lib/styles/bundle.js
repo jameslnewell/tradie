@@ -45,7 +45,7 @@ function createBundle(options) {
     streams.push(minify());
   }
 
-  streams.push(size(s => args.s = s));
+  streams.push(size(s => args.size = s));
   streams.push(fs.createWriteStream(dest));
 
   //write to a file
