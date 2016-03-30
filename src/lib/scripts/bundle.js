@@ -19,7 +19,6 @@ import runWebpack from './runWebpack';
  * @param {string}        [args.watch]
  *
  * @param {function}      emitter
- * @param {function}      onChange
  */
 export default function({args, config, emitter, onChange}) {
   const {env, watch} = args;
@@ -65,13 +64,12 @@ export default function({args, config, emitter, onChange}) {
       errors: stats.errors
     });
 
-    if (onChange) onChange();
   }
 
   function bundleForClient() {
 
     const webpackConfig = createClientConfig(
-      {env, root: '.', config: {scripts: config}}
+      {env, root: '.', config: {scripts: config}, onChange}
     );
 
     return runWebpack(webpackConfig, {
@@ -83,7 +81,7 @@ export default function({args, config, emitter, onChange}) {
   function bundleForServer() {
 
     const webpackConfig = createServerConfig(
-      {env: args.env, root: '.', config: {scripts: config}}
+      {env: args.env, root: '.', config: {scripts: config}, onChange}
     );
 
     return runWebpack(webpackConfig, {

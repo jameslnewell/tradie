@@ -15,7 +15,7 @@ import MochaSetupPlugin from './MochaSetupPlugin';
  */
 export default function({args, config, emitter}) {
   const {watch} = args;
-  const {src, dest, extensions, transforms} = config;
+  const {src, dest, extensions, loaders} = config;
 
   const mochaOptions = readMochaOptions();
   const mochaRequire = mochaOptions.require;
@@ -54,7 +54,7 @@ export default function({args, config, emitter}) {
           const entries = [].concat(
             mochaRequire,
             files
-          ).map(entry => './'+entry); //make the entries local files - TODO: should we force tradie users to do this themselves?
+          ).map(entry => './' + entry); //make the entries local files - TODO: should we force tradie users to do this themselves?
 
           const webpackConfig = {
 
@@ -76,7 +76,7 @@ export default function({args, config, emitter}) {
 
             module: {
               loaders: [
-                transforms.map(loader => ({
+                loaders.map(loader => ({
                   exclude: /(node_modules)/,
                   loader
                 }))

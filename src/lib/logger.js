@@ -69,7 +69,8 @@ module.exports = function(options) {
     let msg = ` => ${count} ${type}s bundled in ${duration} - ${size}`;
 
     if (result.errors && result.errors.length > 0) {
-      msg = chalk.bold.red(msg) + result.errors;
+      msg = chalk.bold.red(msg) + '\n' + result.errors;
+      console.log(result.errors);
     } else if (result.count) {
       msg = chalk.green(msg);
     }

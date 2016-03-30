@@ -1,11 +1,10 @@
 import logger from '../lib/logger';
-import lintScripts from '../lib/scripts/lint';
+import linter from '../lib/scripts/linter';
 import bundleScripts from '../lib/scripts/bundle';
 import bundleStyles from '../lib/styles/bundle';
 
 export const name = 'build';
 export const desc = 'Lint and bundle script and style files';
-
 
 export function hint(yargs) {
   return yargs
@@ -47,16 +46,14 @@ export function exec({args, config, emitter}) {
     )
   ;
 
-  return lintScripts(config.scripts.src, config.scripts.extensions, emitter)
-    .then(code => {
+  const lintScripts = linter({emitter, extensions: config.scripts.extensions});
 
-      if (!watch && code !== 0) {
-        return code;
-      }
+  return lintScripts(config.scripts.src)
+    .then(() => {
 
       return Promise.all([
         bundleScripts({args, config: config.scripts, emitter,
-          onChange: (files) => lintScripts(files, config.scripts.extensions, emitter)
+          onChange: (files) => lintScripts(files)
         }),
         bundleStyles({args, config: config.styles, emitter})
       ])

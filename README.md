@@ -174,6 +174,7 @@ For example:
 - break: browserify transform configuration has changed from `scripts.transforms` to `scripts.loaders` (a webpack loader name)
 - break: browserify plugin configuration has changed from `scripts.plugins` to `scripts.plugins` (a webpack plugin instance)
 - break: script bundle information is reported slightly differently (due to changes below)
+- break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
 
 **plugin:**
 

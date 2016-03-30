@@ -1,5 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
+import WatchAndLintPlugin from './WatchAndLintPlugin';
 
 function configureSourceMaps(env) {
   return {
@@ -18,18 +19,27 @@ function configureResolver(extensions) {
 function configureLoaders(loaders) {
   return {
     module: {
-      loaders: [
-        loaders.map(loader => ({
-          exclude: /(node_modules)/, //apply loaders only to project code by default, possibly add a way to specify all the options later
-          loader
-        }))
-      ]
+      //preLoaders: [
+      //  {
+      //    //test: /\.jsx?$/, //TODO: only apply to script extensions
+      //    exclude: /(node_modules)/,
+      //    loader: 'eslint' //TODO: only lint in dev and if "build"ing
+      //  }
+      //],
+      loaders: loaders.map(loader => ({
+        exclude: /(node_modules)/, //apply loaders only to project code by default, possibly add a way to specify all the options later
+        loader
+      }))
     }
   };
 }
 
-function configurePlugins(env, vendor, plugins) {
+function configurePlugins(env, vendor, plugins, onChange) {
   let allPlugins = [];
+
+  if (onChange) {
+    allPlugins.push(new WatchAndLintPlugin(onChange));
+  }
 
   // --- vendor bundle ---
 

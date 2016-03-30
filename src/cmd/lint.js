@@ -1,5 +1,5 @@
 import logger from '../lib/logger';
-import lint from '../lib/scripts/lint';
+import linter from '../lib/scripts/linter';
 
 export const name = 'lint';
 export const desc = 'Lint script files';
@@ -11,5 +11,5 @@ export function exec({args, config, emitter}) {
     result => logger(args).lintingFinished(result)
   );
 
-  return lint(config.scripts.src, config.scripts.extensions, emitter);
+  return linter({extensions: config.scripts.extensions, emitter})(config.scripts.src);
 }

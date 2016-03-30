@@ -1,4 +1,4 @@
-import ConcatSource from 'webpack-core/lib/ConcatSource';
+import {ConcatSource} from 'webpack-sources';
 
 const mochaSetup = `
 
@@ -21,10 +21,10 @@ setTimeout(() => {
 
 export default class MochaSetupPlugin {
   apply(compiler) {
-    compiler.plugin('compilation', function(compilation) {
-      compilation.plugin('optimize-chunk-assets', function(chunks, callback) {
-        chunks.forEach(function(chunk) {
-          chunk.files.forEach(function(file, i) {
+    compiler.plugin('compilation', compilation => {
+      compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+        chunks.forEach(chunk => {
+          chunk.files.forEach(file => {
             compilation.assets[file] = new ConcatSource(
               mochaSetup,
               compilation.assets[file]
