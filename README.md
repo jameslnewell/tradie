@@ -10,9 +10,9 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
 
 ## Usage
 
-1. Create your project with:
+1. Setup your project:
 
-    `tradie init`
+    Try a tradie generator (coming soon).
 
 2. Build your project with:
 
@@ -23,16 +23,6 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
     `npm run test`
 
 ## Tasks
-
-### Initialise
-
-Create a new project.
-
-    tradie init --force --template=tradie-template-react
-
-Uses conventions to create a new project.
-
-Use the `--force` flag to write to disk.
 
 ### Clean
 
@@ -104,8 +94,8 @@ Configure script bundling.
   "scripts": {
     "src": "src/", //the directory where script files are sourced
     "dest": "dist/", //the directory where bundled scripts are output
-    "bundles": ["index.js"], //the script entry files
-    "vendor": [], //the third-party packages placed into `vendor.js` for long term caching
+    "bundles": ["./index.js"], //the script entry files
+    "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
     "loaders": [], //the webpack loaders
     "plugins": [], //the webpack plugins
     "extensions": [".js"] //the script extensions
@@ -122,7 +112,7 @@ Configure style bundling.
   "styles": {
     "src": "src/", //the directory where style files are sourced
     "dest": "dist/", //the directory where bundled styles are output
-    "bundles": ["index.scss"] //the style entry files
+    "bundles": ["./index.scss"] //the style entry files
   }
 }
 ```
@@ -151,12 +141,6 @@ For example:
 
 ## Related packages
 
-### Templates
-
-- [tradie-template-react](https://www.npmjs.com/package/tradie-template-react)
-- [tradie-template-react-redux](https://www.npmjs.com/package/tradie-template-react-redux)
-- [tradie-template-react-redux-universal](https://www.npmjs.com/package/tradie-template-react-redux-universal)
-
 ### Plugins
 
 - [tradie-plugin-livereload](https://www.npmjs.com/package/tradie-plugin-livereload)
@@ -169,6 +153,7 @@ For example:
 
 **user:**
 
+- break: remove `tradie init` command and templating - its really a separate concern and there's better tools out there that do the scaffolding, and having tradie installed locally and globally often lead to user errors
 - break: bundle paths must be prefixed with `./` otherwise webpack will look for them in `./node_modules`  e.g. `index.js` must be changed to `./index.js`
 - break: vendor bundle configuration has changed from `scripts.libraries` to `scripts.vendors`
 - break: browserify transform configuration has changed from `scripts.transforms` to `scripts.loaders` (a webpack loader name)

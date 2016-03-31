@@ -3,7 +3,6 @@ import {EventEmitter} from 'events';
 import readConfig from './lib/readConfig';
 import executePlugins from './lib/executePlugins';
 
-import * as initCommand from './cmd/init';
 import * as cleanCommand from './cmd/clean';
 import * as lintCommand from './cmd/lint';
 import * as bundleCommand from './cmd/bundle';
@@ -89,21 +88,15 @@ export default function() {
               }
             };
 
-            if (command.name === 'init') {
 
-              //don't load plugins, init isn't a project specific command
-              run();
-            } else {
 
-              //load the plugins
-              executePlugins(tradie)
-                .then(() => {
-                  run();
-                })
-                .catch(reject)
-              ;
-
-            }
+            //load the plugins
+            executePlugins(tradie)
+              .then(() => {
+                run();
+              })
+              .catch(reject)
+            ;
 
           }
         );
@@ -115,7 +108,6 @@ export default function() {
 
     //load the commands
     tradie
-      .cmd(initCommand)
       .cmd(cleanCommand)
       .cmd(lintCommand)
       .cmd(bundleCommand)
