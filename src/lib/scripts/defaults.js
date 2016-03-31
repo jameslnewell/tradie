@@ -3,7 +3,7 @@ export default {
   src: './src/',
   dest: './dist/',
   bundles: ['./index.js'],
-  vendor: [],
+  vendors: [],
   loaders: [],
   plugins: [],
   extensions: ['.js']

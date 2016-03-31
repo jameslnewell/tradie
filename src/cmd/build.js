@@ -19,11 +19,11 @@ export function hint(yargs) {
   ;
 }
 
-export function exec({args, config, emitter}) {
-  const {watch} = args;
+export function exec(tradie) {
+  const {args, args: {watch}, config} = tradie;
   const buildLogger = logger(args);
 
-  emitter
+  tradie
     .on(
       'scripts.linting.finished',
       result => buildLogger.lintingFinished(result)
@@ -46,16 +46,16 @@ export function exec({args, config, emitter}) {
     )
   ;
 
-  const lintScripts = linter({emitter, extensions: config.scripts.extensions});
+  const lintScripts = linter({emitter: tradie, extensions: config.scripts.extensions});
 
   return lintScripts(config.scripts.src)
     .then(() => {
 
       return Promise.all([
-        bundleScripts({args, config: config.scripts, emitter,
+        bundleScripts({args, config: config.scripts, emitter: tradie,
           onChange: (files) => lintScripts(files)
         }),
-        bundleStyles({args, config: config.styles, emitter})
+        bundleStyles({args, config: config.styles, emitter: tradie})
       ])
         .then(codes => codes.reduce((accum, next) => {
           if (next !== 0) {

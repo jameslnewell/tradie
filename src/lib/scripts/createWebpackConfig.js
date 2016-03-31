@@ -1,213 +1,202 @@
 import path from 'path';
 import webpack from 'webpack';
+import MochaSetupPlugin from './MochaSetupPlugin';
 import WatchAndLintPlugin from './WatchAndLintPlugin';
 
-function configureSourceMaps(env) {
-  return {
-    devtool: env === 'production' ? 'hidden-source-map' : 'eval'
-  };
-}
+const ENV_PROD = 'production';
 
-function configureResolver(extensions) {
-  return {
+function createCommonConfig(options) {
+  const {config: {scripts: {loaders, plugins, extensions}}} = options;
+
+  const config = {
+
     resolve: {
       extensions: [''].concat(extensions)
-    }
-  };
-}
+    },
 
-function configureLoaders(loaders) {
-  return {
     module: {
-      //preLoaders: [
-      //  {
-      //    //test: /\.jsx?$/, //TODO: only apply to script extensions
-      //    exclude: /(node_modules)/,
-      //    loader: 'eslint' //TODO: only lint in dev and if "build"ing
-      //  }
-      //],
+
+      preLoaders: [],
+
+      //apply loaders only to project specific code by default, in the future, we'll possibly add a way to override this convention
       loaders: loaders.map(loader => ({
-        exclude: /(node_modules)/, //apply loaders only to project code by default, possibly add a way to specify all the options later
+        exclude: /(node_modules)/,
         loader
-      }))
-    }
+      })),
+
+      postLoaders: []
+
+    },
+
+    plugins: [].concat(plugins)
+
   };
+
+  return config;
 }
 
-function configurePlugins(env, vendor, plugins, onChange) {
-  let allPlugins = [];
+function createApplicationConfig(options) {
+  const {env} = options;
 
-  console.log('onChange', onChange);
-  if (onChange) {
-    allPlugins.push(new WatchAndLintPlugin(onChange));
-  }
+  const config = createCommonConfig(options);
 
-  // --- vendor bundle ---
+  //source maps
+  config.devtool = env === ENV_PROD ? 'hidden-source-map' : 'eval';
 
-  //create a vendor bundle
-  if (vendor.length > 0) {
-    //FIXME: for long-term-caching we need to use https://github.com/diurnalist/chunk-manifest-webpack-plugin
-    // according to http://webpack.github.io/docs/list-of-plugins.html#2-explicit-vendor-chunk
-    //TODO: move to DllPlugin and DllReferencePlugin for faster builds
-    allPlugins = allPlugins.concat([
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: env === 'production' ? 'vendor.[hash].js' : 'vendor.js',
-        //prevent any other packages, other than those specified in the vendor array, from being included
-        minChunks: Infinity
-      })
-    ]);
-  }
+  //plugins
+  if (env === ENV_PROD) {
 
-  // --- common bundle ---
+    config.plugins = config.plugins.concat([
 
-  //TODO: use CommonsChunkPlugin to produce common.js if there is more than 1 bundle
-
-  // --- production ---
-
-  if (env === 'production') {
-    allPlugins = allPlugins.concat([
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('production')
       }),
+
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(true),
       new webpack.optimize.UglifyJsPlugin({output: {comments: false}})
+
     ]);
-    //TODO: create rev-manifest.json to map hashed files to their original names
+
+    //TODO: plugin to create rev-manifest.json to map hashed files to their original names
   }
 
-  // --- user plugins ---
-
-  allPlugins = allPlugins.concat(plugins);
-
-  return {plugins: allPlugins};
+  return config;
 }
 
-function configureEntries(env, root, src, dest, bundles, vendor) {
+export function createClientConfig(options) {
+  const {env, root, config: {scripts: {src, dest, bundles, vendors}}} = options;
 
-  //TODO: error if bundle name contains "vendor.js" or "common.js"
+  const config = createApplicationConfig(options);
 
-  const entries = bundles.reduce((accum, bundle) => ({
-    ...accum,
-    [path.join(
-      path.dirname(bundle),
-      path.basename(bundle, path.extname(bundle))
-    )]: bundle
-  }), {});
+  //configure all the bundles
+  const entries = bundles.reduce((accum, bundle) => {
 
-  if (vendor.length > 0) {
-    entries.vendor = vendor;
+    const dirname = path.dirname(bundle);
+    const basename = path.basename(bundle, path.extname(bundle));
+
+    //TODO: check if the bundle starts with './' and warn if it doesn't
+
+    //check for reserved bundle names
+    if (basename === 'vendor' || basename === 'common') {
+      throw new Error(`"${basename}" is a reserved bundle name. Please use a different name.`);
+    }
+
+    //skip the server bundle
+    if (basename === 'server') {
+      return accum;
+    }
+
+    return {
+      ...accum,
+      [path.join(dirname, basename)]: bundle
+    };
+
+  }, {});
+
+  //create a vendor.js bundle for packages that change infrequently and can be cached for long periods
+  if (vendors.length > 0) {
+
+    entries.vendor = vendors;
+
+    //FIXME: for long-term-caching we need to use https://github.com/diurnalist/chunk-manifest-webpack-plugin
+    // according to http://webpack.github.io/docs/list-of-plugins.html#2-explicit-vendor-chunk
+    //TODO: move to DllPlugin and DllReferencePlugin for faster builds?
+    config.plugins = config.plugins.concat([
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        filename: env === ENV_PROD ? 'vendor.[chunkhash].js' : 'vendor.js',
+        minChunks: Infinity //prevent any other packages, other than those specified in the vendor array, from being included
+      })
+    ]);
+
+  }
+
+  //create a common.js bundle for packages that are shared across multiple bundles
+  if (bundles.length > 0) {
+    //CommonsChunkPlugin
   }
 
   return {
+    ...config,
 
-    context: path.resolve(path.join(root, src)),
+    target: 'web',
 
     entry: entries,
+    context: path.resolve(root, src),
 
     output: {
-      path: path.join(root, dest),
-      filename: env === 'production' ? '[name].[hash].js' : '[name].js'
+      path: path.resolve(root, dest),
+      filename: env === ENV_PROD ? '[name].[chunkhash].js' : '[name].js'
     }
 
   };
 }
 
-/**
- * Create a webpack config object for all the client-side scripts
- * @param   {object} options
- * @param   {string} options.env
- * @param   {string} options.root
- * @param   {object} options.args
- * @param   {object} options.config
- * @param   {object} options.onChange
- * @returns {object}
- */
-export function createClientConfig(options) {
-
-  const {env, root, config, onChange} = options;
-  const {src, dest, bundles, vendor, loaders, plugins, extensions} = config.scripts;
-
-  return {
-    target: 'web',
-    ...configureSourceMaps(env),
-    ...configureResolver(extensions),
-    ...configureLoaders(loaders),
-    ...configurePlugins(env, vendor, plugins, onChange),
-    ...configureEntries(env, root, src, dest, bundles.filter(
-      bundle => path.basename(bundle, path.extname(bundle)) !== 'server' //exclude **/server.js bundles
-    ), vendor)
-  };
-
-}
-
-/**
- * Create a webpack config object for all the server-side scripts
- * @param   {object} options
- * @param   {string} options.env
- * @param   {string} options.root
- * @param   {object} options.args
- * @param   {object} options.config
- * @param   {object} options.onChange
- * @returns {object}
- */
 export function createServerConfig(options) {
+  const {root, config: {scripts: {src, dest, bundles}}} = options;
 
-  const {env, root, config, onChange} = options;
-  const {src, dest, bundles, loaders, plugins, extensions} = config.scripts;
+  const config = createApplicationConfig(options);
+
+  //configure the server bundles
+  const entries = bundles.reduce((accum, bundle) => {
+
+    const dirname = path.dirname(bundle);
+    const basename = path.basename(bundle, path.extname(bundle));
+
+    //skip the server bundle
+    if (basename !== 'server') {
+      return accum;
+    }
+
+    return {
+      ...accum,
+      [path.join(dirname, basename)]: bundle
+    };
+
+  }, {});
 
   return {
-    target: 'node',
-    ...configureSourceMaps(env),
-    ...configureResolver(extensions),
-    ...configureLoaders(loaders),
-    ...configurePlugins(env, [], plugins, onChange),
-    ...configureEntries(
-      env, root, src, dest, bundles.filter(
-        bundle => path.basename(bundle, path.extname(bundle)) === 'server' //only include **/server.js bundles
-      ), []
-    )
-  };
+    ...config,
 
+    target: 'node',
+
+    entry: entries,
+    context: path.resolve(root, src),
+
+    output: {
+      path: path.resolve(root, dest),
+      filename: '[name].js'
+    }
+
+  };
 }
 
-/**
- * Create a webpack config object for all the server-side scripts
- * @param   {object}  options
- * @param   {string}  options.env
- * @param   {string}  options.root
- * @param   {object}  options.args
- * @param   {array}   options.files
- * @param   {array}   options.requires
- * @returns {object}
- */
 export function createTestConfig(options) {
+  const {root, config: {scripts: {src, dest}}, mocha: {files, requires}} = options;
 
-  const {env, root} = options;
-  const {src, dest, loaders, plugins, extensions} = options.config.scripts;
+  const config = createApplicationConfig(options);
 
-  const config = {
+  config.plugins.push(new MochaSetupPlugin());
+
+  return {
+    ...config,
 
     target: 'node',
     devtool: 'inline-source-map',
 
-    context: path.resolve(src, root),
-
     entry: {
-      test: [].concat(files, requires)
+      tests: [].concat(
+        requires, //TODO: check if the bundle starts with './' and warn if it doesn't
+        files.map(entry => './' + entry)
+      )
     },
+    context: path.resolve(root, src),
 
     output: {
-      path: path.resolve(dest, root),
+      path: path.resolve(root, dest),
       filename: '[name].js'
-    },
-
-    ...configureResolver(extensions),
-    ...configureLoaders(loaders),
-    ...configurePlugins(null, [], plugins.concat(new MochaSetupPlugin())) //TODO: evaluate RewirePlugin
+    }
 
   };
-  return config;
 }
-

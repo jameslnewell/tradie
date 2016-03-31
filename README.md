@@ -170,7 +170,7 @@ For example:
 **user:**
 
 - break: bundle paths must be prefixed with `./` otherwise webpack will look for them in `./node_modules`  e.g. `index.js` must be changed to `./index.js`
-- break: vendor bundle configuration has changed from `scripts.libraries` to `scripts.vendor`
+- break: vendor bundle configuration has changed from `scripts.libraries` to `scripts.vendors`
 - break: browserify transform configuration has changed from `scripts.transforms` to `scripts.loaders` (a webpack loader name)
 - break: browserify plugin configuration has changed from `scripts.plugins` to `scripts.plugins` (a webpack plugin instance)
 - break: script bundle information is reported slightly differently (due to changes below)

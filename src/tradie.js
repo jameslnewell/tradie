@@ -68,22 +68,17 @@ export default function() {
           command.name,
           command.desc,
           command.hint,
-          argv => {
-
-            const args = {
-              ...argv,
-              env
-            };
+          args => {
 
             const run = () => {
               try {
 
-                emitter.emit('command.started', {name, args, config});
-                Promise.resolve(command.exec({args, config, emitter}))
+                emitter.emit('command.started', {...tradie, args});
+                Promise.resolve(command.exec({...tradie, args}))
                   .then(
-                    code => {
-                      emitter.emit('command.finished', {name, args, config, code});
-                      resolve(code);
+                    exitCode => {
+                      emitter.emit('command.finished', {...tradie, args, exitCode});
+                      resolve(exitCode);
                     },
                     error => reject(error)
                   )

@@ -72,9 +72,7 @@ export default function({args, config, emitter, onChange}) {
       {env, root: '.', config: {scripts: config}, onChange}
     );
 
-    return runWebpack(webpackConfig, {
-      watch, afterCompile
-    });
+    return runWebpack(webpackConfig, {watch}, afterCompile);
 
   }
 
@@ -84,9 +82,7 @@ export default function({args, config, emitter, onChange}) {
       {env: args.env, root: '.', config: {scripts: config}, onChange}
     );
 
-    return runWebpack(webpackConfig, {
-      watch, afterCompile
-    });
+    return runWebpack(webpackConfig, {watch}, afterCompile);
 
   }
 

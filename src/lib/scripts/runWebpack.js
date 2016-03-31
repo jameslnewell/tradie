@@ -7,10 +7,11 @@ import MemoryFS from 'memory-fs';
  * @param {object}    options               The run options
  * @param {boolean}   options.watch         Whether we're watching
  * @param {boolean}   options.virtual       Whether to use a virtual file system
- * @param {function}  options.afterCompile  Called after a compilation has finished
+ * @param {function}  callback              Called whenever a compilation has finished
+ * @returns {Promise<number>}
  */
-export default function(config, options) {
-  const {watch, virtual, afterCompile} = options;
+export default function(config, options, callback) {
+  const {watch, virtual} = options;
 
   return new Promise((resolve, reject) => {
 
@@ -22,28 +23,28 @@ export default function(config, options) {
       compiler.outputFileSystem = fs;
     }
 
-    const wrappedAfterCompile = (err, stats) => {
+    const wrappedCallback = (err, stats) => {
       if (err) {
-        afterCompile(err, stats, fs);
+        callback(err, stats, fs);
         if (!watch) reject(err);
       } else {
         const jsonStats = stats.toJson();
-        afterCompile(err, jsonStats, fs);
+        callback(err, jsonStats, fs);
         if (!watch) resolve(jsonStats.errors.length > 0 ? -1 : 0);
       }
     };
 
     if (watch) {
 
-      const watcher = compiler.watch({}, wrappedAfterCompile);
+      const watcher = compiler.watch({}, wrappedCallback);
 
       //stop watching and exit when the user presses CTL-C
       process.on('SIGINT', () => {
-        watcher.close(() => resolve());
+        watcher.close(() => resolve(0));
       });
 
     } else {
-      compiler.run(wrappedAfterCompile);
+      compiler.run(wrappedCallback);
     }
 
   });

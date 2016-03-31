@@ -21,8 +21,8 @@ export default function(bundle) {
     //extract the source map, replace URLs in stack traces from generated bundle with the URLs
     // from the original source files, and pipe the output to the console
     const result = mapper.extract(contents);
-    const stream1 = mapper.stream(result.map);
-    const stream2 = mapper.stream(result.map);
+    const stream1 = mapper.stream(result.map).on('error', errr => console.error(err));
+    const stream2 = mapper.stream(result.map).on('error', errr => console.error(err));
     stdout = stdout.pipe(stream1);
     stderr = stderr.pipe(stream2);
 
