@@ -151,6 +151,8 @@ For example:
 
 ### webpack
 
+Overall the changes are quite minor. Continue reading about the minor breaking changes:
+
 **user:**
 
 - break: remove `tradie init` command and templating - its really a separate concern and there's better tools out there that do the scaffolding, and having tradie installed locally and globally often lead to user errors
@@ -160,6 +162,7 @@ For example:
 - break: browserify plugin configuration has changed from `scripts.plugins` to `scripts.plugins` (a webpack plugin instance)
 - break: script bundle information is reported slightly differently (due to changes below)
 - break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
+- add: `common.js` generated with modules common to multiple bundles
 
 **plugin:**
 
@@ -227,6 +230,7 @@ to allow privately scoped templates/plugins
 
 ## To do
 
+- move `scripts.src|dest` and `styles.src|dest` to `src|dest`
 - do we need to lint all files on re-bundle while watching? test files aren't watched so it makes it hard to check linting of test files. maybe we need to add a watch arg to the lint command that watches everything, not just what's being bundled
 - resolve `eslint` configs relative to the current working dir
 - handle errors on browserify object (not just the bundle)
@@ -237,4 +241,5 @@ to allow privately scoped templates/plugins
 - make `autoprefixer` configurable
 - make `uglify` configurable
 - make `sass-composer` configurable
+- replace sass-composer with a postcss pipeline
 - make a code-splitting example
