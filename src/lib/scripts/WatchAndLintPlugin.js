@@ -1,11 +1,15 @@
-import lint from './lint';
 
 export default class WatchAndLintPlugin {
+
+  constructor(onChange) {
+    this.onChange = onChange;
+  }
+
   apply(compiler) {
 
     compiler.plugin('invalid', (file) => {
       console.log('changed:', file);
-      lint(file);
+      this.onChange(file);
     });
 
   }

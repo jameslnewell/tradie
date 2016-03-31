@@ -37,6 +37,7 @@ function configureLoaders(loaders) {
 function configurePlugins(env, vendor, plugins, onChange) {
   let allPlugins = [];
 
+  console.log('onChange', onChange);
   if (onChange) {
     allPlugins.push(new WatchAndLintPlugin(onChange));
   }
@@ -120,19 +121,20 @@ function configureEntries(env, root, src, dest, bundles, vendor) {
  * @param   {string} options.root
  * @param   {object} options.args
  * @param   {object} options.config
+ * @param   {object} options.onChange
  * @returns {object}
  */
 export function createClientConfig(options) {
 
-  const {env, root} = options;
-  const {src, dest, bundles, vendor, loaders, plugins, extensions} = options.config.scripts;
+  const {env, root, config, onChange} = options;
+  const {src, dest, bundles, vendor, loaders, plugins, extensions} = config.scripts;
 
   return {
     target: 'web',
     ...configureSourceMaps(env),
     ...configureResolver(extensions),
     ...configureLoaders(loaders),
-    ...configurePlugins(env, vendor, plugins),
+    ...configurePlugins(env, vendor, plugins, onChange),
     ...configureEntries(env, root, src, dest, bundles.filter(
       bundle => path.basename(bundle, path.extname(bundle)) !== 'server' //exclude **/server.js bundles
     ), vendor)
@@ -147,19 +149,20 @@ export function createClientConfig(options) {
  * @param   {string} options.root
  * @param   {object} options.args
  * @param   {object} options.config
+ * @param   {object} options.onChange
  * @returns {object}
  */
 export function createServerConfig(options) {
 
-  const {env, root} = options;
-  const {src, dest, bundles, loaders, plugins, extensions} = options.config.scripts;
+  const {env, root, config, onChange} = options;
+  const {src, dest, bundles, loaders, plugins, extensions} = config.scripts;
 
   return {
     target: 'node',
     ...configureSourceMaps(env),
     ...configureResolver(extensions),
     ...configureLoaders(loaders),
-    ...configurePlugins(env, [], plugins),
+    ...configurePlugins(env, [], plugins, onChange),
     ...configureEntries(
       env, root, src, dest, bundles.filter(
         bundle => path.basename(bundle, path.extname(bundle)) === 'server' //only include **/server.js bundles
