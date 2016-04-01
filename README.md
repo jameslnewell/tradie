@@ -6,7 +6,7 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
 
 ## Installation
 
-    npm install -g tradie
+    npm install --save-dev tradie
 
 ## Usage
 

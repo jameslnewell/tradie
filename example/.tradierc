@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "bundles": ["./index.js"],
     "vendors": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
     "loaders": ["babel"]
   }

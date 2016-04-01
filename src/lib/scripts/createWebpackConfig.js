@@ -79,7 +79,7 @@ export function createClientConfig(options) {
 
     //check for reserved bundle names
     if (basename === 'vendor' || basename === 'common') {
-      throw new Error(`"${basename}" is a reserved bundle name. Please use a different name.`);
+      throw new Error(`'${basename}' is a reserved bundle name. Please use a different name.`);
     }
 
     //skip the server bundle
@@ -94,6 +94,19 @@ export function createClientConfig(options) {
 
   }, {});
 
+  //create a common.js bundle for modules that are shared across multiple bundles
+  const entryChunkNames = Object.keys(entries);
+  if (entryChunkNames.length > 0) {
+    config.plugins = config.plugins.concat([
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'common',
+        filename: env === ENV_PROD ? 'common.[chunkhash].js' : 'common.js',
+        chunks: entryChunkNames, //exclude modules from the vendor chunk
+        minChunks: entryChunkNames.length //modules must be used across all the chunks to be included
+      })
+    ]);
+  }//TODO: what about for a single page app where require.ensure is used - I want a common stuff for all chunks in the main entry point
+
   //create a vendor.js bundle for packages that change infrequently and can be cached for long periods
   if (vendors.length > 0) {
 
@@ -101,20 +114,15 @@ export function createClientConfig(options) {
 
     //FIXME: for long-term-caching we need to use https://github.com/diurnalist/chunk-manifest-webpack-plugin
     // according to http://webpack.github.io/docs/list-of-plugins.html#2-explicit-vendor-chunk
-    //TODO: move to DllPlugin and DllReferencePlugin for faster builds?
+    //TODO: use DllPlugin and DllReferencePlugin for faster builds?
     config.plugins = config.plugins.concat([
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         filename: env === ENV_PROD ? 'vendor.[chunkhash].js' : 'vendor.js',
-        minChunks: Infinity //prevent any other packages, other than those specified in the vendor array, from being included
+        minChunks: Infinity //only modules manually selected for the vendor bundle may be included
       })
     ]);
 
-  }
-
-  //create a common.js bundle for packages that are shared across multiple bundles
-  if (bundles.length > 0) {
-    //CommonsChunkPlugin
   }
 
   return {
