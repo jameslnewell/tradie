@@ -161,23 +161,19 @@ function createAppBundle(options) {
  * @param {string}        [args.watch]
  * @returns {Promise}
  */
-export default function({args, config, emitter}) {
+export default function(tradie) {
 
-  const debug = args.env !== 'production';
-  const watch = args.watch;
-  const src = config.src;
-  const dest = config.dest;
-  const bundles = config.bundles;
-  const libraries = config.libraries;
-  //const transforms = config.transforms;
+  const {env, root, args: {watch}, config: {src, dest, styles: {bundles}}} = tradie;
+
+  const debug = env !== 'production';
 
   let streams = [];
 
   let totalTime = 0;
   let totalSize = 0;
 
-  emitter.emit('styles.bundling.started');
-  emitter.on('styles.bundle.finished', result => {
+  tradie.emit('styles.bundling.started');
+  tradie.on('styles.bundle.finished', result => {
 
     if (result.time > totalTime) {
       totalTime = result.time;
@@ -187,10 +183,11 @@ export default function({args, config, emitter}) {
   });
 
   return new Promise((resolve, reject) => {
-    mkdirp(dest, err => {
+
+    mkdirp(path.resolve(root, dest), err => {
       if (err) return reject(err);
 
-      //TODO: libraries
+      //TODO: vendors
 
       //create bundle streams
       streams = streams.concat(bundles.map(
@@ -199,8 +196,7 @@ export default function({args, config, emitter}) {
           watch,
           src: path.join(src, file),
           dest: path.join(dest, path.basename(file, path.extname(file)) + '.css'),
-          libraries,
-          emitter
+          emitter: tradie
         })
       ));
 
@@ -213,7 +209,7 @@ export default function({args, config, emitter}) {
               (accum, next) => accum || Boolean(next.error), false
             );
 
-            emitter.emit('styles.bundling.finished', {
+            tradie.emit('styles.bundling.finished', {
               src,
               dest,
               count: streams.length,

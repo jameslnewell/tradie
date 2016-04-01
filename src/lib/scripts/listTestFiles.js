@@ -2,12 +2,12 @@ import path from 'path';
 import glob from 'glob';
 
 /**
- * Recursively list script files named `*.test.js` in the `scripts.src` directory
+ * Recursively list script files named `*.test.js` in the `src` directory
  * @params  {object}  options
  * @returns {Promise<Array<string>>}
  */
 export default function(options) {
-  const {root, config: {scripts: {src, extensions}}} = options;
+  const {root, config: {src, scripts: {extensions}}} = options;
 
   let globExtension = '';
   if (extensions.length > 1) {

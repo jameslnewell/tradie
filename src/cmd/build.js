@@ -1,3 +1,4 @@
+import path from 'path';
 import logger from '../lib/logger';
 import linter from '../lib/scripts/linter';
 import bundleScripts from '../lib/scripts/bundle';
@@ -20,7 +21,7 @@ export function hint(yargs) {
 }
 
 export function exec(tradie) {
-  const {args, args: {watch}, config} = tradie;
+  const {root, args, args: {watch}, config, config: {src}} = tradie;
   const buildLogger = logger(args);
 
   tradie
@@ -48,14 +49,15 @@ export function exec(tradie) {
 
   const lintScripts = linter({emitter: tradie, extensions: config.scripts.extensions});
 
-  return lintScripts(config.scripts.src)
+  return lintScripts(path.resolve(root, src))
     .then(() => {
 
       return Promise.all([
-        bundleScripts({args, config: config.scripts, emitter: tradie,
+        bundleScripts({
+          ...tradie,
           onChange: (files) => lintScripts(files)
         }),
-        bundleStyles({args, config: config.styles, emitter: tradie})
+        bundleStyles(tradie)
       ])
         .then(codes => codes.reduce((accum, next) => {
           if (next !== 0) {

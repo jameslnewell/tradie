@@ -20,9 +20,8 @@ import runWebpack from './runWebpack';
  *
  * @param {function}      emitter
  */
-export default function({args, config, emitter, onChange}) {
-  const {env, watch} = args;
-  const {src, dest} = config;
+export default function(tradie) {
+  const {env, args: {watch}, config: {src, dest}, onChange} = tradie;
 
   //TODO: check for server.js and run a server build too
 
@@ -46,7 +45,7 @@ export default function({args, config, emitter, onChange}) {
         scriptCount += 1;
         scriptTotalSize += asset.size;
 
-        emitter.emit('scripts.bundle.finished', {
+        tradie.emit('scripts.bundle.finished', {
           src: path.join(src, asset.name),
           dest: path.join(dest, asset.name),
           size: asset.size
@@ -55,7 +54,7 @@ export default function({args, config, emitter, onChange}) {
       })
     ;
 
-    emitter.emit('scripts.bundling.finished', {
+    tradie.emit('scripts.bundling.finished', {
       src,
       dest,
       count: scriptCount,
@@ -69,7 +68,7 @@ export default function({args, config, emitter, onChange}) {
   function bundleForClient() {
 
     const webpackConfig = createClientConfig(
-      {env, root: '.', config: {scripts: config}, onChange}
+      {...tradie, onChange}
     );
 
     return runWebpack(webpackConfig, {watch}, afterCompile);
@@ -79,7 +78,7 @@ export default function({args, config, emitter, onChange}) {
   function bundleForServer() {
 
     const webpackConfig = createServerConfig(
-      {env: args.env, root: '.', config: {scripts: config}, onChange}
+      {...tradie, onChange}
     );
 
     return runWebpack(webpackConfig, {watch}, afterCompile);

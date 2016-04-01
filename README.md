@@ -85,57 +85,21 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ## Configuration
 
-### Scripts
-
-Configure script bundling.
-
 ```json
 {
+  "src": "./src/", //the directory where files are sourced relative to the .tradierc file
+  "dest": "./dist/", //the directory where files are output relative to the .tradierc file
   "scripts": {
-    "src": "src/", //the directory where script files are sourced
-    "dest": "dist/", //the directory where bundled scripts are output
-    "bundles": ["./index.js"], //the script entry files
+    "bundles": ["./index.js"], //the script entry files relative to the `src` dir
     "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
     "loaders": [], //the webpack loaders
     "plugins": [], //the webpack plugins
     "extensions": [".js"] //the script extensions
-  }
-}
-```
-
-### Styles
-
-Configure style bundling.
-
-```json
-{
+  },
   "styles": {
-    "src": "src/", //the directory where style files are sourced
-    "dest": "dist/", //the directory where bundled styles are output
-    "bundles": ["./index.scss"] //the style entry files
-  }
-}
-```
-
-### Plugins
-
-Configure tradie plugins.
-
-```json
-{
-  "plugins": []
-}
-```
-
-For example:
-
-```json
-{
-  "plugins": [
-    "tradie-plugin-livereload", // OR
-    "livereload", // OR
-    ["tradie-plugin-livereload", {"scripts": false}]
-  ]
+    "bundles": ["./index.scss"] //the style entry files relative to the `src` dir
+  },
+  "plugins": [] //the tradie plugins
 }
 ```
 
@@ -151,7 +115,7 @@ For example:
 
 ### webpack
 
-Overall the changes are quite minor. Continue reading about the minor breaking changes:
+Overall, the breaking changes are small and easily fixed. Continue reading about the minor breaking changes:
 
 **user:**
 
@@ -162,6 +126,7 @@ Overall the changes are quite minor. Continue reading about the minor breaking c
 - break: browserify plugin configuration has changed from `scripts.plugins` to `scripts.plugins` (a webpack plugin instance)
 - break: script bundle information is reported slightly differently (due to changes below)
 - break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
+- break: `src` and `dist` are no longer configured individually for scripts and styles
 - add: `common.js` generated with modules common to multiple bundles
 
 **plugin:**

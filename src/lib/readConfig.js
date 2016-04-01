@@ -5,6 +5,11 @@ import merge from 'lodash.mergewith';
 import scriptDefaults from './scripts/defaults';
 import styleDefaults from './styles/defaults';
 
+const defaultConfig = {
+  src: './src/',
+  dest: './dist/'
+};
+
 /**
  * Load and merge the user configuration
  * @param   {string} [environment]
@@ -26,6 +31,7 @@ export default function(environment = 'development') {
 
   //override the default config
   let config = {
+    ...defaultConfig,
     scripts: {...scriptDefaults, ...userConfig.scripts},
     styles: {...styleDefaults, ...userConfig.styles},
     plugins: userConfig.plugins || []

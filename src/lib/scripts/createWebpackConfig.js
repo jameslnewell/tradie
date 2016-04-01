@@ -65,7 +65,7 @@ function createApplicationConfig(options) {
 }
 
 export function createClientConfig(options) {
-  const {env, root, config: {scripts: {src, dest, bundles, vendors}}} = options;
+  const {env, root, config: {src, dest, scripts: {bundles, vendors}}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -134,7 +134,7 @@ export function createClientConfig(options) {
 }
 
 export function createServerConfig(options) {
-  const {root, config: {scripts: {src, dest, bundles}}} = options;
+  const {root, config: {src, dest, scripts: {bundles}}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -173,7 +173,7 @@ export function createServerConfig(options) {
 }
 
 export function createTestConfig(options) {
-  const {root, config: {scripts: {src, dest}}, mocha: {files, requires}} = options;
+  const {root, config: {src, dest}, mocha: {files, requires}} = options;
 
   const config = createApplicationConfig(options);
 

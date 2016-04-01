@@ -1,20 +1,23 @@
+import path from 'path';
 import chalk from 'chalk';
-import cleanScripts from '../lib/scripts/clean';
-import cleanStyles from '../lib/styles/clean';
+import del from 'promised-del';
 
 export const name = 'clean';
 export const desc = 'Clean script and style bundles';
 
-export function exec({config, emitter}) {
+export function exec(tradie) {
+  const {root, config: {src}} = tradie;
 
-  emitter
-    .on('scripts.cleaning.finished', () => console.log(chalk.green(` => scripts cleaned`)))
-    .on('styles.cleaning.finished', () => console.log(chalk.green(` => styles cleaned`)))
+  tradie
+    .on('cleaning.finished', () => console.log(chalk.green(` => cleaned`)))
   ;
 
-  return Promise.all([
-    cleanScripts(config.scripts.dest, emitter),
-    cleanStyles(config.styles.dest, emitter)
-  ]);
+  tradie.emit('cleaning.started');
+  return del([
+    path.join(path.resolve(root, src), '*'),
+    path.join(path.resolve(root, src), '.*')
+  ])
+    .then(() => tradie.emit('cleaning.finished'))
+  ;
 
 }
