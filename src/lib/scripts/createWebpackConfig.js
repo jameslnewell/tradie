@@ -1,5 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
+import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
 import MochaSetupPlugin from './MochaSetupPlugin';
 import WatchAndLintPlugin from './WatchAndLintPlugin';
 
@@ -43,8 +44,8 @@ function createApplicationConfig(options) {
   //source maps
   config.devtool = env === ENV_PROD ? 'hidden-source-map' : 'eval';
 
-  //plugins
-  if (env === ENV_PROD) {
+    //plugins
+    if (env === ENV_PROD) {
 
     config.plugins = config.plugins.concat([
 
@@ -52,13 +53,16 @@ function createApplicationConfig(options) {
         'process.env.NODE_ENV': JSON.stringify('production')
       }),
 
+      new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurrenceOrderPlugin(true),
-      new webpack.optimize.UglifyJsPlugin({output: {comments: false}})
+      new webpack.optimize.UglifyJsPlugin({
+        output: {comments: false},
+        compress: {warnings: false}
+      })
 
     ]);
 
-    //TODO: plugin to create rev-manifest.json to map hashed files to their original names
+    //TODO: plugin to create rev-manifest.json to map hashed files to their original names => webpack-manifest-plugin? manifest-revision-webpack-plugin?
   }
 
   return config;
@@ -96,11 +100,11 @@ export function createClientConfig(options) {
 
   //create a common.js bundle for modules that are shared across multiple bundles
   const entryChunkNames = Object.keys(entries);
-  if (entryChunkNames.length > 0) {
+  if (entryChunkNames.length > 1) {
     config.plugins = config.plugins.concat([
       new webpack.optimize.CommonsChunkPlugin({
         name: 'common',
-        filename: env === ENV_PROD ? 'common.[chunkhash].js' : 'common.js',
+        filename: env === ENV_PROD ? '[name].[chunkhash].js' : '[name].js',
         chunks: entryChunkNames, //exclude modules from the vendor chunk
         minChunks: entryChunkNames.length //modules must be used across all the chunks to be included
       })
@@ -112,13 +116,22 @@ export function createClientConfig(options) {
 
     entries.vendor = vendors;
 
+    //plugins
+    if (env === ENV_PROD) {
+
+      //persist module IDs between compilations for long-term caching
+      config.recordsPath = 'webpack.records.json';
+
+    }
+
     //FIXME: for long-term-caching we need to use https://github.com/diurnalist/chunk-manifest-webpack-plugin
     // according to http://webpack.github.io/docs/list-of-plugins.html#2-explicit-vendor-chunk
+    //https://github.com/webpack/webpack/issues/1315 and https://github.com/webpack/webpack/issues/90 seems to be the way to do it
     //TODO: use DllPlugin and DllReferencePlugin for faster builds?
     config.plugins = config.plugins.concat([
       new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: env === ENV_PROD ? 'vendor.[chunkhash].js' : 'vendor.js',
+        names: ['vendor', 'manifest'],
+        filename: env === ENV_PROD ? '[name].[chunkhash].js' : '[name].js',
         minChunks: Infinity //only modules manually selected for the vendor bundle may be included
       })
     ]);
