@@ -1,3 +1,5 @@
+import every from 'lodash.every';
+
 import logger from '../lib/logger';
 import bundleScripts from '../lib/scripts/bundle';
 import bundleStyles from '../lib/styles/bundle';
@@ -45,13 +47,7 @@ export function exec({args, config, emitter}) {
     bundleScripts({args, config: config.scripts, emitter}),
     bundleStyles({args, config: config.styles, emitter})
   ])
-    .then(codes => codes.reduce((accum, next) => {
-      if (next !== 0) {
-        return next;
-      } else {
-        return accum;
-      }
-    }, 0))
+    .then(codes => every(codes, code => code === 0) ? 0 : -1)
   ;
 
 }

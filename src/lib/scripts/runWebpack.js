@@ -3,11 +3,11 @@ import MemoryFS from 'memory-fs';
 
 /**
  * Run webpack
- * @param {object}    config                The webpack configuration
- * @param {object}    options               The run options
- * @param {boolean}   options.watch         Whether we're watching
- * @param {boolean}   options.virtual       Whether to use a virtual file system
- * @param {function}  callback              Called whenever a compilation has finished
+ * @param {object}    config                  The webpack configuration
+ * @param {object}    options                 The run options
+ * @param {boolean}   [options.watch=false]   Whether we're watching
+ * @param {boolean}   [options.virtual=false] Whether to use a virtual file system
+ * @param {function}  callback                Called whenever a compilation has finished
  * @returns {Promise<number>}
  */
 export default function(config, options, callback) {

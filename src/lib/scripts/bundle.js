@@ -1,6 +1,14 @@
 import path from 'path';
-import {createClientConfig, createServerConfig} from './createWebpackConfig';
+import every from 'lodash.every';
+
 import runWebpack from './runWebpack';
+
+import getClientBundles from './configuration/getClientBundles';
+import createVendorConfig from './configuration/createVendorConfig';
+import createClientConfig from './configuration/createClientConfig';
+
+import getServerBundles from './configuration/getServerBundles';
+import createServerConfig from './configuration/createServerConfig';
 
 /**
  * Create script bundles
@@ -21,11 +29,13 @@ import runWebpack from './runWebpack';
  * @param {function}      emitter
  */
 export default function(tradie) {
-  const {env, args: {watch}, config: {src, dest}, onChange} = tradie;
+  const {env, args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
 
-  //TODO: check for server.js and run a server build too
+  const promises = [];
+  const clientBundles = getClientBundles(bundles);
+  const serverBundles = getServerBundles(bundles);
 
-  function afterCompile(err, stats) {
+  const afterCompile = (err, stats) => {
 
     if (err) {
       //FIXME:
@@ -54,6 +64,7 @@ export default function(tradie) {
       })
     ;
 
+    //FIXME: fires too many times when both server and client are built
     tradie.emit('scripts.bundling.finished', {
       src,
       dest,
@@ -63,29 +74,49 @@ export default function(tradie) {
       errors: stats.errors
     });
 
-  }
+  };
 
-  function bundleForClient() {
-
-    const webpackConfig = createClientConfig(
+  const createVendorBundle = () => {
+    const vendorConfig = createVendorConfig(
       {...tradie, onChange}
     );
+    return runWebpack(vendorConfig, {}, afterCompile);
+  };
 
-    return runWebpack(webpackConfig, {watch}, afterCompile);
-
-  }
-
-  function bundleForServer() {
-
-    const webpackConfig = createServerConfig(
+  const createClientBundle = () => {
+    const clientConfig = createClientConfig(
       {...tradie, onChange}
     );
+    return runWebpack(clientConfig, {watch}, afterCompile);
+  };
 
-    return runWebpack(webpackConfig, {watch}, afterCompile);
+  const createServerBundle = () => {
+    const serverConfig = createServerConfig(
+      {...tradie, onChange}
+    );
+    return runWebpack(serverConfig, {watch}, afterCompile);
+  };
 
+  if (clientBundles.length > 0) {
+    if (vendors.length > 0) {
+      promises.push(
+        createVendorBundle()
+          .then(code => code === 0 ? createClientBundle() : -1)
+      );
+    } else {
+      promises.push(createClientBundle());
+    }
   }
 
-  const promises = [bundleForClient()];
+  if (serverBundles.length > 0) {
+    promises.push(createServerBundle());
+  }
 
-  return Promise.all(promises);
+  if (clientBundles.length === 0 && serverBundles.length === 0) {
+    //FIXME: emit `scripts.bundling.finished` when 0 scripts were bundled
+  }
+
+  return Promise.all(promises)
+    .then(codes => every(codes, code => code === 0) ? 0 : -1)
+  ;
 }

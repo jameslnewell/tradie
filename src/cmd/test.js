@@ -1,9 +1,9 @@
 import path from 'path';
 import listTestFiles from '../lib/scripts/listTestFiles';
 import readMochaConfig from '../lib/scripts/readMochaConfig';
-import {createTestConfig} from '../lib/scripts/createWebpackConfig';
 import runWebpack from '../lib/scripts/runWebpack';
 import runBundle from '../lib/scripts/runBundle';
+import createTestConfig from '../lib/scripts/configuration/createTestConfig';
 
 
 export const name = 'test';
