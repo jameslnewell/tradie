@@ -1,8 +1,9 @@
 import webpack from 'webpack';
+import BundleUpdatePlugin from 'webpack-bundle-update-hook-plugin';
 import createCommonConfig from './createCommonConfig';
 
 export default function createApplicationConfig(options) {
-  const {env} = options;
+  const {env, args: {watch}} = options;
 
   const config = createCommonConfig(options);
 
@@ -29,6 +30,11 @@ export default function createApplicationConfig(options) {
 
     ]);
 
+  }
+
+  //emit bundle update events
+  if (watch) {
+    config.plugins.push(new BundleUpdatePlugin());
   }
 
   return config;

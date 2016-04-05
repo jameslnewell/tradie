@@ -70,6 +70,11 @@ export default function(tradie) {
       })
     ;
 
+    //FIXME:
+    if (watch && stats.errors.length) {
+      console.log(stats.errors);
+    }
+
   };
 
   const createVendorBundle = () => {
