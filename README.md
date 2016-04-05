@@ -166,6 +166,10 @@ For example:
 ## Change log
 
 
+### 0.7.4
+
+- fix: case-sensitive issues on linux
+
 ### 0.7.0
 
 - fix: bug with bundling for node - `incremental-browserify` seems to force it to be bundled for the browser
