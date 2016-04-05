@@ -115,6 +115,7 @@ export default function(tradie) {
   return Promise.all(promises)
     .then(codes => every(codes, code => code === 0) ? 0 : -1)
     .then(code => {
+
       if (!watch) {
         tradie.emit('scripts.bundling.finished', {
           src,
