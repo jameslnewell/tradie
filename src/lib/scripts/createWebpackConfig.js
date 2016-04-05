@@ -1,8 +1,14 @@
 import path from 'path';
 import webpack from 'webpack';
 import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
+import BundleUpdateHookPlugin from 'webpack-bundle-update-hook-plugin';
 import MochaSetupPlugin from './MochaSetupPlugin';
-import WatchAndLintPlugin from './WatchAndLintPlugin';
+
+//console.log('onChange', onChange);
+//if (onChange) {
+//  //allPlugins.push(new WatchAndLintPlugin(onChange));
+//  allPlugins.push(new BundleUpdateHookPlugin());
+//}
 
 const ENV_PROD = 'production';
 

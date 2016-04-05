@@ -85,5 +85,7 @@ export default function(tradie) {
 
   }
 
-  return bundleForClient();
+  const promises = [bundleForClient()];
+
+  return Promise.all(promises);
 }

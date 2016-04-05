@@ -18,7 +18,7 @@ export function hint(yargs) {
 
 //process.on('uncaughtException', err => console.log(err));
 export function exec(options) {
-  const {root, args: {watch}, config: {scripts: {dest}}} = options;
+  const {root, args: {watch}, config: {dest}} = options;
 
   const mochaConfig = readMochaConfig();
   const bundlePath = path.resolve(root, dest, 'tests.js');
