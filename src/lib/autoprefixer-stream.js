@@ -15,7 +15,7 @@ module.exports = function(options) {
         result.warnings().forEach(warn => {
           console.warn(warn.toString());
         });
-        this.push(result.css);
+        this.push(result.css); //eslint-disable-line
         callback();
       });
     }

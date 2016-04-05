@@ -4,13 +4,13 @@ import uglify from 'uglify-js';
 module.exports = function(options) {
   let data = '';
 
-  return through(chunk, enc, callback => {
+  return through(function(chunk, enc, callback) {
     data += chunk.toString();
     callback();
   },
-  callback => {
+  function(callback) {
     const result = uglify.minify(data, {fromString: true, compress: options});
-    push(result.code);
+    this.push(result.code); //eslint-disable-line
     callback();
   });
 };

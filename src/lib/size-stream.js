@@ -5,7 +5,7 @@ module.exports = function(done) {
   return through(
     function(chunk, enc, callback) {
       length += chunk.length;
-      this.push(chunk);
+      this.push(chunk); //eslint-disable-line
       callback();
     },
     function(callback) {
