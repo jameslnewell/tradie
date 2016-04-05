@@ -35,44 +35,40 @@ export default function(tradie) {
   const clientBundles = getClientBundles(bundles);
   const serverBundles = getServerBundles(bundles);
 
+  let scriptsCount = 0;
+  let scriptsErrors = [];
+  let scriptsTotalSize = 0;
+  let scriptsTotalTime = 0;
+
   const afterCompile = (err, stats) => {
 
     if (err) {
       //FIXME:
-      console.log(err);
+      console.log('HANDLE ERRORS better!', err);
       console.log(stats);
       return;
     }
 
-    //emit synthetic (cause webpack) end of bundling events for script bundles
+    scriptsErrors = scriptsErrors.concat(stats.errors);
+    scriptsTotalTime += stats.time;
 
-    let scriptCount = 0;
-    let scriptTotalSize = 0;
+    //emit synthetic (cause webpack) end of bundling events for script bundles
     stats.assets
       .filter(asset => path.extname(asset.name) === '.js')
       .forEach(asset => {
 
-        scriptCount += 1;
-        scriptTotalSize += asset.size;
+        scriptsCount += 1;
+        scriptsTotalSize += asset.size;
 
         tradie.emit('scripts.bundle.finished', {
           src: path.join(src, asset.name),
           dest: path.join(dest, asset.name),
-          size: asset.size
+          size: asset.size,
+          time: stats.time
         });
 
       })
     ;
-
-    //FIXME: fires too many times when both server and client are built
-    tradie.emit('scripts.bundling.finished', {
-      src,
-      dest,
-      count: scriptCount,
-      time: stats.time,
-      size: scriptTotalSize,
-      errors: stats.errors
-    });
 
   };
 
@@ -118,5 +114,18 @@ export default function(tradie) {
 
   return Promise.all(promises)
     .then(codes => every(codes, code => code === 0) ? 0 : -1)
+    .then(code => {
+      if (!watch) {
+        tradie.emit('scripts.bundling.finished', {
+          src,
+          dest,
+          count: scriptsCount,
+          time: scriptsTotalTime,
+          size: scriptsTotalSize,
+          errors: scriptsErrors
+        });
+      }
+      return code;
+    })
   ;
 }

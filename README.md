@@ -127,11 +127,12 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 - break: script bundle information is reported slightly differently (due to changes below)
 - break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
 - break: `src` and `dist` are no longer configured individually for scripts and styles
-- add: `common.js` generated with modules common to multiple bundles
+- add: a `common.js` generated with modules common to multiple bundles
+- add: fingerprinting of clientside JS assets when `NODE_ENV=production`
 
 **plugin:**
 
-- break: the `scripts.bundle.finished` event no longer returns the time elapsed for creating an individual bundle (have to run webpack with profiling enabled to get that information)
+- break: the `scripts.bundle.finished` event returns the time elapsed for all assets generated in the webpack compilation (have to run webpack with profiling enabled to get that information)
 - break: the `scripts.bundle.finished` event no longer returns the error encountered whilst creating an individual bundle (webpack lumps them all in one error object)
 - break: the `scripts.bundling.finished` event no longer returns whether an error occurred but an array of all the error strings - overly verbose
 
