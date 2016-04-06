@@ -1,5 +1,7 @@
-import pipe from 'promisepipe';
 import fs from 'fs';
+import path from 'path';
+import mkdirp from 'mkdirp';
+import pipe from 'promisepipe';
 import uglify from '../uglify-stream';
 import size from '../size-stream';
 
@@ -37,18 +39,29 @@ export default function(options) {
   streams.push(size(s => args.size = s));
   streams.push(fs.createWriteStream(dest));
 
-  return pipe(...streams)
-    .then(
-      () => {
-        args.time = Date.now() - startTime;
-        emitter.emit('scripts.bundle.finished', args);
-        return {error: null};
-      },
-      error => {
-        args.time = Date.now() - startTime;
-        args.error = error;
-        emitter.emit('scripts.bundle.finished', args);
-        return {error};
-      }
-    );
+  return new Promise((resolve, reject) => {
+    mkdirp(path.dirname(dest), err => {
+      if (err) return reject(err);
+
+      //write to a file
+      pipe(...streams)
+        .then(
+          () => {
+            args.time = Date.now() - startTime;
+            emitter.emit('scripts.bundle.finished', args);
+            return {error: null};
+          },
+          error => {
+            args.time = Date.now() - startTime;
+            args.error = error;
+            emitter.emit('scripts.bundle.finished', args);
+            return {error};
+          }
+        )
+        .then(resolve, reject)
+      ;
+
+    });
+  });
+
 }
