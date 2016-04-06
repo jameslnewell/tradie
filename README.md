@@ -165,13 +165,9 @@ For example:
 
 ## Change log
 
-### 0.7.6
+### 0.7.5-7
 
-- fix: create non-existent bundle paths
-
-### 0.7.5
-
-- fix: retain the full bundle path
+- fix: use the full relative bundle path when creating the bundle output
 
 ### 0.7.4
 

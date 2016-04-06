@@ -46,12 +46,12 @@ function createBundle(options) {
   }
 
   streams.push(size(s => args.size = s));
-  streams.push(fs.createWriteStream(dest));
-
 
   return new Promise((resolve, reject) => {
     mkdirp(path.dirname(dest), err => {
       if (err) return reject(err);
+
+      streams.push(fs.createWriteStream(dest));
 
       //write to a file
       pipe(...streams)
