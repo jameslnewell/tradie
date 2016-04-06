@@ -198,7 +198,7 @@ export default function({args, config, emitter}) {
           debug,
           watch,
           src: path.join(src, file),
-          dest: path.join(dest, path.basename(file, path.extname(file)) + '.css'),
+          dest: path.join(dest, path.dirname(file), path.basename(file, path.extname(file)) + '.css'),
           libraries,
           emitter
         })

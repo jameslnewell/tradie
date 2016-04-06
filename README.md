@@ -165,6 +165,9 @@ For example:
 
 ## Change log
 
+### 0.7.5
+
+- fix: retain the full bundle path
 
 ### 0.7.4
 

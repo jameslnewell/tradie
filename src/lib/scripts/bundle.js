@@ -209,7 +209,7 @@ export default function({args, config, emitter, onChange}) {
             debug,
             watch,
             src: path.join(src, file),
-            dest: path.join(dest, path.basename(file, path.extname(file)) + '.js'),
+            dest: path.join(dest, path.dirname(file), path.basename(file, path.extname(file)) + '.js'),
             libraries,
             transforms,
             plugins,
