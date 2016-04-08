@@ -10,7 +10,7 @@ module.exports = function(options) {
       callback();
     },
     function(callback) {
-      const self = this;
+      const self = this; //eslint-disable-line no-invalid-this
       const cleaner = new Clean(options);
       cleaner.minify(data, (err, result) => {
         if (err) return callback(err);
