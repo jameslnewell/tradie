@@ -165,6 +165,10 @@ For example:
 
 ## Change log
 
+### 0.7.8
+
+- fix: CSS minification
+
 ### 0.7.5-7
 
 - fix: use the full relative bundle path when creating the bundle output

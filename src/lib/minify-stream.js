@@ -1,5 +1,5 @@
 import through from 'through2';
-import clean from 'clean-css';
+import Clean from 'clean-css';
 
 module.exports = function(options) {
   let data = '';
@@ -10,11 +10,11 @@ module.exports = function(options) {
       callback();
     },
     callback => {
-      /* eslint-disable new-cap */
-      const cleaner = new clean(options);
+      const self = this;
+      const cleaner = new Clean(options);
       cleaner.minify(data, (err, result) => {
         if (err) return callback(err);
-        this.push(result.styles);
+        self.push(result.styles);
         callback();
       });
     }
