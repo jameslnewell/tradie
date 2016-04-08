@@ -9,7 +9,7 @@ module.exports = function(options) {
       data += chunk.toString();
       callback();
     },
-    callback => {
+    function(callback) {
       const self = this;
       const cleaner = new Clean(options);
       cleaner.minify(data, (err, result) => {

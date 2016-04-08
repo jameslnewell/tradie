@@ -165,7 +165,7 @@ For example:
 
 ## Change log
 
-### 0.7.8
+### 0.7.8-9
 
 - fix: CSS minification
 
