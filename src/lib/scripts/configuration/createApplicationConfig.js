@@ -1,9 +1,24 @@
+import getObjectValues from 'object-values';
 import webpack from 'webpack';
 import BundleUpdatePlugin from 'webpack-bundle-update-hook-plugin';
 import createCommonConfig from './createCommonConfig';
 
+class BundleUpdatedPlugin {
+
+  constructor(callback) {
+    this.callback = callback;
+  }
+
+  apply(compiler) {
+    compiler.plugin('bundle-update', (newModules, changedModules, removedModules) => {
+      this.callback(getObjectValues(newModules), getObjectValues(changedModules), getObjectValues(removedModules));
+    });
+  }
+
+}
+
 export default function createApplicationConfig(options) {
-  const {env, args: {watch}} = options;
+  const {env, args: {watch}, onChange} = options;
 
   const config = createCommonConfig(options);
 
@@ -34,7 +49,10 @@ export default function createApplicationConfig(options) {
 
   //emit bundle update events
   if (watch) {
-    config.plugins.push(new BundleUpdatePlugin());
+    config.plugins = config.plugins.concat([
+      new BundleUpdatePlugin(),
+      new BundleUpdatedPlugin(onChange)
+    ]);
   }
 
   return config;

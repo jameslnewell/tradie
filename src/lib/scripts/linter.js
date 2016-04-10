@@ -22,6 +22,9 @@ export default function(options) {
       return ext === '' || extensions.indexOf(ext) !== -1;
     });
 
+    //TODO: exclude files not in the src directory
+    //TODO: exclude node_modules
+
     const cli = new CLIEngine({extensions});
 
     try {

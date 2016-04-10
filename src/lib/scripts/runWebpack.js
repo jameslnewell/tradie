@@ -34,8 +34,6 @@ export default function(config, options, callback) {
       }
     };
 
-    compiler.plugin('bundle-update', (newModules, changedModules, removedModules) => console.log(newModules, changedModules, removedModules));
-
     if (watch) {
 
       const watcher = compiler.watch({}, wrappedCallback);

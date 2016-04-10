@@ -55,7 +55,7 @@ export function exec(tradie) {
       return Promise.all([
         bundleScripts({
           ...tradie,
-          onChange: (files) => lintScripts(files)
+          onChange: (addedModules, changedModules) => lintScripts([].concat(addedModules, changedModules))
         }),
         bundleStyles(tradie)
       ])

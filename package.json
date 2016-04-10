@@ -35,6 +35,7 @@
     "memory-fs": "^0.3.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
+    "object-values": "^1.0.0",
     "postcss": "^5.0.16",
     "promised-del": "^1.0.2",
     "promisepipe": "^1.0.1",
