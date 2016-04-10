@@ -16,14 +16,20 @@ export default function(options) {
     emitter.emit('scripts.linting.started');
     const startTime = Date.now();
 
-    //exclude files which have an extension but aren't on the extension list
-    const filteredFiles = [].concat(files).filter(file => {
-      const ext = path.extname(file);
-      return ext === '' || extensions.indexOf(ext) !== -1;
-    });
+    const filteredFiles = [].concat(files)
+
+      //exclude files which have an extension but aren't on the extension list
+      .filter(file => {
+        const ext = path.extname(file);
+        return ext === '' || extensions.indexOf(ext) !== -1;
+      })
+
+      //exclude files from within node_modules
+      .filter(file => !/node_modules/.test(file))
+
+    ;
 
     //TODO: exclude files not in the src directory
-    //TODO: exclude node_modules
 
     const cli = new CLIEngine({extensions});
 

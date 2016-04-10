@@ -77,6 +77,8 @@ export default function(tradie) {
 
   };
 
+  //TODO: batch up addedModules and changedModules and remove dulplicate modules so that the modules are only linted once each
+
   const createVendorBundle = () => {
     const vendorConfig = createVendorConfig(
       {...tradie, onChange}
