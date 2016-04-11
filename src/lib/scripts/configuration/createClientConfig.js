@@ -9,12 +9,6 @@ export default function createClientConfig(options) {
 
   const config = createApplicationConfig(options);
 
-  //browserify loads *.json just like nodejs... include for compatability
-  config.module.loaders.push({
-    test: /.json$/,
-    loader: 'json'
-  });
-
   //configure all the bundles
   const clientBundles = getClientBundles(bundles);
   const entries = clientBundles.reduce((accum, bundle) => {
