@@ -25,7 +25,7 @@ export function exec(tradie) {
   const buildLogger = logger(args);
 
   tradie
-    .on(
+    .once(
       'scripts.linting.finished',
       result => buildLogger.lintingFinished(result)
     )

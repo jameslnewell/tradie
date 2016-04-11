@@ -40,6 +40,30 @@ export default function(tradie) {
   let scriptsTotalSize = 0;
   let scriptsTotalTime = 0;
 
+  let debouncedOnChange = null;
+  let debouncedAddedModules = [];
+  let debouncedChangedModules = [];
+
+  //debounce changes because client/server compilations might have changed the same file and no point
+  // linting the same file twice within seconds
+  const debounceOnChange = (addedModules, changedModules) => {
+
+    debouncedAddedModules = debouncedAddedModules.concat(addedModules);
+    debouncedChangedModules = debouncedChangedModules.concat(changedModules);
+
+    if (debouncedOnChange + 50 < Date.now()) {
+
+      onChange(addedModules, changedModules);
+
+      //reset debounce
+      debouncedOnChange = Date.now();
+      debouncedAddedModules = [];
+      debouncedChangedModules = [];
+
+    }
+
+  };
+
   const afterCompile = (err, stats) => {
 
     if (err) {
@@ -81,21 +105,21 @@ export default function(tradie) {
 
   const createVendorBundle = () => {
     const vendorConfig = createVendorConfig(
-      {...tradie, onChange}
+      {...tradie, onChange: debounceOnChange}
     );
     return runWebpack(vendorConfig, {}, afterCompile);
   };
 
   const createClientBundle = () => {
     const clientConfig = createClientConfig(
-      {...tradie, onChange}
+      {...tradie, onChange: debounceOnChange}
     );
     return runWebpack(clientConfig, {watch}, afterCompile);
   };
 
   const createServerBundle = () => {
     const serverConfig = createServerConfig(
-      {...tradie, onChange}
+      {...tradie, onChange: debounceOnChange}
     );
     return runWebpack(serverConfig, {watch}, afterCompile);
   };
