@@ -58,8 +58,6 @@ export default function() {
        */
       cmd: (command) => {
 
-        const name = command.name;
-
         argParser.command(
           command.name,
           command.desc,

@@ -17,15 +17,15 @@ export default function createVendorConfig(options) {
 
     output: {
       path: path.resolve(root, dest),
-      filename: env === 'production' ? '[name].[chunkhash].js' : '[name].js',
-      library: '[name]_[chunkhash]'
+      filename: env === 'production' ? '[name].js' : '[name].js', //FIXME: '[name].[chunkhash].js' in prod
+      library: '[name]' //FIXME: '[name]_[chunkhash]' in prod
     },
 
     plugins: [
       ...config.plugins,
       new webpack.DllPlugin({
         path: path.join(root, dest, '[name]-manifest.json'),
-        name: '[name]_[chunkhash]'
+        name: '[name]' //FIXME: '[name]_[chunkhash]' in prod
       })
     ]
 

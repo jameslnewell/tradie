@@ -25,7 +25,7 @@ export default function createClientConfig(options) {
     config.plugins = config.plugins.concat([
       new webpack.optimize.CommonsChunkPlugin({
         name: 'common',
-        filename: env === 'production' ? '[name].[chunkhash].js' : '[name].js',
+        filename: env === 'production' ? '[name].js' : '[name].js', //FIXME: '[name].[chunkhash].js' in prod
         chunks: clientBundles, //exclude modules from the vendor chunk
         minChunks: clientBundles.length //modules must be used across all the chunks to be included
       })
@@ -53,7 +53,7 @@ export default function createClientConfig(options) {
 
     output: {
       path: path.resolve(root, dest),
-      filename: env === 'production' ? '[name].[chunkhash].js' : '[name].js'
+      filename: env === 'production' ? '[name].js' : '[name].js' //FIXME: '[name].[chunkhash].js' in prod
     }
 
   };
