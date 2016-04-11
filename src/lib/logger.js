@@ -70,7 +70,6 @@ module.exports = function(options) {
 
     if (result.errors && result.errors.length > 0) {
       msg = chalk.bold.red(msg) + '\n' + result.errors;
-      console.log(result.errors);
     } else if (result.count) {
       msg = chalk.green(msg);
     }
