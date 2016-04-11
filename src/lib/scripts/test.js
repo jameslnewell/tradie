@@ -90,6 +90,7 @@ export default function({args, config, emitter}) {
   const src = config.src;
   const transforms = config.transforms;
   const plugins = config.plugins;
+  const externals = config.externals;
   const extensions = config.extensions;
 
   const options = readMochaOptions();
@@ -109,6 +110,7 @@ export default function({args, config, emitter}) {
           watch,
           transforms,
           plugins,
+          externals,
           extensions,
           node: true
         });

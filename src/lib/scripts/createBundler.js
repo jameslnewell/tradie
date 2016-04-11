@@ -16,6 +16,7 @@ import envify from 'envify';
  * @param {array}         [options.transforms]  The transforms
  * @param {array}         [options.plugins]     The transforms
  * @param {array}         [options.extensions]  The extensions
+ * @param {array}         [options.externals]   Leave these to external loaders (not browserify)
  * @param {array}         [options.node]        Whether we should bundle for node instead of the browser
  */
 export default function(options) {
@@ -27,6 +28,7 @@ export default function(options) {
   const dest = options.dest;
   const transforms = options.transforms || [];
   const plugins = options.plugins || [];
+  const externals = options.externals || [];
   const extensions = options.extensions || ['js'];
   const node = options.node || false;
 
@@ -89,6 +91,15 @@ export default function(options) {
       bundler.plugin(...plugin);
     } else {
       bundler.plugin(plugin);
+    }
+  });
+
+  //configure externals
+  externals.forEach(external => {
+    if (Array.isArray(external)) {
+      bundler.external(...external);
+    } else {
+      bundler.external(external);
     }
   });
 
