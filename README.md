@@ -165,6 +165,10 @@ For example:
 
 ## Change log
 
+### 0.7.10
+
+- fix: dist-tags went wrong and npm is showing the wrong readme
+
 ### 0.7.8-9
 
 - fix: CSS minification
