@@ -49,14 +49,11 @@ Lint script files.
 
 Uses `eslint` to lint script files in the `src` directory. `eslint` may be configured using an `.eslintrc` file. Find out more about configuring `eslint` [here](http://eslint.org/docs/user-guide/configuring).
 
-### Bundling
+### Building
 
-Bundle script and style files.
+Lint and bundle script and style files
 
-    tradie bundle --watch --verbose
-    # OR
-    tradie bundle-scripts --watch --verbose
-    tradie bundle-styles --watch --verbose
+    tradie build --watch --verbose
 
 Uses `browserify` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be specified in your `.tradierc` file. Styling rules are `autoprefix`ed.
 
@@ -64,13 +61,6 @@ Use the `--watch` flag to re-bundle script and style files whenever they change.
 
 Set `NODE_ENV=production` to minify script and style files e.g. `cross-env NODE_ENV=production tradie build`
 
-### Building
-
-Lint and bundle script and style files with a single command.
-
-    tradie build --watch --verbose
-
-Performs the linting and bundling steps listed above.
 
 ### Testing
 
@@ -135,6 +125,7 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 - break: vendor bundle configuration has changed from `scripts.libraries` to `scripts.vendors`
 - break: browserify transform configuration has changed from `scripts.transforms` to `scripts.loaders` (a webpack loader name)
 - break: browserify plugin configuration has changed from `scripts.plugins` to `scripts.plugins` (a webpack plugin instance)
+- break: remove the `bundle`, `bundle-scripts` and `bundle-styles` commands
 - break: script bundle information is reported slightly differently (due to changes below)
 - break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
 - break: `src` and `dist` are no longer configured individually for scripts and styles

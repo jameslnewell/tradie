@@ -38,7 +38,7 @@ export function exec(options) {
           if (stats.errors.length > 0) {
             //TODO: figure out how to handle/display errors
             stats.errors.forEach(moduleError => console.error(moduleError));
-            return;
+            return Promise.resolve();
           }
 
           //TODO: what if webpack splits it into more than one chunk?)

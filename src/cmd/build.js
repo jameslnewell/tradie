@@ -21,7 +21,7 @@ export function hint(yargs) {
 }
 
 export function exec(tradie) {
-  const {root, args, args: {watch}, config, config: {src}} = tradie;
+  const {root, args, config: {src}} = tradie;
   const buildLogger = logger(args);
 
   tradie
@@ -47,28 +47,23 @@ export function exec(tradie) {
     )
   ;
 
-  const lintScripts = linter({emitter: tradie, extensions: config.scripts.extensions});
+  const lintScripts = linter(tradie);
 
   return lintScripts(path.resolve(root, src))
-    .then(() => {
-
-      return Promise.all([
-        bundleScripts({
-          ...tradie,
-          onChange: (addedModules, changedModules) => lintScripts([].concat(addedModules, changedModules))
-        }),
-        bundleStyles(tradie)
-      ])
-        .then(codes => codes.reduce((accum, next) => {
-          if (next !== 0) {
-            return next;
-          } else {
-            return accum;
-          }
-        }, 0))
-      ;
-
-    })
-  ;
+    .then(() => Promise.all([
+      bundleScripts({
+        ...tradie,
+        onChange: (addedModules, changedModules) => lintScripts([].concat(addedModules, changedModules))
+      }),
+      bundleStyles(tradie)
+    ])
+      .then(codes => codes.reduce((accum, next) => {
+        if (next !== 0) {
+          return next;
+        } else {
+          return accum;
+        }
+      }, 0))
+  );
 
 }

@@ -5,9 +5,6 @@ import executePlugins from './lib/executePlugins';
 
 import * as cleanCommand from './cmd/clean';
 import * as lintCommand from './cmd/lint';
-import * as bundleCommand from './cmd/bundle';
-import * as bundleScriptsCommand from './cmd/bundle-scripts';
-import * as bundleStylesCommand from './cmd/bundle-styles';
 import * as buildCommand from './cmd/build';
 import * as testCommand from './cmd/test';
 
@@ -110,9 +107,6 @@ export default function() {
     tradie
       .cmd(cleanCommand)
       .cmd(lintCommand)
-      .cmd(bundleCommand)
-      .cmd(bundleScriptsCommand)
-      .cmd(bundleStylesCommand)
       .cmd(buildCommand)
       .cmd(testCommand)
     ;

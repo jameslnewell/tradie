@@ -1,5 +1,4 @@
 import assert from 'assert';
-import sinon from 'sinon';
 import through2 from 'through2';
 import target from './autoprefixer-stream';
 
@@ -8,7 +7,7 @@ describe('autoprefixer-stream', () => {
   it('should prefix an incoming stream with the relevant browser types', (done) => {
     let actual = '';
     // create our targeted stream
-    let outputStream = target({browsers: 'last 2 versions'});
+    const outputStream = target({browsers: 'last 2 versions'});
     outputStream.pipe(through2(function(chunk, enc, callback) {
       actual = chunk.toString();
       callback();
@@ -20,4 +19,4 @@ describe('autoprefixer-stream', () => {
     outputStream.end();
   });
 
-})
+});
