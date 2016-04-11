@@ -3,17 +3,15 @@ import {CLIEngine} from 'eslint';
 
 /**
  * Create a linter
- * @param   {object}  options
- * @param   {object}  options.emitter
- * @param   {array}   options.extensions
+ * @param   {object}  tradie
  * @returns {Function}
  */
-export default function(options) {
-  const {extensions, emitter} = options;
+export default function(tradie) {
+  const {config: {scripts: {extensions}}} = tradie;
 
   return files => new Promise((resolve, reject) => {
 
-    emitter.emit('scripts.linting.started');
+    tradie.emit('scripts.linting.started');
     const startTime = Date.now();
 
     const filteredFiles = [].concat(files)
@@ -29,6 +27,7 @@ export default function(options) {
 
     ;
 
+
     //TODO: exclude files not in the src directory
 
     const cli = new CLIEngine({extensions});
@@ -42,7 +41,7 @@ export default function(options) {
         console.log(formatter(report.results));
       }
 
-      emitter.emit('scripts.linting.finished', {
+      tradie.emit('scripts.linting.finished', {
         time: Date.now() - startTime,
         errors: report.errorCount
       });

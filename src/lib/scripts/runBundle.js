@@ -21,14 +21,14 @@ export default function(bundle) {
     //extract the source map, replace URLs in stack traces from generated bundle with the URLs
     // from the original source files, and pipe the output to the console
     const result = mapper.extract(contents);
-    const stream1 = mapper.stream(result.map).on('error', errr => console.error(err));
-    const stream2 = mapper.stream(result.map).on('error', errr => console.error(err));
+    const stream1 = mapper.stream(result.map);
+    const stream2 = mapper.stream(result.map);
     stdout = stdout.pipe(stream1);
     stderr = stderr.pipe(stream2);
 
     //pipe test results to the console
     stdout.pipe(process.stdout);
-    stderr.pipe(process.stderr);
+    stderr.pipe(process.stderr); //TODO: colour it red
 
     //write the test bundle to node to start executing tests
     node.stdin.write(contents);

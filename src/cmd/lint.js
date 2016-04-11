@@ -4,12 +4,13 @@ import linter from '../lib/scripts/linter';
 export const name = 'lint';
 export const desc = 'Lint script files';
 
-export function exec({args, config, emitter}) {
+export function exec(tradie) {
+  const {args, config: {src}} = tradie;
 
-  emitter.on(
+  tradie.on(
     'scripts.linting.finished',
     result => logger(args).lintingFinished(result)
   );
 
-  return linter({extensions: config.scripts.extensions, emitter})(config.scripts.src);
+  return linter(tradie)(src);
 }

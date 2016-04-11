@@ -16,7 +16,6 @@ export function hint(yargs) {
   });
 }
 
-//process.on('uncaughtException', err => console.log(err));
 export function exec(options) {
   const {root, args: {watch}, config: {dest}} = options;
 
@@ -34,10 +33,11 @@ export function exec(options) {
         });
 
         runWebpack(webpackConfig, {watch, virtual: true}, (err, stats, fs) => {
+          if (err) return resolve(err);
 
           if (stats.errors.length > 0) {
             //TODO: figure out how to handle/display errors
-            console.error(stats.errors);
+            stats.errors.forEach(moduleError => console.error(moduleError));
             return;
           }
 
