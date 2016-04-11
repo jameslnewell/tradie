@@ -19,7 +19,6 @@
     "clean": "tradie clean",
     "lint": "tradie lint",
     "build": "tradie build",
-    "bundle": "tradie bundle",
     "test": "tradie test"
   }
 }
