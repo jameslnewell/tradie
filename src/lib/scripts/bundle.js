@@ -14,6 +14,7 @@ import createBundler from './createBundler';
  * @param {array}         [options.transforms]
  * @param {array}         [options.plugins]
  * @param {array}         [options.extensions]
+ * @param {array}         [options.externals]
  * @param {EventEmitter}  [options.emitter]
  * @param {function}      [options.onChange]
  * @param {function}      [options.node]
@@ -28,6 +29,7 @@ function createAppBundle(options) {
   const transforms = options.transforms;
   const plugins = options.plugins;
   const extensions = options.extensions;
+  const externals = options.externals;
   const emitter = options.emitter;
   const onChange = options.onChange;
   const node = options.node;
@@ -41,6 +43,7 @@ function createAppBundle(options) {
     transforms,
     plugins,
     extensions,
+    externals,
     emitter,
     node
   });
@@ -137,6 +140,7 @@ function createVendorBundle(options) {
  * @param {array}         [config.transforms]
  * @param {array}         [config.plugins]
  * @param {array}         [config.extensions]
+ * @param {array}         [config.externals]
  *
  * @param {object}        args
  * @param {string}        [args.env]
@@ -156,6 +160,7 @@ export default function({args, config, emitter, onChange}) {
   const transforms = config.transforms;
   const plugins = config.plugins;
   const extensions = config.extensions;
+  const externals = config.externals;
 
   let streams = [];
 
@@ -214,6 +219,7 @@ export default function({args, config, emitter, onChange}) {
             transforms,
             plugins,
             extensions,
+            externals,
             emitter,
             onChange,
             node: path.basename(file, path.extname(file)) === 'server'

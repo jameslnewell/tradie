@@ -95,13 +95,7 @@ export default function(options) {
   });
 
   //configure externals
-  externals.forEach(external => {
-    if (Array.isArray(external)) {
-      bundler.external(...external);
-    } else {
-      bundler.external(external);
-    }
-  });
+  externals.forEach(external => bundler.external(external));
 
   return bundler;
 }
