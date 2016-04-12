@@ -165,6 +165,10 @@ For example:
 
 ## Change log
 
+### 0.8.0
+
+add: made browserify `externals` configurable via `scripts.externals`
+
 ### 0.7.10
 
 - fix: dist-tags went wrong and npm is showing the wrong readme
