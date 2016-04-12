@@ -24,6 +24,9 @@ export default function createServerConfig(options) {
 
   }, {});
 
+  //TODO: add source-map-support via banner plugin so the user doesn't have to add it in each app
+  //TODO: in distant future, use IgnorePlugin to ignore SCSS
+
   return {
     ...config,
 
