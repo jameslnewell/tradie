@@ -35,8 +35,8 @@ export default function(environment = 'development') {
   };
 
   //merge the environment specific config
-  if (config.env && config.env[environment]) {
-    config = mergewith({}, config, config.env[environment], concatWithPrevArray);
+  if (userConfig.env && userConfig.env[environment]) {
+    config = mergewith({}, config, userConfig.env[environment], concatWithPrevArray);
   }
 
   return config;

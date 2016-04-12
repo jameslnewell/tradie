@@ -55,6 +55,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",
     "eslint-config-jameslnewell": "0.4.3",
+    "proxyquire": "^1.7.4",
     "sinon": "^1.17.3"
   },
   "bin": {
@@ -63,7 +64,7 @@
   "scripts": {
     "lint": "eslint src/**/*.js",
     "build": "babel -s --out-dir ./dist/ src",
-    "test": "mocha ./dist/**/*.test.js",
+    "test": "mocha $(find ./dist -name '*.test.js')",
     "prepublish": "npm run lint && npm run build && npm run test"
   },
   "license": "MIT"
