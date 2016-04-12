@@ -108,6 +108,7 @@ Configure script bundling.
     "libraries": [], //the third-party packages placed into `vendor.js` for long term caching
     "transforms": [], //the browserify transform
     "plugins": [], //the browserify plugins
+    "externals": [], //the browserify externals
     "extensions": [".js"] //the script extensions
   }
 }
