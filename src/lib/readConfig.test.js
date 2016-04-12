@@ -3,6 +3,10 @@ import sinon from 'sinon';
 import assert from 'assert';
 import path from 'path';
 
+import scriptsDefaults from './scripts/defaults';
+import testsDefaults from './tests/defaults';
+import stylesDefaults from './styles/defaults';
+
 const sandbox = sinon.sandbox.create();
 const mocks = {
   'fs': {
@@ -24,7 +28,7 @@ describe('getConfig()', () => {
 
   it('should load the config from .tradierc', () => {
     readConfig();
-    const requestedTradiercPath = mocks.fs.readFileSync.lastCall.args[0]
+    const requestedTradiercPath = mocks.fs.readFileSync.lastCall.args[0];
 
     assert.equal(requestedTradiercPath, path.join(process.cwd(), `.tradierc`),
       'Did not look for .tradierc in appropriate location');
@@ -33,9 +37,9 @@ describe('getConfig()', () => {
   it('should load defaults on empty config', () => {
     const config = readConfig();
 
-    assert.deepEqual(config.scripts, require('./scripts/defaults').default);
-    assert.deepEqual(config.tests, require('./tests/defaults').default);
-    assert.deepEqual(config.styles, require('./styles/defaults').default);
+    assert.deepEqual(config.scripts, scriptsDefaults);
+    assert.deepEqual(config.tests, testsDefaults);
+    assert.deepEqual(config.styles, stylesDefaults);
     assert.deepEqual(config.plugins, []);
   });
 
