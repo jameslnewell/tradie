@@ -12,7 +12,7 @@ const mocks = {
 };
 const readConfig = proxyquire('./readConfig', mocks).default;
 
-describe.only('getConfig()', () => {
+describe('getConfig()', () => {
   function mockTradierc(config) {
     mocks.fs.readFileSync.returns(JSON.stringify(config));
   }
