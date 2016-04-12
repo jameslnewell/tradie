@@ -5,7 +5,6 @@ import bundleStyles from '../lib/styles/bundle';
 export const name = 'bundle';
 export const desc = 'Bundle script and style files';
 
-
 export function hint(yargs) {
   return yargs
     .option('w', {

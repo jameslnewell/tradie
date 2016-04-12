@@ -108,7 +108,20 @@ Configure script bundling.
     "libraries": [], //the third-party packages placed into `vendor.js` for long term caching
     "transforms": [], //the browserify transform
     "plugins": [], //the browserify plugins
-    "extensions": [".js"] //the script extensions
+    "extensions": [".js"], //the script extensions
+    "externals": [] //the browserify externals
+  }
+}
+```
+
+### Tests
+
+Configure test-specific bundling overrides. These settings are merged with the `scripts` configuration.
+
+```json
+{
+  "tests": {
+    "externals": ["react", "react-dom"]
   }
 }
 ```
@@ -164,6 +177,11 @@ For example:
 - [tradie-plugin-copy](https://www.npmjs.com/package/tradie-plugin-copy)
 
 ## Change log
+
+### 0.8.0
+
+- add: specify 'externals' option to prevent libraries from being included in the bundle
+- add: specify additional test config when running tests
 
 ### 0.7.10
 

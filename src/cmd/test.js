@@ -1,3 +1,5 @@
+import mergewith from 'lodash.mergewith';
+import concatWithPrevArray from '../util/concatWithPrevArray';
 import testScripts from '../lib/scripts/test';
 
 export const name = 'test';
@@ -11,5 +13,6 @@ export function hint(yargs) {
 }
 
 export function exec({args, config, emitter}) {
-  return testScripts({args, config: config.scripts, emitter});
+  const finalConfig = mergewith({}, config.scripts, config.tests, concatWithPrevArray);
+  return testScripts({args, config: finalConfig, emitter});
 }
