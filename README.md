@@ -95,6 +95,7 @@ Use the `--watch` flag to re-test script files whenever they change.
     "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
     "loaders": [], //the webpack loaders
     "plugins": [], //the webpack plugins
+    "externals": [], //the browserify externals
     "extensions": [".js"] //the script extensions
   },
   "styles": {
