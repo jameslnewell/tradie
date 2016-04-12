@@ -108,8 +108,8 @@ Configure script bundling.
     "libraries": [], //the third-party packages placed into `vendor.js` for long term caching
     "transforms": [], //the browserify transform
     "plugins": [], //the browserify plugins
-    "extensions": [".js"], //the script extensions
-    "externals": [] //the browserify externals
+    "externals": [], //the browserify externals
+    "extensions": [".js"] //the script extensions
   }
 }
 ```
@@ -180,7 +180,7 @@ For example:
 
 ### 0.8.0
 
-- add: specify 'externals' option to prevent libraries from being included in the bundle
+- add: made browserify `externals` configurable via `scripts.externals`
 - add: specify additional test config when running tests
 
 ### 0.7.10
