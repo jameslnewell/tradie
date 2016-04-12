@@ -114,6 +114,18 @@ Configure script bundling.
 }
 ```
 
+### Tests
+
+Configure test-specific bundling overrides. These settings are merged with the `scripts` configuration.
+
+```json
+{
+  "tests": {
+    "externals": ["react", "react-dom"]
+  }
+}
+```
+
 ### Styles
 
 Configure style bundling.
@@ -168,7 +180,8 @@ For example:
 
 ### 0.8.0
 
-add: made browserify `externals` configurable via `scripts.externals`
+- add: made browserify `externals` configurable via `scripts.externals`
+- add: specify additional test config when running tests
 
 ### 0.7.10
 

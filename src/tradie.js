@@ -14,9 +14,7 @@ import * as testCommand from './cmd/test';
 
 export default function() {
   return new Promise((resolve, reject) => {
-
     const env = process.env.NODE_ENV || 'development';
-
     const emitter = new EventEmitter();
 
     const argParser = yargs
@@ -41,7 +39,6 @@ export default function() {
     }
 
     const tradie = {
-
       env,
       config,
 
@@ -60,7 +57,6 @@ export default function() {
        * @returns {tradie}
        */
       cmd: (command) => {
-
         const name = command.name;
 
         argParser.command(
@@ -68,7 +64,6 @@ export default function() {
           command.desc,
           command.hint,
           argv => {
-
             const args = {
               ...argv,
               env
@@ -76,7 +71,6 @@ export default function() {
 
             const run = () => {
               try {
-
                 emitter.emit('command.started', {name, args, config});
                 Promise.resolve(command.exec({args, config, emitter}))
                   .then(
@@ -94,7 +88,6 @@ export default function() {
             };
 
             if (command.name === 'init') {
-
               //don't load plugins, init isn't a project specific command
               run();
             } else {
@@ -106,15 +99,12 @@ export default function() {
                 })
                 .catch(reject)
               ;
-
             }
-
           }
         );
 
         return tradie;
       }
-
     };
 
     //load the commands

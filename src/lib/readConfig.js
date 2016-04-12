@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import JSON5 from 'json5';
-import merge from 'lodash.mergewith';
+import mergewith from 'lodash.mergewith';
+import concatWithPrevArray from '../util/concatWithPrevArray';
 import scriptDefaults from './scripts/defaults';
+import testDefaults from './tests/defaults';
 import styleDefaults from './styles/defaults';
 
 /**
@@ -27,17 +29,14 @@ export default function(environment = 'development') {
   //override the default config
   let config = {
     scripts: {...scriptDefaults, ...userConfig.scripts},
+    tests: {...testDefaults, ...userConfig.tests},
     styles: {...styleDefaults, ...userConfig.styles},
     plugins: userConfig.plugins || []
   };
 
   //merge the environment specific config
-  if (config.env && config.env[environment]) {
-    config = merge({}, config, config.env[environment], (prev, next) => {
-      if (Array.isArray(prev)) {
-        return prev.concat(next);
-      }
-    });
+  if (userConfig.env && userConfig.env[environment]) {
+    config = mergewith({}, config, userConfig.env[environment], concatWithPrevArray);
   }
 
   return config;
