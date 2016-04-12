@@ -46,24 +46,33 @@ function createBundle(options) {
   }
 
   streams.push(size(s => args.size = s));
-  streams.push(fs.createWriteStream(dest));
 
-  //write to a file
-  return pipe(...streams)
-    .then(
-      () => {
-        args.time = Date.now() - startTime;
-        emitter.emit('styles.bundle.finished', args);
-        return {error: null};
-      },
-      error => {
-        args.time = Date.now() - startTime;
-        args.error = error;
-        emitter.emit('styles.bundle.finished', args);
-        return {error};
-      }
-    )
-  ;
+  return new Promise((resolve, reject) => {
+    mkdirp(path.dirname(dest), err => {
+      if (err) return reject(err);
+
+      streams.push(fs.createWriteStream(dest));
+
+      //write to a file
+      pipe(...streams)
+        .then(
+          () => {
+            args.time = Date.now() - startTime;
+            emitter.emit('styles.bundle.finished', args);
+            return {error: null};
+          },
+          error => {
+            args.time = Date.now() - startTime;
+            args.error = error;
+            emitter.emit('styles.bundle.finished', args);
+            return {error};
+          }
+        )
+        .then(resolve, reject)
+      ;
+
+    });
+  });
 
 }
 /**
@@ -195,7 +204,7 @@ export default function(tradie) {
           debug,
           watch,
           src: path.join(src, file),
-          dest: path.join(dest, path.basename(file, path.extname(file)) + '.css'),
+          dest: path.join(dest, path.dirname(file), path.basename(file, path.extname(file)) + '.css'),
           emitter: tradie
         })
       ));

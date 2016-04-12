@@ -21,6 +21,7 @@ import createServerConfig from './configuration/createServerConfig';
  * @param {array}         [config.loaders]
  * @param {array}         [config.plugins]
  * @param {array}         [config.extensions]
+ * @param {array}         [config.externals]
  *
  * @param {object}        args
  * @param {string}        [args.env]

@@ -138,6 +138,26 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 - break: the `scripts.bundle.finished` event no longer returns the error encountered whilst creating an individual bundle (webpack lumps them all in one error object)
 - break: the `scripts.bundling.finished` event no longer returns whether an error occurred but an array of all the error strings - overly verbose
 
+### 0.8.0
+
+add: made browserify `externals` configurable via `scripts.externals`
+
+### 0.7.10
+
+- fix: dist-tags went wrong and npm is showing the wrong readme
+
+### 0.7.8-9
+
+- fix: CSS minification
+
+### 0.7.5-7
+
+- fix: use the full relative bundle path when creating the bundle output
+
+### 0.7.4
+
+- fix: case-sensitive issues on linux
+
 ### 0.7.0
 
 - fix: bug with bundling for node - `incremental-browserify` seems to force it to be bundled for the browser

@@ -4,11 +4,12 @@ import target from './autoprefixer-stream';
 
 
 describe('autoprefixer-stream', () => {
+
   it('should prefix an incoming stream with the relevant browser types', (done) => {
     let actual = '';
     // create our targeted stream
     const outputStream = target({browsers: 'last 2 versions'});
-    outputStream.pipe(through2(function(chunk, enc, callback) {
+    outputStream.pipe(through2((chunk, enc, callback) => {
       actual = chunk.toString();
       callback();
     }, () => {
