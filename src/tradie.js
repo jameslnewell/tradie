@@ -10,9 +10,7 @@ import * as testCommand from './cmd/test';
 
 export default function() {
   return new Promise((resolve, reject) => {
-
     const env = process.env.NODE_ENV || 'development';
-
     const emitter = new EventEmitter();
 
     const argParser = yargs
@@ -37,7 +35,6 @@ export default function() {
     }
 
     const tradie = {
-
       env,
       root: process.cwd(),
       config,
@@ -62,6 +59,7 @@ export default function() {
           command.name,
           command.desc,
           command.hint,
+
           args => {
 
             const run = () => {
@@ -83,8 +81,6 @@ export default function() {
               }
             };
 
-
-
             //load the plugins
             executePlugins(tradie)
               .then(() => {
@@ -98,7 +94,6 @@ export default function() {
 
         return tradie;
       }
-
     };
 
     //load the commands

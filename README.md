@@ -98,6 +98,9 @@ Use the `--watch` flag to re-test script files whenever they change.
     "externals": [], //the webpack externals
     "extensions": [".js"] //the script extensions
   },
+  "tests": { //these settings are merged with the `scripts` for test specific overrides
+    "externals": ["react", "react-dom"]
+  },
   "styles": {
     "bundles": ["./index.scss"] //the style entry files relative to the `src` dir
   },
@@ -106,6 +109,10 @@ Use the `--watch` flag to re-test script files whenever they change.
 ```
 
 ## Related packages
+
+### Templates
+
+- [generator-tradie-react](https://www.npmjs.com/package/generator-tradie-react)
 
 ### Plugins
 
@@ -141,7 +148,8 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 
 ### 0.8.0
 
-add: made browserify `externals` configurable via `scripts.externals`
+- add: made browserify `externals` configurable via `scripts.externals`
+- add: specify additional test config when running tests
 
 ### 0.7.10
 

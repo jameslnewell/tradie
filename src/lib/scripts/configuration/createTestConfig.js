@@ -1,11 +1,22 @@
 import path from 'path';
+import mergewith from 'lodash.mergewith';
+import concatWithPrevArray from '../../../util/concatWithPrevArray';
 import MochaSetupPlugin from './MochaSetupPlugin';
 import createCommonConfig from './createCommonConfig';
 
 export default function createTestConfig(options) {
-  const {root, config: {src, dest}, mocha: {files, requires}} = options;
+  const {root, config: {src, dest, scripts, tests}, mocha: {files, requires}} = options;
 
-  const config = createCommonConfig(options);
+  //merge the test specific settings
+  const mergedScripts = mergewith({}, scripts, tests, concatWithPrevArray);
+
+  const config = createCommonConfig({
+    ...options,
+    config: {
+      ...options.config,
+      scripts: mergedScripts
+    }
+  });
 
   config.plugins.push(new MochaSetupPlugin());
 
