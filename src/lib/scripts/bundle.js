@@ -49,6 +49,7 @@ export default function(tradie) {
   // linting the same file twice within seconds
   const debounceOnChange = (addedModules, changedModules) => {
 
+    //TODO: remove duplicates
     debouncedAddedModules = debouncedAddedModules.concat(addedModules);
     debouncedChangedModules = debouncedChangedModules.concat(changedModules);
 
@@ -101,8 +102,6 @@ export default function(tradie) {
     }
 
   };
-
-  //TODO: batch up addedModules and changedModules and remove dulplicate modules so that the modules are only linted once each
 
   const createVendorBundle = () => {
     const vendorConfig = createVendorConfig(

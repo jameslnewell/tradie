@@ -22,13 +22,6 @@ export default function createApplicationConfig(options) {
 
   const config = createCommonConfig(options);
 
-  //browserify loads *.json just like nodejs... include for compatability
-  // webpack tries to parse the JSON when targetting node so need it for node too - other option is not to bundle *.json by using externals
-  config.module.loaders.push({
-    test: /.json$/,
-    loader: 'json'
-  });
-
   //source maps
   config.devtool = env === 'production' ? 'hidden-source-map' : 'eval';
 
