@@ -1,6 +1,6 @@
 
 export default function createCommonConfig(options) {
-  const {config: {scripts: {loaders, plugins, extensions}}} = options;
+  const {config: {scripts: {extensions, loaders, plugins, externals}}} = options;
 
   const allLoaders = []
 
@@ -36,7 +36,9 @@ export default function createCommonConfig(options) {
 
     },
 
-    plugins: [].concat(plugins)
+    plugins: [].concat(plugins),
+
+    externals
 
   };
 }
