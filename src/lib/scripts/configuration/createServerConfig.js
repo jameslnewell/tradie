@@ -1,8 +1,9 @@
 import path from 'path';
+import webpack from 'webpack';
 import createApplicationConfig from './createApplicationConfig';
 
 export default function createServerConfig(options) {
-  const {root, config: {src, dest, scripts: {bundles}}} = options;
+  const {env, root, config: {src, dest, scripts: {bundles}}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -31,6 +32,7 @@ export default function createServerConfig(options) {
     ...config,
 
     target: 'node',
+    devtool: env === 'production' ? 'source-map' : 'cheap-module-source-map',
 
     entry: entries,
     context: path.resolve(root, src),
@@ -39,7 +41,15 @@ export default function createServerConfig(options) {
       path: path.resolve(root, dest),
       filename: '[name].js',
       libraryTarget: "commonjs"
-    }
+    },
+
+    plugins: [
+      ...config.plugins,
+      new webpack.BannerPlugin(
+        'require(\'source-map-support\').install();',
+        {raw: true, entryOnly: true}
+      )
+    ]
 
   };
 }

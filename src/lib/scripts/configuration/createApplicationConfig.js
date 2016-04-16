@@ -22,9 +22,6 @@ export default function createApplicationConfig(options) {
 
   const config = createCommonConfig(options);
 
-  //source maps
-  config.devtool = env === 'production' ? 'hidden-source-map' : 'eval';
-
   //plugins
   if (env === 'production') {
 

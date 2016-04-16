@@ -11,6 +11,7 @@ export default function createVendorConfig(options) {
     ...config,
 
     target: 'web',
+    devtool: env === 'production' ? 'hidden-source-map' : 'cheap-module-source-map',
 
     entry: {vendor: vendors},
     context: path.resolve(root, src),
