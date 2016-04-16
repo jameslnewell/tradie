@@ -47,7 +47,7 @@ export default function createClientConfig(options) {
     ...config,
 
     target: 'web',
-    devtool: env === 'production' ? 'hidden-source-map' : 'cheap-module-source-map',
+    devtool: env === 'production' ? 'hidden-source-map' : 'cheap-module-eval-source-map',
 
     entry: entries,
     context: path.resolve(root, src),

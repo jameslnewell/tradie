@@ -25,14 +25,13 @@ export default function createServerConfig(options) {
 
   }, {});
 
-  //TODO: add source-map-support via banner plugin so the user doesn't have to add it in each app
   //TODO: in distant future, use IgnorePlugin to ignore (S)CSS on the server
 
   return {
     ...config,
 
     target: 'node',
-    devtool: env === 'production' ? 'source-map' : 'cheap-module-source-map',
+    devtool: env === 'production' ? 'source-map' : 'cheap-module-source-map', //source-map-support only works with external maps - there is a PR to work with inline maps
 
     entry: entries,
     context: path.resolve(root, src),
