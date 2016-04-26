@@ -47,13 +47,16 @@ export default function(tradie) {
       });
 
       if (report.errorCount > 0) {
-        return resolve(-1);
+        resolve(-1);
+        return;
       } else {
-        return resolve(0);
+        resolve(0);
+        return;
       }
 
     } catch (error) {
       reject(error);
+      return;
     }
 
   });
