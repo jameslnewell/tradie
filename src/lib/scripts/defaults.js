@@ -4,5 +4,6 @@ export default {
   vendors: [],
   loaders: [],
   plugins: [],
+  externals: [],
   extensions: ['.js']
 };

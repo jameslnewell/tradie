@@ -1,13 +1,48 @@
 import path from 'path';
-import MochaSetupPlugin from './MochaSetupPlugin';
+import mergewith from 'lodash.mergewith';
+import webpack from 'webpack';
+import concatWithPrevArray from '../../../util/concatWithPrevArray';
 import createCommonConfig from './createCommonConfig';
 
+const mochaSetup = `
+
+const Mocha = require('mocha');
+Mocha.reporters.Base.window.width = ${process.stdout.columns || 80};
+Mocha.reporters.Base.symbols.dot = '.';
+
+const _mocha = new Mocha({});
+_mocha.ui('bdd');
+_mocha.reporter('spec');
+_mocha.useColors(true);
+_mocha.suite.emit('pre-require', global, '', _mocha);
+
+setTimeout(() => {
+  _mocha.run(errors => {
+    process.exit(errors ? 1 : 0);
+  });
+}, 1);
+`;
+
 export default function createTestConfig(options) {
-  const {root, config: {src, dest}, mocha: {files, requires}} = options;
+  const {root, config: {src, dest, scripts, tests}, mocha: {files, requires}} = options;
 
-  const config = createCommonConfig(options);
+  //merge the test specific settings
+  const mergedScripts = mergewith({}, scripts, tests, concatWithPrevArray);
 
-  config.plugins.push(new MochaSetupPlugin());
+  const config = createCommonConfig({
+    ...options,
+    config: {
+      ...options.config,
+      scripts: mergedScripts
+    }
+  });
+
+  config.plugins.push(
+    new webpack.BannerPlugin(
+      mochaSetup,
+      {raw: true, entryOnly: true}
+    )
+  );
 
   return {
     ...config,
