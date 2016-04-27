@@ -1,8 +1,9 @@
 import path from 'path';
+import webpack from 'webpack';
 import createApplicationConfig from './createApplicationConfig';
 
 export default function createServerConfig(options) {
-  const {root, config: {src, dest, scripts: {bundles}}} = options;
+  const {env, root, config: {src, dest, scripts: {bundles}}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -24,21 +25,30 @@ export default function createServerConfig(options) {
 
   }, {});
 
-  //TODO: add source-map-support via banner plugin so the user doesn't have to add it in each app
-  //TODO: in distant future, use IgnorePlugin to ignore SCSS
+  //TODO: in distant future, use IgnorePlugin to ignore (S)CSS on the server
 
   return {
     ...config,
 
     target: 'node',
+    devtool: env === 'production' ? 'source-map' : 'cheap-module-source-map', //source-map-support only works with external maps - there is a PR to work with inline maps
 
     entry: entries,
     context: path.resolve(root, src),
 
     output: {
       path: path.resolve(root, dest),
-      filename: '[name].js'
-    }
+      filename: '[name].js',
+      libraryTarget: "commonjs"
+    },
+
+    plugins: [
+      ...config.plugins,
+      new webpack.BannerPlugin(
+        'require(\'source-map-support\').install();',
+        {raw: true, entryOnly: true}
+      )
+    ]
 
   };
 }

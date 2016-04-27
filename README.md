@@ -55,7 +55,7 @@ Lint and bundle script and style files
 
     tradie build --watch --verbose
 
-Uses `browserify` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be specified in your `.tradierc` file. Styling rules are `autoprefix`ed.
+Uses `webpack` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be specified in your `.tradierc` file. Styling rules are `autoprefix`ed.
 
 Use the `--watch` flag to re-bundle script and style files whenever they change.
 
@@ -68,7 +68,7 @@ Test script files.
 
     tradie test --watch
 
-There's no need to setup extensions or compilers for `mocha`, this command bundles all your test files (`*.test{.js,.jsx,etc`) using your `browserify` transforms/plugins, then runs the generated test bundle with `mocha`.
+There's no need to setup extensions or compilers for `mocha`, this command bundles all your test files (`*.test{.js,.jsx,etc`) using your `webpack` loaders/plugins, then runs the generated test bundle with `mocha`.
 
 Mocha options may be configured in a `.mocharc` file:
 
@@ -95,8 +95,11 @@ Use the `--watch` flag to re-test script files whenever they change.
     "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
     "loaders": [], //the webpack loaders
     "plugins": [], //the webpack plugins
-    "externals": [], //the browserify externals
+    "externals": [], //the webpack externals
     "extensions": [".js"] //the script extensions
+  },
+  "tests": { //these settings are merged with the `scripts` for test specific overrides
+    "externals": ["react", "react-dom"]
   },
   "styles": {
     "bundles": ["./index.scss"] //the style entry files relative to the `src` dir
@@ -106,6 +109,10 @@ Use the `--watch` flag to re-test script files whenever they change.
 ```
 
 ## Related packages
+
+### Templates
+
+- [generator-tradie-react](https://www.npmjs.com/package/generator-tradie-react)
 
 ### Plugins
 
@@ -141,7 +148,8 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 
 ### 0.8.0
 
-add: made browserify `externals` configurable via `scripts.externals`
+- add: made browserify `externals` configurable via `scripts.externals`
+- add: specify additional test config when running tests
 
 ### 0.7.10
 

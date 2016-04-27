@@ -1,7 +1,8 @@
 {
   "scripts": {
     "bundles": ["./client.js", "./server.js"],
-//    "vendors": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
-    "loaders": ["babel"]
+    "vendors": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
+    "loaders": ["babel"],
+    "extensions": [".js", ".jsx"]
   }
 }

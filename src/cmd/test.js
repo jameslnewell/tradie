@@ -5,7 +5,6 @@ import runWebpack from '../lib/scripts/runWebpack';
 import runBundle from '../lib/scripts/runBundle';
 import createTestConfig from '../lib/scripts/configuration/createTestConfig';
 
-
 export const name = 'test';
 export const desc = 'Test script files';
 
@@ -63,4 +62,5 @@ export function exec(options) {
     ;
 
   });
+
 }
