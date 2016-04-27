@@ -1,6 +1,7 @@
 import path from 'path';
 import fileName from 'file-name';
 import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import getClientBundles from './getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 
@@ -42,6 +43,18 @@ export default function createClientConfig(options) {
       })
     ]);
   }
+
+  //stylesheets
+  config.module.loaders = config.module.loaders.concat([
+    {
+      test: /\.scss$/,
+      loader: ExtractTextPlugin.extract('style-loader', 'css!sass')
+    }
+  ]);
+  config.plugins = config.plugins.concat([
+    new ExtractTextPlugin('[name].css', {allChunks: true}) //TODO: [contenthash]
+  ]);
+  console.log(config.module.loaders);
 
   return {
     ...config,

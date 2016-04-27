@@ -4,7 +4,7 @@ export default function createCommonConfig(options) {
   return {
 
     resolve: {
-      extensions: [''].concat(extensions)
+      extensions: [''].concat(extensions, '.json')
     },
 
     module: {
@@ -13,6 +13,7 @@ export default function createCommonConfig(options) {
 
       //TODO: apply loaders only to project specific code by default, in the future, we'll possibly add a way to override this convention
       loaders: loaders.map(loader => ({
+        test: new RegExp(extensions.join('|').replace('.', '\\.') + '$'),
         exclude: /(node_modules)/,
         loader
       })),
