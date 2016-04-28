@@ -6,7 +6,7 @@ import getClientBundles from './getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 
 export default function createClientConfig(options) {
-  const {env, root, config: {src, dest, scripts: {bundles, vendors}}} = options;
+  const {env, root, config: {src, dest, scripts: {bundles, vendors}, styles: {extensions}}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -47,13 +47,19 @@ export default function createClientConfig(options) {
   //stylesheets
   config.module.loaders = config.module.loaders.concat([
     {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style-loader', 'css!sass')
+      test: new RegExp(extensions.join('$|').replace('.', '\\.') + '$'),
+      loader: ExtractTextPlugin.extract('style-loader', ['css?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
+    },
+    {
+      test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$/,
+      loader: 'file'
     }
   ]);
   config.plugins = config.plugins.concat([
     new ExtractTextPlugin('[name].css', {allChunks: true}) //TODO: [contenthash]
   ]);
+
+
   console.log(config.module.loaders);
 
   return {

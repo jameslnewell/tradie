@@ -3,5 +3,6 @@ export default {
   bundles: ['./index.scss'],
   vendors: [],
   loaders: [],
-  plugins: []
+  plugins: [],
+  extensions: ['.scss', '.css']
 };

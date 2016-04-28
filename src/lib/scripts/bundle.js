@@ -41,6 +41,10 @@ export default function(tradie) {
   let scriptsTotalSize = 0;
   let scriptsTotalTime = 0;
 
+  let stylesCount = 0;
+  let stylesTotalSize = 0;
+  let stylesTotalTime = 0;
+
   let debouncedOnChange = null;
   let debouncedAddedModules = [];
   let debouncedChangedModules = [];
@@ -77,21 +81,37 @@ export default function(tradie) {
 
     scriptsErrors = scriptsErrors.concat(stats.errors);
     scriptsTotalTime += stats.time;
+    stylesTotalTime += stats.time;
 
     //emit synthetic (cause webpack) end of bundling events for script bundles
     stats.assets
-      .filter(asset => path.extname(asset.name) === '.js')
       .forEach(asset => {
 
-        scriptsCount += 1;
-        scriptsTotalSize += asset.size;
+        if (path.extname(asset.name) === '.js') {
 
-        tradie.emit('scripts.bundle.finished', {
-          src: path.join(src, asset.name),
-          dest: path.join(dest, asset.name),
-          size: asset.size,
-          time: stats.time
-        });
+          scriptsCount += 1;
+          scriptsTotalSize += asset.size;
+
+          tradie.emit('scripts.bundle.finished', {
+            src: path.join(src, asset.name),
+            dest: path.join(dest, asset.name),
+            size: asset.size,
+            time: stats.time
+          });
+
+        } else if (path.extname(asset.name) === '.css') {
+
+          stylesCount += 1;
+          stylesTotalSize += asset.size;
+
+          tradie.emit('styles.bundle.finished', {
+            src: path.join(src, asset.name),
+            dest: path.join(dest, asset.name),
+            size: asset.size,
+            time: stats.time
+          });
+
+        }
 
       })
     ;
@@ -128,7 +148,7 @@ export default function(tradie) {
     if (vendors.length > 0) {
       promises.push(
         createVendorBundle()
-          .then(code => code === 0 ? createClientBundle() : -1)
+          .then(code => (code === 0 ? createClientBundle() : -1))
       );
     } else {
       promises.push(createClientBundle());
@@ -154,7 +174,15 @@ export default function(tradie) {
           count: scriptsCount,
           time: scriptsTotalTime,
           size: scriptsTotalSize,
-          errors: scriptsErrors
+          errors: scriptsErrors //FIXME:
+        });
+        tradie.emit('styles.bundling.finished', {
+          src,
+          dest,
+          count: stylesCount,
+          time: stylesTotalTime,
+          size: stylesTotalSize,
+          errors: scriptsErrors //FIXME:
         });
       }
       return code;
