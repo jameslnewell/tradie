@@ -4,6 +4,8 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import getClientBundles from './getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
+import mapExtensionsToRegExp from './mapExtensionsToRegExp';
+import resolve from 'resolve';
 
 export default function createClientConfig(options) {
   const {env, root, config: {src, dest, scripts: {bundles, vendors}, styles: {extensions}}} = options;
@@ -45,9 +47,34 @@ export default function createClientConfig(options) {
   }
 
   //stylesheets
+  config.sassLoader = {
+    importer: function(url, prev, done) {
+      prev = prev === 'stdin' ? process.cwd()+'/.' : prev; //FIXME: pending https://github.com/jtangelder/sass-loader/issues/234
+      resolve(url, {
+
+        basedir: path.dirname(prev),
+
+        //look for SASS and CSS files
+        extensions: ['.scss', '.sass', '.css'],
+
+        //allow packages to define a SASS entry file using the "main.scss", "main.sass" or "main.css" keys
+        packageFilter: function(pkg) {
+          pkg.main = pkg['main.scss'] || pkg['main.sass'] || pkg['main.css'] || pkg['style'];
+          return pkg;
+        }
+
+      }, (err, file) => {
+        if (err) {
+          done(err);
+        } else {
+          done({file: file});
+        }
+      });
+    }
+  };
   config.module.loaders = config.module.loaders.concat([
     {
-      test: new RegExp(extensions.join('$|').replace('.', '\\.') + '$'),
+      test: mapExtensionsToRegExp(extensions),
       loader: ExtractTextPlugin.extract('style-loader', ['css?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
     },
     {
@@ -58,9 +85,6 @@ export default function createClientConfig(options) {
   config.plugins = config.plugins.concat([
     new ExtractTextPlugin('[name].css', {allChunks: true}) //TODO: [contenthash]
   ]);
-
-
-  console.log(config.module.loaders);
 
   return {
     ...config,

@@ -167,6 +167,8 @@ export default function(tradie) {
     .then(codes => every(codes, code => code === 0) ? 0 : -1)
     .then(code => {
 
+      //FIXME: errors are getting output twice - once for scripts and errors
+
       if (!watch) {
         tradie.emit('scripts.bundling.finished', {
           src,

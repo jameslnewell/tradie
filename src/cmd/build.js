@@ -2,7 +2,6 @@ import path from 'path';
 import logger from '../lib/logger';
 import linter from '../lib/scripts/linter';
 import bundleScripts from '../lib/scripts/bundle';
-import bundleStyles from '../lib/styles/_bundle';
 
 export const name = 'build';
 export const desc = 'Lint and bundle script and style files';
@@ -54,8 +53,7 @@ export function exec(tradie) {
       bundleScripts({
         ...tradie,
         onChange: (addedModules, changedModules) => lintScripts([].concat(addedModules, changedModules))
-      }),
-      //bundleStyles(tradie)
+      })
     ])
       .then(codes => codes.reduce((accum, next) => {
         if (next !== 0) {
