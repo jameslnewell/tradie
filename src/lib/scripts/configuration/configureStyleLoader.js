@@ -28,25 +28,25 @@ function importer(url, prev, done) {
   });
 }
 
-export default function configureStyles(options, webpack) {
+export default function configureStyleLoader(options, config) {
   const {minimize, extensions} = options;
 
-  webpack.sassLoader = {
+  config.sassLoader = {
     importer
   };
 
-  webpack.postcss = [
+  config.postcss = [
     autoprefixer({browsers: ['last 2 versions']})
     //NOTE: css-loader looks for NODE_ENV=production and performs minification so we don't need cssnano
   ];
 
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
-  webpack.module.loaders.push({
+  config.module.loaders.push({
     test: mapExtensionsToRegExp(extensions),
     loader: ExtractTextPlugin.extract('style-loader', ['css?sourceMap', 'postcss?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
   });
 
-  webpack.plugins = webpack.plugins.concat([
+  config.plugins = config.plugins.concat([
     new ExtractTextPlugin(minimize ? '[name].[contenthash].css' : '[name].css', {allChunks: true})
   ]);
 

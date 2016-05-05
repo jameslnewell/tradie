@@ -5,7 +5,8 @@ import ManifestPlugin from 'webpack-manifest-plugin';
 import getClientBundles from './getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 
-import configureStyles from './configureStyles';
+import configureStyleEntries from './configureStyleEntries';
+import configureStyleLoader from './configureStyleLoader';
 import configureAssets from './configureAssets';
 
 const assetExtensions = [
@@ -13,14 +14,23 @@ const assetExtensions = [
 ];
 
 export default function createClientConfig(options) {
-  const {env, root, config: {src, dest, scripts: {bundles, vendors}, styles: {extensions: styleExtensions}}} = options;
+  const {
+    env,
+    root,
+    config: {
+      src,
+      dest,
+      scripts: {bundles, vendors},
+      styles: {bundles: styleBundles, extensions: styleExtensions}
+    }
+  } = options;
 
   const minimize = env === 'production';
   const config = createApplicationConfig(options);
 
   //configure all the bundles
   const clientBundles = getClientBundles(bundles);
-  const entries = clientBundles.reduce((accum, bundle) => {
+  config.entry = clientBundles.reduce((accum, bundle) => {
     const dirname = path.dirname(bundle);
     const basename = fileName(bundle);
     return {
@@ -28,6 +38,9 @@ export default function createClientConfig(options) {
       [path.join(dirname, basename)]: bundle
     };
   }, {});
+
+  //configure style bundles
+  //configureStyleEntries({bundles: styleBundles}, config);
 
   //create a common.js bundle for modules that are shared across multiple bundles
   if (clientBundles.length > 1) {
@@ -53,7 +66,7 @@ export default function createClientConfig(options) {
   }
 
   //stylesheets
-  configureStyles({
+  configureStyleLoader({
     minimize,
     extensions: styleExtensions
   }, config);
@@ -77,7 +90,6 @@ export default function createClientConfig(options) {
     target: 'web',
     devtool: minimize ? 'hidden-source-map' : 'cheap-module-eval-source-map',
 
-    entry: entries,
     context: path.resolve(root, src),
 
     output: {

@@ -30,6 +30,8 @@ export default function createCommonConfig(options) {
 
   return {
 
+    entry: {},
+
     resolve: {
       extensions: [''].concat(extensions, '.json')
     },
