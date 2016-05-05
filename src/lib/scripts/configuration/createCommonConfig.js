@@ -22,6 +22,12 @@ export default function createCommonConfig(options) {
 
   ;
 
+  //optimize/minimize
+  //new webpack.LoaderOptionsPlugin({
+  //  minimize: true,
+  //  debug: false
+  //})
+
   return {
 
     resolve: {

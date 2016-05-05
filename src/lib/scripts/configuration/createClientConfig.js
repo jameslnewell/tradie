@@ -3,8 +3,8 @@ import fileName from 'file-name';
 import webpack from 'webpack';
 import resolve from 'resolve';
 import autoprefixer from 'autoprefixer';
-//import cssnano from 'cssnano';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import ManifestPlugin from 'webpack-manifest-plugin';
 import getClientBundles from './getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 import mapExtensionsToRegExp from './mapExtensionsToRegExp';
@@ -31,7 +31,7 @@ export default function createClientConfig(options) {
     config.plugins = config.plugins.concat([
       new webpack.optimize.CommonsChunkPlugin({
         name: 'common',
-        filename: env === 'production' ? '[name].js' : '[name].js', //FIXME: '[name].[chunkhash].js' in prod
+        filename: env === 'production' ? '[name].[chunkhash].js' : '[name].js',
         chunks: clientBundles, //exclude modules from the vendor chunk
         minChunks: clientBundles.length //modules must be used across all the chunks to be included
       })
@@ -82,10 +82,9 @@ export default function createClientConfig(options) {
     }
   ]);
   config.plugins = config.plugins.concat([
-    new ExtractTextPlugin('[name].css', {allChunks: true}) //TODO: [contenthash]
+    new ExtractTextPlugin(env === 'production' ? '[name].[contenthash].css' : '[name].css', {allChunks: true})
   ]);
   config.postcss = [autoprefixer({browsers: ['last 2 versions']})];//NOTE: css-loader looks for NODE_ENV=production and performs cssnano
-
 
   //assets
   config.module.loaders = config.module.loaders.concat([
@@ -94,6 +93,16 @@ export default function createClientConfig(options) {
       loader: 'file'
     }
   ]);
+
+  //manifest
+  console.log('PLUGIN', env === 'production');
+  if (env === 'production') {
+    config.plugins.push(new ManifestPlugin({
+      fileName: 'fingerprint-manifest.json'
+    }));
+  }
+
+
 
   return {
     ...config,
@@ -106,7 +115,7 @@ export default function createClientConfig(options) {
 
     output: {
       path: path.resolve(root, dest),
-      filename: env === 'production' ? '[name].js' : '[name].js' //FIXME: '[name].[chunkhash].js' in prod
+      filename: env === 'production' ? '[name].[chunkhash].js' : '[name].js'
     }
 
   };

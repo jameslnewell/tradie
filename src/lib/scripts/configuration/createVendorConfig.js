@@ -18,7 +18,7 @@ export default function createVendorConfig(options) {
 
     output: {
       path: path.resolve(root, dest),
-      filename: env === 'production' ? '[name].js' : '[name].js', //FIXME: '[name].[chunkhash].js' in prod
+      filename: env === 'production' ? '[name].[chunkhash].js' : '[name].js',
       library: '[name]' //FIXME: '[name]_[chunkhash]' in prod
     },
 
