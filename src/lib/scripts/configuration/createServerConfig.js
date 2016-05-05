@@ -1,10 +1,10 @@
 import path from 'path';
 import webpack from 'webpack';
 import createApplicationConfig from './createApplicationConfig';
-import mapExtensionsToRegExp from './mapExtensionsToRegExp';
+import ignoreStyles from './ignoreStyles';
 
 export default function createServerConfig(options) {
-  const {env, root, config: {src, dest, scripts: {bundles}, styles: {extensions}}} = options;
+  const {env, root, config: {src, dest, scripts: {bundles}, styles: {extensions: styleExtensions}}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -25,6 +25,9 @@ export default function createServerConfig(options) {
     };
 
   }, {});
+
+  //replace/ignore (S)CSS on the server - it doesn't get displayed
+  ignoreStyles({extensions: styleExtensions}, config);
 
   return {
     ...config,
@@ -48,12 +51,6 @@ export default function createServerConfig(options) {
       new webpack.BannerPlugin(
         'require(\'source-map-support\').install();',
         {raw: true, entryOnly: true}
-      ),
-
-      //replace/ignore (S)CSS
-      new webpack.NormalModuleReplacementPlugin(
-        mapExtensionsToRegExp(extensions),
-        'node-noop'
       )
 
     ]
