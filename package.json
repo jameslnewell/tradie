@@ -20,7 +20,7 @@
     "url": "git@github.com:jameslnewell/tradie.git"
   },
   "dependencies": {
-    "autoprefixer": "^6.3.3",
+    "autoprefixer": "^6.3.6",
     "chalk": "^1.1.1",
     "clean-css": "^3.4.8",
     "css-loader": "^0.23.1",
@@ -43,11 +43,11 @@
     "node-sass": "^3.6.0",
     "object-values": "^1.0.0",
     "postcss": "^5.0.16",
+    "postcss-loader": "^0.9.1",
     "promised-del": "^1.0.2",
     "promisepipe": "^1.0.1",
     "resolve": "^1.1.7",
     "resolve-url-loader": "^1.4.3",
-    "sass-composer": "^2.0.0-beta14",
     "sass-loader": "^3.2.0",
     "source-map-support": "^0.4.0",
     "source-mapper": "^2.0.0",

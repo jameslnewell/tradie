@@ -1,11 +1,14 @@
 import path from 'path';
 import fileName from 'file-name';
 import webpack from 'webpack';
+import resolve from 'resolve';
+import autoprefixer from 'autoprefixer';
+//import cssnano from 'cssnano';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import getClientBundles from './getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 import mapExtensionsToRegExp from './mapExtensionsToRegExp';
-import resolve from 'resolve';
+
 
 export default function createClientConfig(options) {
   const {env, root, config: {src, dest, scripts: {bundles, vendors}, styles: {extensions}}} = options;
@@ -58,16 +61,16 @@ export default function createClientConfig(options) {
         extensions: ['.scss', '.sass', '.css'],
 
         //allow packages to define a SASS entry file using the "main.scss", "main.sass" or "main.css" keys
-        packageFilter: function(pkg) {
+        packageFilter(pkg) {
           pkg.main = pkg['main.scss'] || pkg['main.sass'] || pkg['main.css'] || pkg['style'];
           return pkg;
         }
 
       }, (err, file) => {
         if (err) {
-          done(err);
+          return done(err);
         } else {
-          done({file: file});
+          return done({file});
         }
       });
     }
@@ -75,15 +78,21 @@ export default function createClientConfig(options) {
   config.module.loaders = config.module.loaders.concat([
     {
       test: mapExtensionsToRegExp(extensions),
-      loader: ExtractTextPlugin.extract('style-loader', ['css?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
-    },
-    {
-      test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$/,
-      loader: 'file'
+      loader: ExtractTextPlugin.extract('style-loader', ['css?sourceMap', 'postcss?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
     }
   ]);
   config.plugins = config.plugins.concat([
     new ExtractTextPlugin('[name].css', {allChunks: true}) //TODO: [contenthash]
+  ]);
+  config.postcss = [autoprefixer({browsers: ['last 2 versions']})];//NOTE: css-loader looks for NODE_ENV=production and performs cssnano
+
+
+  //assets
+  config.module.loaders = config.module.loaders.concat([
+    {
+      test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$/,
+      loader: 'file'
+    }
   ]);
 
   return {
