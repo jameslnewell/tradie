@@ -139,6 +139,7 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 - break: `src` and `dist` are no longer configured individually for scripts and styles
 - add: a `common.js` generated with modules common to multiple bundles
 - add: fingerprinting of clientside JS assets when `NODE_ENV=production`
+- add: a version command
 
 **plugin:**
 

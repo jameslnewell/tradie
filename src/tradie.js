@@ -17,12 +17,14 @@ export default function() {
       .usage('\nUsage: \n  $0 <command> [options]')
       .demand(1)
       .strict()
+      .version()
       .help('h')
       .alias('h', 'help')
       .option('v', {
         alias: 'verbose',
         default: false
       })
+
       .showHelpOnFail()
     ;
 
