@@ -137,6 +137,7 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 - break: script bundle information is reported slightly differently (due to changes below)
 - break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
 - break: `src` and `dist` are no longer configured individually for scripts and styles
+- break: `require` in `.mocharc` has been renamed to `requires`
 - add: a `common.js` generated with modules common to multiple bundles
 - add: fingerprinting of clientside JS assets when `NODE_ENV=production`
 - add: a version command
