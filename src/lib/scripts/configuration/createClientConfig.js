@@ -10,7 +10,8 @@ import configureStyleLoader from './configureStyleLoader';
 import configureAssets from './configureAssets';
 
 const assetExtensions = [
-  '.jpeg', '.jpg', '.gif', '.png', '.svg', '.woff', '.ttf'
+  '.jpeg', '.jpg', '.gif', '.png', '.svg',
+  '.woff', '.ttf', '.eot'
 ];
 
 export default function createClientConfig(options) {
@@ -40,7 +41,7 @@ export default function createClientConfig(options) {
   }, {});
 
   //configure style bundles
-  //configureStyleEntries({bundles: styleBundles}, config);
+  configureStyleEntries({bundles: styleBundles}, config);
 
   //create a common.js bundle for modules that are shared across multiple bundles
   if (clientBundles.length > 1) {
@@ -67,14 +68,12 @@ export default function createClientConfig(options) {
 
   //stylesheets
   configureStyleLoader({
-    minimize,
-    extensions: styleExtensions
+    minimize, root, src, extensions: styleExtensions
   }, config);
 
   //assets
   configureAssets({
-    minimize,
-    extensions: assetExtensions
+    minimize, extensions: assetExtensions
   }, config);
 
   //revision-manifest //TODO: include vendor.js

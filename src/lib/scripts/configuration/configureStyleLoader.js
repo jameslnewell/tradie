@@ -4,35 +4,36 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import mapExtensionsToRegExp from './mapExtensionsToRegExp';
 
-function importer(url, prev, done) {
-  prev = prev === 'stdin' ? process.cwd()+'/.' : prev; //FIXME: pending https://github.com/jtangelder/sass-loader/issues/234
-  resolve(url, {
-
-    basedir: path.dirname(prev),
-
-    //look for SASS and CSS files
-    extensions: ['.scss', '.sass', '.css'],
-
-    //allow packages to define a SASS entry file using the "main.scss", "main.sass" or "main.css" keys
-    packageFilter(pkg) {
-      pkg.main = pkg['main.scss'] || pkg['main.sass'] || pkg['main.css'] || pkg['style'];
-      return pkg;
-    }
-
-  }, (err, file) => {
-    if (err) {
-      return done(err);
-    } else {
-      return done({file});
-    }
-  });
-}
-
 export default function configureStyleLoader(options, config) {
-  const {minimize, extensions} = options;
+  const {minimize, root, src, extensions} = options;
 
   config.sassLoader = {
-    importer
+    importer: (url, prev, done) => {
+
+      //FIXME: pending https://github.com/jtangelder/sass-loader/issues/234
+      const basedir = prev === 'stdin' ? path.resolve(root, src) : path.dirname(prev);
+
+      resolve(url, {
+
+        basedir,
+
+        //look for SASS and CSS files
+        extensions: ['.scss', '.sass', '.css'],
+
+        //allow packages to define a SASS entry file using the "main.scss", "main.sass" or "main.css" keys
+        packageFilter(pkg) {
+          pkg.main = pkg['main.scss'] || pkg['main.sass'] || pkg['main.css'] || pkg['style'];
+          return pkg;
+        }
+
+      }, (err, file) => {
+        if (err) {
+          return done(err);
+        } else {
+          return done({file});
+        }
+      });
+    }
   };
 
   config.postcss = [

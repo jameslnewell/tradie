@@ -4,8 +4,5 @@
     "vendors": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
     "loaders": ["babel"],
     "extensions": [".js", ".jsx"]
-  },
-  "styles": {
-    "bundles": ["./client.scss"]
   }
 }

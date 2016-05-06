@@ -1,6 +1,6 @@
 
 export default {
-  bundles: ['./index.scss'],
+  bundles: [],
   vendors: [],
   loaders: [],
   plugins: [],

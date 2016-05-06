@@ -33,6 +33,10 @@ export default function createServerConfig(options) {
     ...config,
 
     target: 'node',
+    node: {
+      __dirname: false,
+      __filename: false
+    },
     devtool: env === 'production' ? 'source-map' : 'cheap-module-source-map', //source-map-support only works with external maps - there is a PR to work with inline maps
 
     entry: entries,
