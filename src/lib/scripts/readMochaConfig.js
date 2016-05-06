@@ -4,7 +4,7 @@ import JSON5 from 'json5';
 
 const defaultOptions = {
   reporter: 'spec',
-  require: []
+  requires: []
 };
 
 /**
