@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import resolve from 'resolve';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
@@ -26,9 +27,17 @@ export default function configureStyleLoader(options, config) {
           return pkg;
         }
 
-      }, (err, file) => {
-        if (err) {
-          return done(err);
+      }, (resolveError, file) => {
+        if (resolveError) {
+          return done(resolveError);
+        } else if (path.extname(file) === '.css') {
+          fs.readFile(file, (readError, data) => {
+            if (readError) {
+              return done(readError);
+            } else {
+              return done({file, contents: data.toString()});
+            }
+          });
         } else {
           return done({file});
         }
@@ -44,7 +53,7 @@ export default function configureStyleLoader(options, config) {
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
   config.module.loaders.push({
     test: mapExtensionsToRegExp(extensions),
-    loader: ExtractTextPlugin.extract('style-loader', ['css?sourceMap', 'postcss?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
+    loader: ExtractTextPlugin.extract('style', ['css?sourceMap', 'postcss?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
   });
 
   config.plugins = config.plugins.concat([
