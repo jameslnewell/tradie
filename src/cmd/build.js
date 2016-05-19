@@ -67,6 +67,13 @@ export function exec({args, config, emitter}) {
             return accum;
           }
         }, 0))
+        .then(buildCode => {
+          if (code === 0 && buildCode === 0) {
+            return 0;
+          } else {
+            return -1;
+          }
+        })
       ;
 
     })
