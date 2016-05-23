@@ -67,11 +67,11 @@ export default function() {
             const run = () => {
               try {
 
-                emitter.emit('command.started', {...tradie, args});
+                emitter.emit('command.started', {...tradie, args, name: command.name});
                 Promise.resolve(command.exec({...tradie, args}))
                   .then(
                     exitCode => {
-                      emitter.emit('command.finished', {...tradie, args, exitCode});
+                      emitter.emit('command.finished', {...tradie, args, name: command.name, exitCode});
                       resolve(exitCode);
                     },
                     error => reject(error)
