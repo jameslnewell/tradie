@@ -1,10 +1,9 @@
 import path from 'path';
 import mergewith from 'lodash.mergewith';
 import webpack from 'webpack';
-import concatWithPrevArray from '../../../util/concatWithPrevArray';
 import createCommonConfig from './createCommonConfig';
 
-const mochaSetup = `
+const runner = `
 
 const Mocha = require('mocha');
 Mocha.reporters.Base.window.width = ${process.stdout.columns || 80};
@@ -23,43 +22,33 @@ setTimeout(() => {
 }, 1);
 `;
 
-export default function createTestConfig(options) {
-  const {root, config: {src, dest, scripts, tests}, mocha: {files, requires}} = options;
+export default function createTestConfig(testFiles, options) {
+  const {config: {src, dest}} = options;
 
-  //merge the test specific settings
-  const mergedScripts = mergewith({}, scripts, tests, concatWithPrevArray);
-
-  const config = createCommonConfig({
-    ...options,
-    config: {
-      ...options.config,
-      scripts: mergedScripts
-    }
-  });
+  const config = createCommonConfig(options);
 
   config.plugins.push(
     new webpack.BannerPlugin(
-      mochaSetup,
+      runner,
       {raw: true, entryOnly: true}
     )
   );
 
   return {
+
     ...config,
 
     target: 'node',
     devtool: 'inline-source-map',
 
+    context: src,
+
     entry: {
-      tests: [].concat(
-        requires, //TODO: check if the bundle starts with './' and warn if it doesn't
-        files.map(entry => './' + entry)
-      )
+      tests: testFiles
     },
-    context: path.resolve(root, src),
 
     output: {
-      path: path.resolve(root, dest),
+      path: dest,
       filename: '[name].js'
     }
 

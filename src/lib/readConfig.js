@@ -2,48 +2,128 @@ import fs from 'fs';
 import path from 'path';
 import JSON5 from 'json5';
 import mergewith from 'lodash.mergewith';
-import concatWithPrevArray from '../util/concatWithPrevArray';
-import scriptDefaults from './scripts/defaults';
-import testDefaults from './tests/defaults';
-import styleDefaults from './styles/defaults';
 
 const defaultConfig = {
+
   src: './src/',
-  dest: './dist/'
+  dest: './dist/',
+  tmp: './tmp',
+
+  bundles: ['./index'],
+  vendors: [],
+
+  script: {
+    extensions: ['.js']
+  },
+
+  style: {
+    extensions: ['.scss', '.css']
+  },
+
+  eslint: {},
+  babel: {},
+
+  //extra webpack config... try not to use this, its not portable
+  webpack: {},
+
+  plugins: [],
+
+  _: {
+    test: {},
+    optimise: {}
+  }
+
 };
 
 /**
- * Load and merge the user configuration
- * @param   {string} [environment]
- * @returns {object}
+ * Combine arrays
+ * @param {array} prev
+ * @param {array} next
+ * @returns {Array.<T>|string}
  */
-export default function(environment = 'development') {
-  const file = path.join(process.cwd(), '.tradierc');
+function concatArray(prev, next) {
+  if (Array.isArray(prev)) {
+    return prev.concat(next);
+  }
+}
+
+/**
+ * Combine settings from two configuration objects and replace any duplicate settings
+ * @param   {object} cfg1
+ * @param   {object} cfg2
+ * @returns {object} Returns a new config object
+ */
+function combineAndReplaceConfig(cfg1, cfg2) {
+  return {
+    ...cfg1,
+    ...cfg2
+  }
+}
+
+/**
+ * Combine settings from two configuration objects and merge any duplicate settings
+ * @param   {object} cfg1
+ * @param   {object} cfg2
+ * @returns {object} Returns a new config object
+ */
+function combineAndMergeConfig(cfg1, cfg2) {
+  return mergewith({}, cfg1, cfg2, concatArray);
+}
+
+/**
+ * Combine the config with the defaults
+ * @param   {object} config The user's config
+ * @param   {String} task   The task name
+ * @returns {{}}
+ */
+export function combineConfig(config, task = null) {
+  let finalConfig = combineAndReplaceConfig(defaultConfig, config);
+
+  if (task) {
+    finalConfig = combineAndMergeConfig(finalConfig, config['_'][task]);
+  }
+
+  delete finalConfig['_'];
+
+  return finalConfig;
+}
+
+/**
+ * Read the config
+ * @param root
+ * @returns {{}}
+ */
+function readConfig(root) {
+  const file = path.resolve(root, '.tradierc');
 
   //load the user config
-  let userConfig = {};
-
+  let config = {};
   if (fs.existsSync(file)) {
     try {
-      userConfig = JSON5.parse(fs.readFileSync(file));
+      config = JSON5.parse(fs.readFileSync(file));
     } catch (err) {
       throw new Error(`Error reading config file ${file}`);
     }
   }
 
-  //override the default config
-  let config = {
-    ...defaultConfig,
-    scripts: {...scriptDefaults, ...userConfig.scripts},
-    tests: {...testDefaults, ...userConfig.tests},
-    styles: {...styleDefaults, ...userConfig.styles},
-    plugins: userConfig.plugins || []
-  };
+  return config;
+}
 
-  //merge the environment specific config
-  if (userConfig.env && userConfig.env[environment]) {
-    config = mergewith({}, config, userConfig.env[environment], concatWithPrevArray);
-  }
+/**
+ * Load and merge the user configuration
+ * @param   {string} root
+ * @returns {object}
+ */
+export default function(root = process.cwd(), task = null) {
+
+  //load the user config
+  const config = combineConfig(readConfig(root), task);
+
+  //resolve paths
+  config.root = path.resolve(root, config.src);
+  config.src = path.resolve(root, config.src);
+  config.dest = path.resolve(root, config.dest);
+  config.tmp = path.resolve(root, config.tmp);
 
   return config;
 }

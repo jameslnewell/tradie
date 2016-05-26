@@ -1,5 +1,5 @@
 import webpack from 'webpack';
-import mapExtensionsToRegExp from './mapExtensionsToRegExp';
+import mapExtensionsToRegExp from './../common/mapExtensionsToRegExp';
 
 export default function ignoreStyles(options, config) {
   const {extensions} = options;

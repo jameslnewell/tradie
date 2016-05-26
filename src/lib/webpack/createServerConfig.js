@@ -1,10 +1,10 @@
 import path from 'path';
 import webpack from 'webpack';
 import createApplicationConfig from './createApplicationConfig';
-import ignoreStyles from './ignoreStyles';
+import ignoreStyles from './server/ignoreStyles';
 
 export default function createServerConfig(options) {
-  const {env, root, config: {src, dest, scripts: {bundles}, styles: {extensions: styleExtensions}}} = options;
+  const {env, root, config: {src, dest, bundles, style: {extensions: styleExtensions}}} = options;
 
   const config = createApplicationConfig(options);
 

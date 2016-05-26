@@ -3,12 +3,12 @@ import every from 'lodash.every';
 
 import runWebpack from './runWebpack';
 
-import getClientBundles from './configuration/getClientBundles';
-import createVendorConfig from './configuration/createVendorConfig';
-import createClientConfig from './configuration/createClientConfig';
+import getClientBundles from './webpack/common/getClientBundles';
+import createVendorConfig from './webpack/createVendorConfig';
+import createClientConfig from './webpack/createClientConfig';
 
-import getServerBundles from './configuration/getServerBundles';
-import createServerConfig from './configuration/createServerConfig';
+import getServerBundles from './webpack/common/getServerBundles';
+import createServerConfig from './webpack/createServerConfig';
 
 /**
  * Create script bundles
@@ -30,7 +30,7 @@ import createServerConfig from './configuration/createServerConfig';
  * @param {function}      emitter
  */
 export default function(tradie) {
-  const {env, args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
+  const {env, args: {watch}, config: {src, dest, bundles, vendors}, onChange} = tradie;
 
   const promises = [];
   const clientBundles = getClientBundles(bundles);

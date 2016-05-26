@@ -31,14 +31,13 @@ export default function() {
     //load the config
     let config = {};
     try {
-      config = readConfig(env);
+      config = readConfig(process.cwd());
     } catch (error) {
       return reject(error);
     }
 
     const tradie = {
       env,
-      root: process.cwd(),
       config,
 
       on: (...args) => emitter.on(...args),

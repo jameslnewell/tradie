@@ -1,7 +1,7 @@
 import path from 'path';
 import logger from '../lib/logger';
-import linter from '../lib/scripts/linter';
-import bundleScripts from '../lib/scripts/bundle';
+import linter from '../lib/linter';
+import bundleScripts from '../lib/bundle';
 
 export const name = 'build';
 export const desc = 'Lint and bundle script and style files';

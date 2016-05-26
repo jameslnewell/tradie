@@ -1,4 +1,4 @@
-import mapExtensionsToRegExp from './mapExtensionsToRegExp';
+import mapExtensionsToRegExp from './../common/mapExtensionsToRegExp';
 
 export default function configureAssets(options, webpack) {
   const {minimize, extensions} = options;

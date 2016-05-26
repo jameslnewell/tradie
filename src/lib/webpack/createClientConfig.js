@@ -2,12 +2,11 @@ import path from 'path';
 import fileName from 'file-name';
 import webpack from 'webpack';
 import ManifestPlugin from 'webpack-manifest-plugin';
-import getClientBundles from './getClientBundles';
+import getClientBundles from './common/getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 
-import configureStyleEntries from './configureStyleEntries';
-import configureStyleLoader from './configureStyleLoader';
-import configureAssets from './configureAssets';
+import configureStyleLoader from './client/configureStyleLoader';
+import configureAssets from './client/configureAssets';
 
 const assetExtensions = [
   '.jpeg', '.jpg', '.gif', '.png', '.svg',
@@ -21,8 +20,9 @@ export default function createClientConfig(options) {
     config: {
       src,
       dest,
-      scripts: {bundles, vendors},
-      styles: {bundles: styleBundles, extensions: styleExtensions}
+      bundles,
+      vendors,
+      style: {extensions: styleExtensions}
     }
   } = options;
 
@@ -39,9 +39,6 @@ export default function createClientConfig(options) {
       [path.join(dirname, basename)]: bundle
     };
   }, {});
-
-  //configure style bundles
-  configureStyleEntries({bundles: styleBundles}, config);
 
   //create a common.js bundle for modules that are shared across multiple bundles
   if (clientBundles.length > 1) {
