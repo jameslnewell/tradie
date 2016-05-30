@@ -13,7 +13,7 @@ describe('autoprefixer-stream', () => {
       actual = chunk.toString();
       callback();
     }, () => {
-      assert.equal(actual, 'body {\n display:-webkit-flex;\n display:-ms-flexbox;\n display:flex;\n}');
+      assert.equal(actual, 'body {\n display:-ms-flexbox;\n display:flex;\n}');
       done();
     }));
     outputStream.write('body {\n display:flex;\n}');
