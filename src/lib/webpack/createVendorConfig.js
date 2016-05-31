@@ -2,8 +2,8 @@ import path from 'path';
 import webpack from 'webpack';
 import createApplicationConfig from './createApplicationConfig';
 
-export default options => {
-  const {env, config: {src, dest, tmp, vendors}} = options;
+export default function createVendorConfig(options) {
+  const {env, config: {src, dest, tmp, scripts: {vendors}}} = options;
 
   const config = createApplicationConfig(options);
 

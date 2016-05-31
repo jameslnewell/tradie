@@ -30,7 +30,7 @@ import createServerConfig from './webpack/createServerConfig';
  * @param {function}      emitter
  */
 export default function(tradie) {
-  const {env, args: {watch}, config: {src, dest, bundles, vendors}, onChange} = tradie;
+  const {env, args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
 
   const promises = [];
   const clientBundles = getClientBundles(bundles);

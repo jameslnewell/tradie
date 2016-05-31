@@ -9,24 +9,21 @@ const defaultConfig = {
   dest: './dist/',
   tmp: './tmp',
 
-  bundles: ['./index'],
-  vendors: [],
-
-  script: {
+  scripts: {
+    bundles: ['./index.js'],
+    vendors: [],
     extensions: ['.js']
   },
 
-  style: {
+  styles: {
+    bundles: ['./index.css'],
     extensions: ['.scss', '.css']
   },
 
-  eslint: {},
-  babel: {},
+  plugins: [],
 
   //extra webpack config... try not to use this, it won't be portable if we switch tooling
   webpack: {},
-
-  plugins: [],
 
   _: {
     test: {},
@@ -56,8 +53,20 @@ function concatArray(prev, next) {
 function combineAndReplaceConfig(cfg1, cfg2) {
   return {
     ...cfg1,
-    ...cfg2
-  };
+    ...cfg2,
+
+    scripts: {
+      ...cfg1.scripts,
+      ...cfg2.scripts
+    },
+
+    styles: {
+      ...cfg1.styles,
+      ...cfg2.styles
+    }
+
+  }
+
 }
 
 /**
@@ -73,14 +82,14 @@ function combineAndMergeConfig(cfg1, cfg2) {
 /**
  * Combine the config with the defaults
  * @param   {object} config The user's config
- * @param   {String} task   The task name
+ * @param   {String} context   The task name
  * @returns {{}}
  */
-export function combineConfig(config, task = null) {
+export function combineConfig(config, context = null) {
   let finalConfig = combineAndReplaceConfig(defaultConfig, config);
 
-  if (task) {
-    finalConfig = combineAndMergeConfig(finalConfig, config._[task]);
+  if (context) {
+    finalConfig = combineAndMergeConfig(finalConfig, config._[context]);
   }
 
   delete finalConfig._;

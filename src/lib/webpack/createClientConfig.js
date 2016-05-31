@@ -19,8 +19,14 @@ export default function createClientConfig(options) {
     root,
     config: {
       src, dest, tmp,
-      bundles, vendors,
-      style: {extensions: styleExtensions}
+      scripts: {
+        bundles: scriptBundles,
+        vendors
+      },
+      styles: {
+        bundles: styleBundles,
+        extensions: styleExtensions
+      }
     }
   } = options;
 
@@ -28,15 +34,24 @@ export default function createClientConfig(options) {
   const config = createApplicationConfig(options);
 
   //configure all the bundles
-  const clientBundles = getClientBundles(bundles);
+  const clientBundles = getClientBundles(scriptBundles);
   config.entry = clientBundles.reduce((accum, bundle) => {
-    const dirname = path.dirname(bundle);
-    const basename = fileName(bundle);
+    const key = path.join(path.dirname(bundle), fileName(bundle));
     return {
       ...accum,
-      [path.join(dirname, basename)]: bundle
+      [key]: bundle
     };
   }, {});
+
+  //configure the style bundles
+  styleBundles.forEach(bundle => {
+    const key = path.join(path.dirname(bundle), fileName(bundle));
+    if (config.entry[key]) {
+      config.entry[key] = [].concat(config.entry[key], bundle);
+    } else {
+      throw new Error(`Style bundle "${bundle}" must have a matching script bundle.`);
+    }
+  });
 
   //create a common.js bundle for modules that are shared across multiple bundles
   if (clientBundles.length > 1) {

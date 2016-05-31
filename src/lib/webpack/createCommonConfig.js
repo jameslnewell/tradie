@@ -3,8 +3,8 @@ import mapExtensionsToRegExp from './common/mapExtensionsToRegExp';
 export default function createCommonConfig(options) {
   const {
     config: {
-      script: {extensions: scriptExtensions},
-      style: {extensions: styleExtensions}
+      scripts: {extensions: scriptExtensions},
+      styles: {extensions: styleExtensions}
     }
   } = options;
 
