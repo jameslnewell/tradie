@@ -6,7 +6,7 @@ export const name = 'clean';
 export const desc = 'Clean script and style bundles';
 
 export function exec(tradie) {
-  const {root, config: {dest}} = tradie;
+  const {root, config: {dest, tmp}} = tradie;
 
   tradie
     .on('cleaning.finished', () => console.log(chalk.green(` => cleaned`)))
@@ -14,8 +14,8 @@ export function exec(tradie) {
 
   tradie.emit('cleaning.started');
   return del([
-    path.join(path.resolve(root, dest), '*'),
-    path.join(path.resolve(root, dest), '.*')
+    path.join(dest, '*'), path.join(dest, '.*'),
+    path.join(tmp, '*'), path.join(tmp, '.*')
   ])
     .then(() => tradie.emit('cleaning.finished'))
     .then(() => 0)

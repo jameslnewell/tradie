@@ -5,6 +5,8 @@
 
   "script": {
     "extensions": [".js", ".jsx"]
-  }
+  },
+
+  "plugins": [["copy", {"files": ["index.html"]}]]
 
 }

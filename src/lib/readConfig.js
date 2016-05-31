@@ -23,7 +23,7 @@ const defaultConfig = {
   eslint: {},
   babel: {},
 
-  //extra webpack config... try not to use this, its not portable
+  //extra webpack config... try not to use this, it won't be portable if we switch tooling
   webpack: {},
 
   plugins: [],
@@ -57,7 +57,7 @@ function combineAndReplaceConfig(cfg1, cfg2) {
   return {
     ...cfg1,
     ...cfg2
-  }
+  };
 }
 
 /**
@@ -80,10 +80,10 @@ export function combineConfig(config, task = null) {
   let finalConfig = combineAndReplaceConfig(defaultConfig, config);
 
   if (task) {
-    finalConfig = combineAndMergeConfig(finalConfig, config['_'][task]);
+    finalConfig = combineAndMergeConfig(finalConfig, config._[task]);
   }
 
-  delete finalConfig['_'];
+  delete finalConfig._;
 
   return finalConfig;
 }
@@ -112,12 +112,13 @@ function readConfig(root) {
 /**
  * Load and merge the user configuration
  * @param   {string} root
+ * @param   {string} context
  * @returns {object}
  */
-export default function(root = process.cwd(), task = null) {
+export default function(root = process.cwd(), context = null) {
 
   //load the user config
-  const config = combineConfig(readConfig(root), task);
+  const config = combineConfig(readConfig(root), context);
 
   //resolve paths
   config.root = path.resolve(root, config.src);

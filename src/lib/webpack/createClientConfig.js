@@ -18,10 +18,8 @@ export default function createClientConfig(options) {
     env,
     root,
     config: {
-      src,
-      dest,
-      bundles,
-      vendors,
+      src, dest, tmp,
+      bundles, vendors,
       style: {extensions: styleExtensions}
     }
   } = options;
@@ -57,8 +55,8 @@ export default function createClientConfig(options) {
     //chose DLLPlugin for long-term-caching based on https://github.com/webpack/webpack/issues/1315
     config.plugins = config.plugins.concat([
       new webpack.DllReferencePlugin({
-        context: path.resolve(root, dest),
-        manifest: require(path.resolve(root, dest, 'vendor-manifest.json'))
+        context: dest,
+        manifest: require(path.join(tmp, 'vendor-manifest.json'))
       })
     ]);
   }
@@ -76,7 +74,7 @@ export default function createClientConfig(options) {
   //revision-manifest //TODO: include vendor.js
   if (env === 'production') {
     config.plugins.push(new ManifestPlugin({
-      fileName: 'fingerprint-manifest.json'
+      fileName: 'rev-manifest.json'
     }));
   }
 
@@ -86,10 +84,10 @@ export default function createClientConfig(options) {
     target: 'web',
     devtool: minimize ? 'hidden-source-map' : 'cheap-module-eval-source-map',
 
-    context: path.resolve(root, src),
+    context: src,
 
     output: {
-      path: path.resolve(root, dest),
+      path: dest,
       filename: minimize ? '[name].[chunkhash].js' : '[name].js'
     }
 

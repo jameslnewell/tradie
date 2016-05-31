@@ -6,5 +6,4 @@ import './client.scss';
 
 sum(1, 2, 3, 4, 5, 6, 7);
 
-console.log(data);
-console.log(renderToStaticMarkup(<h1>Hello Server!</h1>));
+renderToStaticMarkup(<h1>{data.msg}</h1>);

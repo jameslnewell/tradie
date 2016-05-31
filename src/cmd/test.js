@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import findTestFiles from '../lib/findTestFiles';
 import runWebpack from '../lib/runWebpack';

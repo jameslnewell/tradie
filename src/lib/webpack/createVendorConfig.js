@@ -2,8 +2,8 @@ import path from 'path';
 import webpack from 'webpack';
 import createApplicationConfig from './createApplicationConfig';
 
-export default function createVendorConfig(options) {
-  const {env, config: {src, dest, vendors}} = options;
+export default options => {
+  const {env, config: {src, dest, tmp, vendors}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -25,10 +25,10 @@ export default function createVendorConfig(options) {
     plugins: [
       ...config.plugins,
       new webpack.DllPlugin({
-        path: path.join(dest, '[name]-manifest.json'),
+        path: path.join(tmp, '[name]-manifest.json'),
         name: '[name]' //FIXME: '[name]_[chunkhash]' in prod
       })
     ]
 
   };
-}
+};

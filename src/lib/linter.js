@@ -19,7 +19,7 @@ function filterScriptFiles(fileOrFiles, extensions) {
     //exclude files from within node_modules
     .filter(file => !/node_modules/.test(file))
 
-    //TODO: exclude files not in the src directory
+    //TODO: exclude files not in the ./src directory
 
   ;
 }
