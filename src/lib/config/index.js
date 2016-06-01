@@ -15,5 +15,7 @@ export default (root = process.cwd()) => {
   config.dest = path.resolve(root, config.dest);
   config.tmp = path.resolve(root, config.tmp);
 
+  //TODO: merging context specific config
+
   return config;
 };
