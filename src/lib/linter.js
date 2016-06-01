@@ -4,22 +4,21 @@ import {CLIEngine} from 'eslint';
 /**
  * Filter out any file which is not in the ./src directory and doesn't have a script extension
  * @param   {string|array}  fileOrFiles
+ * @param   {string}        src
  * @param   {array}         extensions
  * @returns {array}
  */
-function filterScriptFiles(fileOrFiles, extensions) {
+function filterScriptFiles(fileOrFiles, src, extensions) {
   return [].concat(fileOrFiles)
+
+    //exclude files not in the ./src directory
+    .filter(file => path.normalize(file).indexOf(src) === 0)
 
     //exclude files which have an extension but aren't on the extension list
     .filter(file => {
       const ext = path.extname(file);
       return ext === '' || extensions.indexOf(ext) !== -1;
     })
-
-    //exclude files from within node_modules
-    .filter(file => !/node_modules/.test(file))
-
-    //TODO: exclude files not in the ./src directory
 
   ;
 }
@@ -49,13 +48,13 @@ function lintScriptFiles(fileOrFiles, extensions) {
  * @returns {function}
  */
 export default function(tradie) {
-  const {config: {scripts: {extensions}}} = tradie;
+  const {config: {src, scripts: {extensions}}} = tradie;
   return scriptFiles => new Promise((resolve, reject) => {
 
     tradie.emit('scripts.linting.started');
     const startTime = Date.now();
 
-    const filteredScriptFiles = filterScriptFiles(scriptFiles, extensions);
+    const filteredScriptFiles = filterScriptFiles(scriptFiles, src, extensions);
 
     try {
 
