@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 import {EventEmitter} from 'events';
-import readConfig from './lib/readConfig';
+import readConfig from './lib/config';
 import executePlugins from './lib/executePlugins';
 
 import * as cleanCommand from './cmd/clean';

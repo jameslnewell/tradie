@@ -1,1 +1,0 @@
-import readConfig from './readConfig';
