@@ -11,7 +11,7 @@ describe('requireExtension()', () => {
     return requireExtension('react', 'template', {resolve})
       .then(
         () => assert(false),
-        err => assert.equal(err.message, `Cannot resolve template "tradie-template-react".`)
+        err => assert.equal(err.message, 'Cannot resolve template "tradie-template-react".')
       )
     ;
 
@@ -25,7 +25,7 @@ describe('requireExtension()', () => {
     return requireExtension('livereload', 'plugin', {resolve, require})
       .then(
         () => assert(false),
-        err => assert.equal(err.message, `Cannot require plugin "tradie-plugin-livereload".`)
+        err => assert.equal(err.message, 'Cannot require plugin "tradie-plugin-livereload".')
       )
     ;
 
@@ -39,7 +39,7 @@ describe('requireExtension()', () => {
     return requireExtension('livereload', 'plugin', {resolve, require})
       .then(
         () => assert(false),
-        err => assert.equal(err.message, `Invalid plugin "tradie-plugin-livereload".`)
+        err => assert.equal(err.message, 'Invalid plugin "tradie-plugin-livereload".')
       )
       ;
 

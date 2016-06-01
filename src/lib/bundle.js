@@ -30,7 +30,7 @@ import createServerConfig from './webpack/createServerConfig';
  * @param {function}      emitter
  */
 export default function(tradie) {
-  const {env, args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
+  const {args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
 
   const promises = [];
   const clientBundles = getClientBundles(bundles);
@@ -78,7 +78,7 @@ export default function(tradie) {
       console.log(stats);
       return;
     }
-
+console.log(JSON.stringify(stats, null, 2));
     scriptsErrors = scriptsErrors.concat(stats.errors);
     scriptsTotalTime += stats.time;
     stylesTotalTime += stats.time;
@@ -148,7 +148,13 @@ export default function(tradie) {
     if (vendors.length > 0) {
       promises.push(
         createVendorBundle()
-          .then(code => (code === 0 ? createClientBundle() : -1))
+          .then(code => {
+            if (code === 0) {
+              return createClientBundle();
+            } else {
+              return -1;
+            }
+          })
       );
     } else {
       promises.push(createClientBundle());
@@ -164,7 +170,13 @@ export default function(tradie) {
   }
 
   return Promise.all(promises)
-    .then(codes => every(codes, code => code === 0) ? 0 : -1)
+    .then(codes => {
+      if (every(codes, code => code === 0)) {
+        return 0;
+      } else {
+        return -1;
+      }
+    })
     .then(code => {
 
       //FIXME: errors are getting output twice - once for scripts and errors

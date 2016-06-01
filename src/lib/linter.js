@@ -66,9 +66,9 @@ export default function(tradie) {
       });
 
       if (report.errorCount > 0) {
-        return resolve(-1);
+        resolve(-1);
       } else {
-        return resolve(0);
+        resolve(0);
       }
 
     } catch (error) {

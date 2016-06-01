@@ -36,7 +36,7 @@ export function exec(options) {
           }
 
           //TODO: what if webpack splits it into more than one chunk?)
-          runBundle(fs.readFileSync(bundlePath))
+          return runBundle(fs.readFileSync(bundlePath))
             .then(
               exitCode => {
 

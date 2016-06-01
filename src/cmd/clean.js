@@ -6,10 +6,10 @@ export const name = 'clean';
 export const desc = 'Clean script and style bundles';
 
 export function exec(tradie) {
-  const {root, config: {dest, tmp}} = tradie;
+  const {config: {dest, tmp}} = tradie;
 
   tradie
-    .on('cleaning.finished', () => console.log(chalk.green(` => cleaned`)))
+    .on('cleaning.finished', () => console.log(chalk.green(' => cleaned')))
   ;
 
   tradie.emit('cleaning.started');

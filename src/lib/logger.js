@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import humanize from 'humanize-duration';
 import filesize from 'file-size';
 
-module.exports = function(options) {
+export default function(options) {
 
   const verbose = options.verbose;
 
@@ -92,4 +92,4 @@ module.exports = function(options) {
     styleBundlingFinished
   };
 
-};
+}

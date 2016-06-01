@@ -48,7 +48,7 @@ export default function(name, type, options) {
         }
       }
 
-      resolvePromise(extension);
+      return resolvePromise(extension);
     });
   });
 

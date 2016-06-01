@@ -16,7 +16,7 @@ export default function(config, options, callback) {
   return new Promise((resolve, reject) => {
 
     const compiler = webpack(config);
-    let fs;
+    let fs = null;
 
     if (virtual) {
       fs = new MemoryFS();
@@ -25,11 +25,11 @@ export default function(config, options, callback) {
 
     const wrappedCallback = (err, stats) => {
       if (err) {
-        callback(err, stats, fs);
+        callback(err, stats, fs); //eslint-disable-line callback-return
         if (!watch) reject(err);
       } else {
         const jsonStats = stats.toJson();
-        callback(err, jsonStats, fs);
+        callback(err, jsonStats, fs); //eslint-disable-line callback-return
         if (!watch) resolve(jsonStats.errors.length > 0 ? -1 : 0);
       }
     };
