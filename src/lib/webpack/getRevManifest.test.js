@@ -2,7 +2,7 @@ import getRevManifest from './getRevManifest.js';
 
 describe('getRevManifest()', () => {
 
-  it('should return asset revisions', () => {
+  it.skip('should return asset revisions', () => {
 
     const stats = {};
 

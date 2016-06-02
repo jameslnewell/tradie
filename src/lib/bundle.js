@@ -147,6 +147,7 @@ export default function(tradie) {
     return runWebpack(clientConfig, {watch}, (err, stats) => {
       if (!err && env === 'production') {
         const manifest = {...vendorManifest, ...getRevManifest(stats)};
+        //TODO: cleanup old files???
         fs.writeFileSync(path.join(dest, 'rev-manifest.json'), JSON.stringify(manifest, null, 2));
       }
       afterCompile(err, stats);
