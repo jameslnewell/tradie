@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import every from 'lodash.every';
 
@@ -9,6 +10,8 @@ import createClientConfig from './webpack/createClientConfig';
 
 import getServerBundles from './webpack/common/getServerBundles';
 import createServerConfig from './webpack/createServerConfig';
+
+import getRevManifest from './webpack/getRevManifest';
 
 /**
  * Create script bundles
@@ -30,7 +33,7 @@ import createServerConfig from './webpack/createServerConfig';
  * @param {function}      emitter
  */
 export default function(tradie) {
-  const {args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
+  const {env, args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
 
   const promises = [];
   const clientBundles = getClientBundles(bundles);
@@ -48,6 +51,8 @@ export default function(tradie) {
   let debouncedOnChange = null;
   let debouncedAddedModules = [];
   let debouncedChangedModules = [];
+
+  let vendorManifest = {};
 
   //debounce changes because client/server compilations might have changed the same file and no point
   // linting the same file twice within seconds
@@ -78,7 +83,7 @@ export default function(tradie) {
       console.log(stats);
       return;
     }
-console.log(JSON.stringify(stats, null, 2));
+
     scriptsErrors = scriptsErrors.concat(stats.errors);
     scriptsTotalTime += stats.time;
     stylesTotalTime += stats.time;
@@ -127,14 +132,25 @@ console.log(JSON.stringify(stats, null, 2));
     const vendorConfig = createVendorConfig(
       {...tradie, onChange: debounceOnChange}
     );
-    return runWebpack(vendorConfig, {}, afterCompile);
+    return runWebpack(vendorConfig, {}, (err, stats) => {
+      if (!err && env === 'production') {
+        vendorManifest = getRevManifest(stats);
+      }
+      afterCompile(err, stats);
+    });
   };
 
   const createClientBundle = () => {
     const clientConfig = createClientConfig(
       {...tradie, onChange: debounceOnChange}
     );
-    return runWebpack(clientConfig, {watch}, afterCompile);
+    return runWebpack(clientConfig, {watch}, (err, stats) => {
+      if (!err && env === 'production') {
+        const manifest = {...vendorManifest, ...getRevManifest(stats)};
+        fs.writeFileSync(path.join(dest, 'rev-manifest.json'), JSON.stringify(manifest, null, 2));
+      }
+      afterCompile(err, stats);
+    });
   };
 
   const createServerBundle = () => {

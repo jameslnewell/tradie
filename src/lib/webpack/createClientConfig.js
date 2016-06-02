@@ -1,7 +1,6 @@
 import path from 'path';
 import fileName from 'file-name';
 import webpack from 'webpack';
-import ManifestPlugin from 'webpack-manifest-plugin';
 import getClientBundles from './common/getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 
@@ -86,12 +85,6 @@ export default function createClientConfig(options) {
     minimize, extensions: assetExtensions
   }, config);
 
-  //revision-manifest //TODO: include vendor.js
-  if (env === 'production') {
-    config.plugins.push(new ManifestPlugin({
-      fileName: 'rev-manifest.json'
-    }));
-  }
 
   return {
     ...config,
