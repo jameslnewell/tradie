@@ -1,5 +1,5 @@
 import through from 'through2';
-import uglify from 'uglify-js';
+import UglifyJS from 'uglify-js';
 
 module.exports = function(options) {
   let data = '';
@@ -9,8 +9,16 @@ module.exports = function(options) {
     callback();
   },
   function(callback) {
-    const result = uglify.minify(data, {fromString: true, compress: options});
-    this.push(result.code); //eslint-disable-line
-    callback();
+    try {
+      const result = UglifyJS.minify(data, {fromString: true, compress: options});
+      this.push(result.code); //eslint-disable-line
+      return callback();
+    } catch (error) {
+      if (error instanceof UglifyJS.JS_Parse_Error) {
+        return callback(new Error(`UglifyJS parse error: ${error.message} at ${error.line}:${error.col}`));
+      } else {
+        return callback(error);
+      }
+    }
   });
 };
