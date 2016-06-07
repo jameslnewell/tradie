@@ -129,6 +129,7 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 **user:**
 
 - break: migrated to `eslint` v2
+- break: switch `.tradierc` from JSON to JS and renamed it to `.tradie.js`
 - break: remove `tradie init` command and templating - its really a separate concern and there's better tools out there that do the scaffolding, and having tradie installed locally and globally often lead to user errors
 - break: bundle paths must be prefixed with `./` otherwise webpack will look for them in `./node_modules`  e.g. `index.js` must be changed to `./index.js`
 - break: vendor bundle configuration has changed from `scripts.libraries` to `scripts.vendors`
