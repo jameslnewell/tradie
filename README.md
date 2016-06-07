@@ -178,6 +178,10 @@ For example:
 
 ## Change log
 
+### 0.8.2-3
+
+- fix: report UglifyJS errors with more detail, and still output the scripts
+
 ### 0.8.0
 
 - add: made browserify `externals` configurable via `scripts.externals`

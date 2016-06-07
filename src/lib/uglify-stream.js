@@ -14,6 +14,7 @@ module.exports = function(options) {
       this.push(result.code); //eslint-disable-line
       return callback();
     } catch (error) {
+      this.push(data); //eslint-disable-line
       if (error instanceof UglifyJS.JS_Parse_Error) {
         return callback(new Error(`UglifyJS parse error: ${error.message} at ${error.line}:${error.col}`));
       } else {
