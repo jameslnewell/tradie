@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import createApplicationConfig from './createApplicationConfig';
 
 export default function createVendorConfig(options) {
-  const {env, config: {src, dest, tmp, scripts: {vendors}}} = options;
+  const {optimize, src, dest, tmp, scripts: {vendors}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -11,14 +11,14 @@ export default function createVendorConfig(options) {
     ...config,
 
     target: 'web',
-    devtool: env === 'production' ? 'hidden-source-map' : 'cheap-module-eval-source-map',
+    devtool: optimize ? 'hidden-source-map' : 'cheap-module-eval-source-map',
 
     entry: {vendor: vendors},
     context: src,
 
     output: {
       path: dest,
-      filename: env === 'production' ? '[name].[chunkhash].js' : '[name].js',
+      filename: optimize ? '[name].[chunkhash].js' : '[name].js',
       library: '[name]' //FIXME: '[name]_[chunkhash]' in prod
     },
 

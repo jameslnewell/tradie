@@ -1,7 +1,7 @@
 import path from 'path';
 import mergewith from 'lodash.mergewith';
 import webpack from 'webpack';
-import createCommonConfig from './createCommonConfig';
+import createCommonBundleConfig from './createCommonBundleConfig';
 
 const runner = `
 
@@ -22,10 +22,10 @@ setTimeout(() => {
 }, 1);
 `;
 
-export default function createTestConfig(testFiles, options) {
-  const {config: {src, dest}} = options;
+export default function createTestConfig(options) {
+  const {src, dest, files} = options;
 
-  const config = createCommonConfig(options);
+  const config = createCommonBundleConfig(options);
 
   config.plugins.push(
     new webpack.BannerPlugin(
@@ -44,7 +44,7 @@ export default function createTestConfig(testFiles, options) {
     context: src,
 
     entry: {
-      tests: testFiles
+      tests: files
     },
 
     output: {

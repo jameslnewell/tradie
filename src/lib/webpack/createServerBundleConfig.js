@@ -4,7 +4,7 @@ import createApplicationConfig from './createApplicationConfig';
 import ignoreStyles from './server/ignoreStyles';
 
 export default function createServerConfig(options) {
-  const {env, root, config: {src, dest, styles: {bundles, extensions: styleExtensions}}} = options;
+  const {optimize, src, dest, styles: {bundles, extensions: styleExtensions}} = options;
 
   const config = createApplicationConfig(options);
 
@@ -37,13 +37,13 @@ export default function createServerConfig(options) {
       __dirname: false,
       __filename: false
     },
-    devtool: env === 'production' ? 'source-map' : 'cheap-module-source-map', //source-map-support only works with external maps - there is a PR to work with inline maps
+    devtool: optimize ? 'source-map' : 'cheap-module-source-map', //source-map-support only works with external maps - there is a PR to work with inline maps
 
     entry: entries,
-    context: path.resolve(root, src),
+    context: src,
 
     output: {
-      path: path.resolve(root, dest),
+      path: dest,
       filename: '[name].js',
       libraryTarget: 'commonjs'
     },

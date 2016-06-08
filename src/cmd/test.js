@@ -2,7 +2,7 @@ import path from 'path';
 import findTestFiles from '../lib/findTestFiles';
 import runWebpack from '../lib/runWebpack';
 import runBundle from '../lib/runBundle';
-import createTestConfig from '../lib/webpack/createTestConfig';
+import createTestBundleConfig from '../lib/webpack/createTestBundleConfig';
 
 export const name = 'test';
 export const desc = 'Test script files';
@@ -14,8 +14,8 @@ export function hint(yargs) {
   });
 }
 
-export function exec(options) {
-  const {args: {watch}, config: {src, dest, scripts: {extensions}}} = options;
+export function exec(tradie) {
+  const {args: {watch}, config: {src, dest, scripts: {extensions}}} = tradie;
 
   const bundlePath = path.resolve(dest, 'tests.js'); //FIXME:
 
@@ -24,7 +24,7 @@ export function exec(options) {
     findTestFiles(src, {extensions})
       .then(testFiles => {
 
-        const webpackConfig = createTestConfig(testFiles, options);
+        const webpackConfig = createTestBundleConfig({watch, optimize: false, files: testFiles, ...tradie.config});
 
         runWebpack(webpackConfig, {watch, virtual: true}, (err, stats, fs) => {
           if (err) return reject(err);

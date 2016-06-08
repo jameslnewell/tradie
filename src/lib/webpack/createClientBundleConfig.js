@@ -15,23 +15,19 @@ const assetExtensions = [
 
 export default function createClientConfig(options) {
   const {
-    env,
-    root,
-    config: {
-      src, dest, tmp,
-      scripts: {
-        bundles: scriptBundles,
-        vendors
-      },
-      styles: {
-        bundles: styleBundles,
-        extensions: styleExtensions
-      },
-      webpack: extraWebpackConfig
-    }
+    optimize,
+    src, dest, tmp,
+    scripts: {
+      bundles: scriptBundles,
+      vendors
+    },
+    styles: {
+      bundles: styleBundles,
+      extensions: styleExtensions
+    },
+    webpack: extraWebpackConfig
   } = options;
 
-  const minimize = env === 'production';
   let config = createApplicationConfig(options);
 
   //configure all the bundles
@@ -59,7 +55,7 @@ export default function createClientConfig(options) {
     config.plugins = config.plugins.concat([
       new webpack.optimize.CommonsChunkPlugin({
         name: 'common',
-        filename: minimize ? '[name].[chunkhash].js' : '[name].js',
+        filename: optimize ? '[name].[chunkhash].js' : '[name].js',
         chunks: clientBundles, //exclude modules from the vendor chunk
         minChunks: clientBundles.length //modules must be used across all the chunks to be included
       })
@@ -79,12 +75,12 @@ export default function createClientConfig(options) {
 
   //stylesheets
   configureStyleLoader({
-    minimize, root, src, extensions: styleExtensions
+    optimize, src, extensions: styleExtensions
   }, config);
 
   //assets
   configureAssets({
-    minimize, extensions: assetExtensions
+    optimize, extensions: assetExtensions
   }, config);
 
   //merge common and client config
@@ -92,13 +88,13 @@ export default function createClientConfig(options) {
     ...config,
 
     target: 'web',
-    devtool: minimize ? 'hidden-source-map' : 'cheap-module-eval-source-map',
+    devtool: optimize ? 'hidden-source-map' : 'cheap-module-eval-source-map',
 
     context: src,
 
     output: {
       path: dest,
-      filename: minimize ? '[name].[chunkhash].js' : '[name].js'
+      filename: optimize ? '[name].[chunkhash].js' : '[name].js'
     }
 
   };

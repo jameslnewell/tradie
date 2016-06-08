@@ -5,11 +5,11 @@ import every from 'lodash.every';
 import runWebpack from './runWebpack';
 
 import getClientBundles from './webpack/common/getClientBundles';
-import createVendorConfig from './webpack/createVendorConfig';
-import createClientConfig from './webpack/createClientConfig';
+import createClientBundleConfig from './webpack/createClientBundleConfig';
+import createVendorBundleConfig from './webpack/createVendorBundleConfig';
 
 import getServerBundles from './webpack/common/getServerBundles';
-import createServerConfig from './webpack/createServerConfig';
+import createServerBundleConfig from './webpack/createServerBundleConfig';
 
 import getRevManifestFromStats from './webpack/getRevManifestFromStats';
 
@@ -35,6 +35,7 @@ import getRevManifestFromStats from './webpack/getRevManifestFromStats';
 export default function(tradie) {
   const {env, args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
 
+  const optimize = env === 'production';
   const promises = [];
   const clientBundles = getClientBundles(bundles);
   const serverBundles = getServerBundles(bundles);
@@ -129,11 +130,11 @@ export default function(tradie) {
   };
 
   const createVendorBundle = () => {
-    const vendorConfig = createVendorConfig(
-      {...tradie, onChange: debounceOnChange}
+    const vendorConfig = createVendorBundleConfig(
+      {watch, optimize, onFileChange: debounceOnChange ,...tradie.config}
     );
     return runWebpack(vendorConfig, {}, (err, stats) => {
-      if (!err && env === 'production') {
+      if (!err && optimize) {
         vendorManifest = getRevManifestFromStats(stats);
       }
       afterCompile(err, stats);
@@ -141,11 +142,11 @@ export default function(tradie) {
   };
 
   const createClientBundle = () => {
-    const clientConfig = createClientConfig(
-      {...tradie, onChange: debounceOnChange}
+    const clientConfig = createClientBundleConfig(
+      {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
     );
     return runWebpack(clientConfig, {watch}, (err, stats) => {
-      if (!err && env === 'production') {
+      if (!err && optimize) {
         const manifest = {...vendorManifest, ...getRevManifestFromStats(stats)};
         //TODO: cleanup old files???
         fs.writeFileSync(path.join(dest, 'rev-manifest.json'), JSON.stringify(manifest, null, 2));
@@ -155,8 +156,8 @@ export default function(tradie) {
   };
 
   const createServerBundle = () => {
-    const serverConfig = createServerConfig(
-      {...tradie, onChange: debounceOnChange}
+    const serverConfig = createServerBundleConfig(
+      {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
     );
     return runWebpack(serverConfig, {watch}, afterCompile);
   };

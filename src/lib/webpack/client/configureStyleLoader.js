@@ -6,13 +6,13 @@ import autoprefixer from 'autoprefixer';
 import mapExtensionsToRegExp from './../common/mapExtensionsToRegExp';
 
 export default function configureStyleLoader(options, config) {
-  const {minimize, root, src, extensions} = options;
+  const {optimize, src, extensions} = options;
 
   config.sassLoader = {
     importer: (url, prev, done) => {
 
       //FIXME: pending https://github.com/jtangelder/sass-loader/issues/234
-      const basedir = prev === 'stdin' ? path.resolve(root, src) : path.dirname(prev);
+      const basedir = prev === 'stdin' ? src : path.dirname(prev);
 
       resolve(url, {
 
@@ -57,7 +57,7 @@ export default function configureStyleLoader(options, config) {
   });
 
   config.plugins = config.plugins.concat([
-    new ExtractTextPlugin(minimize ? '[name].[contenthash].css' : '[name].css', {allChunks: true})
+    new ExtractTextPlugin(optimize ? '[name].[contenthash].css' : '[name].css', {allChunks: true})
   ]);
 
 }

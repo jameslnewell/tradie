@@ -1,11 +1,9 @@
 import mapExtensionsToRegExp from './common/mapExtensionsToRegExp';
 
-export default function createCommonConfig(options) {
+export default function createCommonBundleConfig(options) {
   const {
-    config: {
-      scripts: {extensions: scriptExtensions},
-      styles: {extensions: styleExtensions}
-    }
+    scripts: {extensions: scriptExtensions},
+    styles: {extensions: styleExtensions}
   } = options;
 
   const loaders = []
