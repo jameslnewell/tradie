@@ -21,7 +21,7 @@ export default {
   //extra webpack config... try not to use this, it won't be portable if we switch tooling
   webpack: {},
 
-  _: {
+  $: {
     test: {},
     optimise: {}
   }

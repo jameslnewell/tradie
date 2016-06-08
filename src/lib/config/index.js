@@ -1,12 +1,12 @@
 import path from 'path';
 import readFile from './readFile';
-import shallowMerge from './shallowMerge';
-import defaultConfig from './defaultConfig';
+import shallowMerge from './../util/shallowMerge';
+import extendDefaultConfig from './extendDefaultConfig';
 
 export default (root = process.cwd()) => {
 
   //load and merge the user's config with the default config
-  const config = shallowMerge(defaultConfig, readFile(root));
+  const config = extendDefaultConfig(readFile(root));
 
   //TODO: validate/lint the config
 

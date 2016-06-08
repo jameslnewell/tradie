@@ -1,4 +1,4 @@
-import getRevManifest from './getRevManifest.js';
+import getRevManifestFromStats from './getRevManifestFromStats.js';
 
 describe('getRevManifest()', () => {
 
@@ -6,7 +6,7 @@ describe('getRevManifest()', () => {
 
     const stats = {};
 
-    expect(getRevManifest(stats)).to.be.deep.equal({
+    expect(getRevManifestFromStats(stats)).to.be.deep.equal({
 
     });
 

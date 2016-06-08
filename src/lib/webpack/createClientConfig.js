@@ -6,6 +6,7 @@ import createApplicationConfig from './createApplicationConfig';
 
 import configureStyleLoader from './client/configureStyleLoader';
 import configureAssets from './client/configureAssets';
+import deepMerge from '../util/deepMerge';
 
 const assetExtensions = [
   '.jpeg', '.jpg', '.gif', '.png', '.svg',
@@ -25,12 +26,13 @@ export default function createClientConfig(options) {
       styles: {
         bundles: styleBundles,
         extensions: styleExtensions
-      }
+      },
+      webpack: extraWebpackConfig
     }
   } = options;
 
   const minimize = env === 'production';
-  const config = createApplicationConfig(options);
+  let config = createApplicationConfig(options);
 
   //configure all the bundles
   const clientBundles = getClientBundles(scriptBundles);
@@ -85,8 +87,8 @@ export default function createClientConfig(options) {
     minimize, extensions: assetExtensions
   }, config);
 
-
-  return {
+  //merge common and client config
+  config = {
     ...config,
 
     target: 'web',
@@ -100,4 +102,9 @@ export default function createClientConfig(options) {
     }
 
   };
+
+  //merge extra webpack config
+  config = deepMerge(config, extraWebpackConfig);
+
+  return config;
 }

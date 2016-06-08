@@ -7,15 +7,17 @@
     "react-redux": "^4.0.6",
     "redux": "^3.0.5",
     "redux-thunk": "^1.0.3",
-    "sass-grid": "^2.0.3",
-    "tradie-plugin-copy": "^0.2.0-preview.1"
+    "sass-grid": "^2.0.3"
   },
   "devDependencies": {
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.5.0",
     "chai": "^3.5.0",
-    "eslint-config-jameslnewell": "^1.0.0-rc.2"
+    "eslint-config-jameslnewell": "^1.0.0-rc.2",
+    "tradie-plugin-copy": "^0.2.0-preview.1",
+    "tradie-plugin-livereload": "^0.1.2",
+    "tradie-plugin-serve": "^0.2.0-preview.1"
   },
   "scripts": {
     "clean": "tradie clean",

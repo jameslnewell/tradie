@@ -11,7 +11,7 @@ import createClientConfig from './webpack/createClientConfig';
 import getServerBundles from './webpack/common/getServerBundles';
 import createServerConfig from './webpack/createServerConfig';
 
-import getRevManifest from './webpack/getRevManifest';
+import getRevManifestFromStats from './webpack/getRevManifestFromStats';
 
 /**
  * Create script bundles
@@ -134,7 +134,7 @@ export default function(tradie) {
     );
     return runWebpack(vendorConfig, {}, (err, stats) => {
       if (!err && env === 'production') {
-        vendorManifest = getRevManifest(stats);
+        vendorManifest = getRevManifestFromStats(stats);
       }
       afterCompile(err, stats);
     });
@@ -146,7 +146,7 @@ export default function(tradie) {
     );
     return runWebpack(clientConfig, {watch}, (err, stats) => {
       if (!err && env === 'production') {
-        const manifest = {...vendorManifest, ...getRevManifest(stats)};
+        const manifest = {...vendorManifest, ...getRevManifestFromStats(stats)};
         //TODO: cleanup old files???
         fs.writeFileSync(path.join(dest, 'rev-manifest.json'), JSON.stringify(manifest, null, 2));
       }
