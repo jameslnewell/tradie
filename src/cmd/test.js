@@ -27,12 +27,13 @@ export function exec(tradie) {
         const webpackConfig = createTestBundleConfig({watch, optimize: false, files: testFiles, ...tradie.config});
 
         runWebpack(webpackConfig, {watch, virtual: true}, (err, stats, fs) => {
+          console.log(err);
           if (err) return reject(err);
 
           if (stats.errors.length > 0) {
             //TODO: figure out how to handle/display errors
             stats.errors.forEach(moduleError => console.error(moduleError));
-            return Promise.resolve(-1);
+            return reject(-1);
           }
 
           //TODO: what if webpack splits it into more than one chunk?)
