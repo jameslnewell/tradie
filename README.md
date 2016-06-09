@@ -95,11 +95,9 @@ Use the `--watch` flag to re-test script files whenever they change.
     "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
     "loaders": [], //the webpack loaders
     "plugins": [], //the webpack plugins
-    "externals": [], //the webpack externals
     "extensions": [".js"] //the script extensions
   },
   "tests": { //these settings are merged with the `scripts` for test specific overrides
-    "externals": ["react", "react-dom"]
   },
   "styles": {
     "bundles": ["./index.scss"] //the style entry files relative to the `src` dir
@@ -140,9 +138,11 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 - break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
 - break: `src` and `dist` are no longer configured individually for scripts and styles
 - break: `require` in `.mocharc` has been renamed to `requires`
+- break: removed `scripts.externals` due to specific browserify/webpack specific nature - you can specifiy extra webpack config at `webpack` 
 - add: a `common.js` generated with modules common to multiple bundles
 - add: fingerprinting of clientside JS assets when `NODE_ENV=production`
 - add: a version command
+- add: ability to provide additional webpack configuration
 
 **plugin:**
 

@@ -1,11 +1,11 @@
-import createClientBundleConfig from './createClientBundleConfig';
-import extendDefaultConfig from '../config/extendDefaultConfig'
+import createVendorBundleConfig from './createVendorBundleConfig';
+import extendDefaultConfig from '../config/extendDefaultConfig';
 
-describe('createClientBundleConfig()', () => {
+describe('createVendorBundleConfig()', () => {
 
   it('should merge extra webpack config', () => {
 
-    const config = createClientBundleConfig(extendDefaultConfig({
+    const config = createVendorBundleConfig(extendDefaultConfig({
 
       watch: false, optimize: false,
 

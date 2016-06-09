@@ -1,12 +1,14 @@
 import path from 'path';
 import webpack from 'webpack';
+
 import createApplicationConfig from './createApplicationConfig';
 import ignoreStyles from './server/ignoreStyles';
+import deepMerge from '../util/deepMerge';
 
 export default function createServerConfig(options) {
-  const {optimize, src, dest, styles: {bundles, extensions: styleExtensions}} = options;
+  const {optimize, src, dest, styles: {bundles, extensions: styleExtensions}, webpack: extraWebpackConfig} = options;
 
-  const config = createApplicationConfig(options);
+  let config = createApplicationConfig(options);
 
   //configure the server bundles
   const entries = bundles.reduce((accum, bundle) => {
@@ -29,7 +31,8 @@ export default function createServerConfig(options) {
   //replace/ignore (S)CSS on the server - it doesn't get displayed
   ignoreStyles({extensions: styleExtensions}, config);
 
-  return {
+  //merge common and server config
+  config = {
     ...config,
 
     target: 'node',
@@ -60,4 +63,9 @@ export default function createServerConfig(options) {
     ]
 
   };
+
+  //merge extra webpack config
+  config = deepMerge(config, extraWebpackConfig);
+
+  return config;
 }

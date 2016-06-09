@@ -1,13 +1,16 @@
 import path from 'path';
 import webpack from 'webpack';
+
 import createApplicationConfig from './createApplicationConfig';
+import deepMerge from '../util/deepMerge';
 
 export default function createVendorConfig(options) {
-  const {optimize, src, dest, tmp, scripts: {vendors}} = options;
+  const {optimize, src, dest, tmp, scripts: {vendors}, webpack: extraWebpackConfig} = options;
 
-  const config = createApplicationConfig(options);
+  let config = createApplicationConfig(options);
 
-  return {
+  //merge common and test config
+  config = {
     ...config,
 
     target: 'web',
@@ -31,4 +34,9 @@ export default function createVendorConfig(options) {
     ]
 
   };
-};
+
+  //merge extra webpack config
+  config = deepMerge(config, extraWebpackConfig);
+
+  return config;
+}

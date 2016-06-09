@@ -1,7 +1,9 @@
 import path from 'path';
 import mergewith from 'lodash.mergewith';
 import webpack from 'webpack';
+
 import createCommonBundleConfig from './createCommonBundleConfig';
+import deepMerge from '../util/deepMerge';
 
 const runner = `
 
@@ -23,9 +25,9 @@ setTimeout(() => {
 `;
 
 export default function createTestConfig(options) {
-  const {src, dest, files} = options;
+  const {src, dest, files, webpack: extraWebpackConfig} = options;
 
-  const config = createCommonBundleConfig(options);
+  let config = createCommonBundleConfig(options);
 
   config.plugins.push(
     new webpack.BannerPlugin(
@@ -34,7 +36,8 @@ export default function createTestConfig(options) {
     )
   );
 
-  return {
+  //merge common and test config
+  config = {
 
     ...config,
 
@@ -53,4 +56,9 @@ export default function createTestConfig(options) {
     }
 
   };
+
+  //merge extra webpack config
+  config = deepMerge(config, extraWebpackConfig);
+
+  return config;
 }
