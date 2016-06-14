@@ -31,7 +31,7 @@ function filterScriptFiles(fileOrFiles, src, extensions) {
  */
 function lintScriptFiles(fileOrFiles, extensions) {
 
-  const cli = new CLIEngine({extensions});
+  const cli = new CLIEngine({baseConfig: false, useEslintrc: false, configFile: path.resolve('./.eslintrc.json'), extensions});
   const report = cli.executeOnFiles(fileOrFiles);
 
   if (report.errorCount + report.warningCount > 0) {
