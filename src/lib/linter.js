@@ -66,7 +66,7 @@ export default function(tradie) {
       });
 
       if (report.errorCount > 0) {
-        resolve(-1);
+        resolve(1);
       } else {
         resolve(0);
       }

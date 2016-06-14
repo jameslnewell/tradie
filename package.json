@@ -75,7 +75,9 @@
     "lint": "eslint src/**/*.js",
     "build": "babel -s --out-dir ./dist/ src",
     "watch": "npm run build -- --watch",
-    "test": "mocha --require ./dist/_.test.js $(find ./dist -name '*.test.js')",
+    "test:unit": "mocha --require ./dist/_.test.js $(find ./dist -name '*.test.js')",
+    "test:acceptance": "mocha --require ./dist/_.test.js",
+    "test": "npm run test:unit && npm run test:acceptance",
     "prepublish": "npm run lint && npm run clean && npm run build && npm run test"
   },
   "license": "MIT"
