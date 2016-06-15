@@ -131,7 +131,7 @@ export default function(tradie) {
 
   const createVendorBundle = () => {
     const vendorConfig = createVendorBundleConfig(
-      {watch, optimize, onFileChange: debounceOnChange ,...tradie.config}
+      {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
     );
     return runWebpack(vendorConfig, {}, (err, stats) => {
       if (!err && optimize) {
