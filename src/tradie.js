@@ -82,6 +82,9 @@ export default function() {
               }
             };
 
+            //figure out the context
+            tradie.context = command.context ? command.context(args) : null;
+
             //load the plugins
             executePlugins(tradie)
               .then(() => {

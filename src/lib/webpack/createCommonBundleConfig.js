@@ -2,6 +2,7 @@ import mapExtensionsToRegExp from './common/mapExtensionsToRegExp';
 
 export default function createCommonBundleConfig(options) {
   const {
+    src,
     scripts: {extensions: scriptExtensions},
     styles: {extensions: styleExtensions}
   } = options;
@@ -12,13 +13,16 @@ export default function createCommonBundleConfig(options) {
     .concat(
       {
         test: mapExtensionsToRegExp(scriptExtensions),
-        exclude: /(node_modules)/,
-        loader: 'babel'
-        //TODO: pass babel config
+        include: src,
+        loader: 'babel',
+        query: {
+          cacheDirectory: true
+          //TODO: pass babel config
+        }
       }
     )
 
-    //browserify loads JSON files like NodeJS does... emulate that for compatibility
+    //node and browserify loads JSON files like NodeJS does... emulate that for compatibility
     .concat({
       test: /\.json$/,
       loader: 'json'
