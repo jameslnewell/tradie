@@ -12,7 +12,7 @@ export default function createCommonBundleConfig(options) {
     .concat(
       {
         test: mapExtensionsToRegExp(scriptExtensions),
-        exclude: /(node_modules)/,
+        exclude: /(node_modules)/, //TODO: use include instead to only include files in the src dir
         loader: 'babel'
         //TODO: pass babel config
       }
