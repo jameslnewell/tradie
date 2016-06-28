@@ -1,7 +1,7 @@
 import path from 'path';
 import findTestFiles from '../lib/findTestFiles';
 import runWebpack from '../lib/runWebpack';
-import runInProcess from '../lib/runInProcess';
+import runTestBundle from '../lib/runInProcess';
 import createTestBundleConfig from '../lib/webpack/createTestBundleConfig';
 
 export const name = 'test';
@@ -42,23 +42,23 @@ export function exec(tradie) {
 
           //TODO: what if webpack splits it into more than one chunk?)
           const bundle = fs.readFileSync(bundlePath);
-          const hack = {bundle};
 
-          //plugin hook
-          tradie.emit('test.bundle', hack);
-require('fs').writeFileSync('out.txt', hack.bundle);
-          return runInProcess(hack.bundle)
-            .then(
-              exitCode => {
+          return runTestBundle(bundle.toString())
+            .then(result => {
 
-                //if we're not watching then we're done
-                if (!watch) {
-                  resolve(exitCode);
-                }
+              return tradie.emit('test.result', result)
+                .then(() => {
 
-              },
-              reject
-            )
+                  //if we're not watching then we're done
+                  if (!watch) {
+                    resolve(result.failures ? -1 : 0);
+                  }
+
+                })
+              ;
+
+            })
+            .catch(reject)
           ;
 
         })

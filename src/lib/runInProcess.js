@@ -3,15 +3,17 @@ import mapper from 'source-mapper';
 
 export default function(bundle) {
   return new Promise((resolve, reject) => {
+    let result = null;
     const contents = bundle.toString();
 
     //run in a sub-directory of `tradie` so that the `mocha` package is found
     //FIXME: should probably be run in the `.tradierc` directory
-    const node = spawn('node', {cwd: __dirname});
+    const node = spawn('node', {cwd: __dirname, stdio: [null, null, null, 'ipc']});
 
     node
       .on('error', reject)
-      .on('exit', resolve)
+      .on('exit', () => resolve(result))
+      .on('message', data => result = JSON.parse(data)) //FIXME: this is a hack for `tradie-plugin-coverage`
     ;
 
     //TODO: handle stream errors
@@ -19,18 +21,18 @@ export default function(bundle) {
     let stderr = node.stderr;
 
     //if there is a source map, replace stack trace URLs from the generated bundle with the URLs from the original source file(s)
-    const result = mapper.extract(contents);
-    if (result.map) {
+    const extracted = mapper.extract(contents);
+    if (extracted.map) {
 
       //TODO: handle stream errors
-      const stream1 = mapper.stream(result.map);
+      const stream1 = mapper.stream(extracted.map);
       stdout = stdout.pipe(stream1);
-      const stream2 = mapper.stream(result.map);
+      const stream2 = mapper.stream(extracted.map);
       stderr = stderr.pipe(stream2);
 
     }
 
-    //pipe test results to the console
+    //pipe test output to the console
     stdout.pipe(process.stdout);
     stderr.pipe(process.stderr); //TODO: colour it red
 

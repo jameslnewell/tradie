@@ -10,17 +10,15 @@ export default function createCommonBundleConfig(options) {
   const loaders = []
 
     //transpile project scripts with the babel loader
-    .concat(
-      {
-        test: mapExtensionsToRegExp(scriptExtensions),
-        include: src,
-        loader: 'babel',
-        query: {
-          cacheDirectory: true
-          //TODO: pass babel config
-        }
+    .concat({
+      test: mapExtensionsToRegExp(scriptExtensions),
+      include: src,
+      loader: 'babel',
+      query: {
+        cacheDirectory: true
+        //TODO: pass babel config
       }
-    )
+    })
 
     //node and browserify loads JSON files like NodeJS does... emulate that for compatibility
     .concat({

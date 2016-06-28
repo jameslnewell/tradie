@@ -15,7 +15,8 @@ function executePlugin(name, options, tradie) {
       try {
         fn(tradie, options);
       } catch (error) {
-        throw new TradieError(`Cannot execute plugin "${name}".`);
+        console.log(error);
+        throw new TradieError(`Cannot execute plugin "${name}". \n\n\t ${error}`);
       }
     })
   ;
