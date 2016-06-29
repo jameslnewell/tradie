@@ -29,7 +29,7 @@ export function exec(tradie) {
         const webpackConfig = createTestBundleConfig({watch, optimize: false, files: testFiles, ...tradie.config});
 
         //plugin hook
-        tradie.emit('test.webpack-config', webpackConfig);
+        tradie.emit('test.webpack.config', webpackConfig);
 
         runWebpack(webpackConfig, {watch, virtual: true}, (err, stats, fs) => {
           if (err) return reject(err);

@@ -1,7 +1,7 @@
 //LinearPromisePipeline
 
 export function pipe(stages, input) {
-  return stages.reduce((prev, next) => prev.then(next), Promise.resolve(input));
+  return stages.reduce((prev, next) => prev.then(() => next(input)), Promise.resolve(input));
 }
 
 export function mixin(object = {}) {
@@ -24,7 +24,7 @@ export function mixin(object = {}) {
     let handled = false;
     return this.on(event, (...args) => {
       if (!handled) {
-        handle(...args);
+        handler(...args);
       }
       handled = true;
     });
@@ -47,7 +47,7 @@ export function mixin(object = {}) {
       return Promise.resolve(input);
     }
 
-    return pipe(this.__handlers[event], input);
+    return pipe(this.__handlers[event], input).catch(err => console.error(err.stack));
   };
 
   return object;
