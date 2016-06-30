@@ -4,7 +4,7 @@ const spawn = require('child_process').spawn;
 function run(args, options) {
   return new Promise((resolve, reject) => {
 
-    const proc = spawn('node', [path.resolve('./dist/bin/tradie.js'), ...args], options);
+    const proc = spawn('node', [].concat(path.resolve('./dist/bin/tradie.js'), args), options);
 
     if (options.log) {
       proc.stdout.pipe(process.stdout);
