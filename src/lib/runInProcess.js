@@ -8,6 +8,7 @@ export default function(bundle) {
 
     //run in a sub-directory of `tradie` so that the `mocha` package is found
     //FIXME: should probably be run in the `.tradierc` directory
+    //TODO: use command line so plugins can switch `mocha` for `mochify`, `istanbul cover` etc
     const node = spawn('node', {cwd: __dirname, stdio: [null, null, null, 'ipc']});
 
     node
