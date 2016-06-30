@@ -14,7 +14,7 @@ export function hint(yargs) {
   });
 }
 
-export const context = args => 'test';
+export const context = () => 'test';
 
 export function exec(tradie) {
   const {args: {watch}, config: {src, dest, scripts: {extensions}}} = tradie;

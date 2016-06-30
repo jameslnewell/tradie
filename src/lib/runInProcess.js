@@ -14,7 +14,9 @@ export default function(bundle) {
     node
       .on('error', reject)
       .on('exit', () => resolve(result))
-      .on('message', data => result = JSON.parse(data)) //FIXME: this is a hack for `tradie-plugin-coverage`
+      .on('message', data => {
+        result = JSON.parse(data); //FIXME: this is a hack for `tradie-plugin-coverage`
+      })
     ;
 
     //TODO: handle stream errors

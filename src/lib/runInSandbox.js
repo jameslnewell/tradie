@@ -1,6 +1,6 @@
+/* eslint-disable */
 import fs from 'fs';
 import vm from 'vm';
-import path from 'path';
 import resolve from 'resolve';
 
 function createContext(filename) {
