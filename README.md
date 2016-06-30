@@ -55,7 +55,8 @@ Lint and bundle script and style files
 
     tradie build --watch --verbose
 
-Uses `webpack` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be specified in your `.tradierc` file. Styling rules are `autoprefix`ed.
+Uses `webpack` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be
+specified in your `.tradie.js` file. Styling rules are `autoprefix`ed.
 
 Use the `--watch` flag to re-bundle script and style files whenever they change.
 
@@ -88,8 +89,8 @@ Use the `--watch` flag to re-test script files whenever they change.
 
 ```json
 {
-  "src": "./src/", //the directory where files are sourced relative to the .tradierc file
-  "dest": "./dist/", //the directory where files are output relative to the .tradierc file
+  "src": "./src/", //the directory where files are sourced relative to the .tradie.js file
+  "dest": "./dist/", //the directory where files are output relative to the .tradie.js file
   "scripts": {
     "bundles": ["./index.js"], //the script entry files relative to the `src` dir
     "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
