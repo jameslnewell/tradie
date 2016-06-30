@@ -1,5 +1,5 @@
 import yargs from 'yargs';
-import {mixin} from './lib/PromisePipeline';
+import {EventEmitter} from 'events';
 import readConfig from './lib/config';
 import executePlugins from './lib/executePlugins';
 
@@ -11,6 +11,7 @@ import * as testCommand from './cmd/test';
 export default function() {
   return new Promise((resolve, reject) => {
     const env = process.env.NODE_ENV || 'development';
+    const emitter = new EventEmitter();
 
     const argParser = yargs
       .usage('\nUsage: \n  $0 <command> [options]')
@@ -39,6 +40,11 @@ export default function() {
       env,
       config,
 
+      on: (...args) => emitter.on(...args),
+      once: (...args) => emitter.once(...args),
+      off: (...args) => emitter.off(...args),
+      emit: (...args) => emitter.emit(...args),
+
       /**
        * Register a new command
        * @param   {object}    command
@@ -60,12 +66,13 @@ export default function() {
             const run = () => {
               try {
 
-                tradie.emit('command.started', {...tradie, args, name: command.name});
+                emitter.emit('command.started', {...tradie, args, name: command.name});
                 Promise.resolve(command.exec({...tradie, args}))
                   .then(
                     exitCode => {
-                      tradie.emit('command.finished', {...tradie, args, name: command.name, exitCode});
-                      resolve(exitCode);
+                      const event = {...tradie, args, name: command.name, exitCode};
+                      emitter.emit('command.finished', event);
+                      resolve(event.exitCode);
                     },
                     error => reject(error)
                   )
@@ -93,8 +100,6 @@ export default function() {
         return tradie;
       }
     };
-
-    mixin(tradie);
 
     //load the commands
     tradie

@@ -46,16 +46,12 @@ export function exec(tradie) {
           return runTestBundle(bundle.toString())
             .then(result => {
 
-              return tradie.emit('test.result', result)
-                .then(() => {
+              tradie.emit('test.result', result);
 
-                  //if we're not watching then we're done
-                  if (!watch) {
-                    resolve(result.failures ? -1 : 0);
-                  }
-
-                })
-              ;
+              //if we're not watching then we're done
+              if (!watch) {
+                resolve(result.failures ? -1 : 0);
+              }
 
             })
             .catch(reject)
