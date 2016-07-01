@@ -1,7 +1,7 @@
 import path from 'path';
 import findTestFiles from '../lib/findTestFiles';
 import runWebpack from '../lib/runWebpack';
-import runInProcess from '../lib/runInProcess';
+import runTestBundle from '../lib/runInProcess';
 import createTestBundleConfig from '../lib/webpack/createTestBundleConfig';
 
 export const name = 'test';
@@ -14,7 +14,7 @@ export function hint(yargs) {
   });
 }
 
-export const context = args => 'test';
+export const context = () => 'test';
 
 export function exec(tradie) {
   const {args: {watch}, config: {src, dest, scripts: {extensions}}} = tradie;
@@ -29,7 +29,7 @@ export function exec(tradie) {
         const webpackConfig = createTestBundleConfig({watch, optimize: false, files: testFiles, ...tradie.config});
 
         //plugin hook
-        tradie.emit('test.webpack-config', webpackConfig);
+        tradie.emit('test.webpack.config', webpackConfig);
 
         runWebpack(webpackConfig, {watch, virtual: true}, (err, stats, fs) => {
           if (err) return reject(err);
@@ -42,23 +42,19 @@ export function exec(tradie) {
 
           //TODO: what if webpack splits it into more than one chunk?)
           const bundle = fs.readFileSync(bundlePath);
-          const hack = {bundle};
 
-          //plugin hook
-          tradie.emit('test.bundle', hack);
-require('fs').writeFileSync('out.txt', hack.bundle);
-          return runInProcess(hack.bundle)
-            .then(
-              exitCode => {
+          return runTestBundle(bundle.toString())
+            .then(result => {
 
-                //if we're not watching then we're done
-                if (!watch) {
-                  resolve(exitCode);
-                }
+              tradie.emit('test.result', result);
 
-              },
-              reject
-            )
+              //if we're not watching then we're done
+              if (!watch) {
+                resolve(result.failures ? -1 : 0);
+              }
+
+            })
+            .catch(reject)
           ;
 
         })

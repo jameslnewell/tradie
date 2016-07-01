@@ -19,7 +19,13 @@ export const hint = yargs => {
   ;
 };
 
-export const context = args => Boolean(args.optimize) ? 'optimize' : null;
+export const context = args => {
+  if (args.optimize) {
+    return 'optimize';
+  } else {
+    return null;
+  }
+};
 
 export const exec = tradie => {
   const {root, args, config: {src}} = tradie;

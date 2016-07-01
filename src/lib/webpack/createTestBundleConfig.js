@@ -7,21 +7,30 @@ import deepMerge from '../util/deepMerge';
 
 const runner = `
 
-const Mocha = require('mocha');
-Mocha.reporters.Base.window.width = ${process.stdout.columns || 80};
-Mocha.reporters.Base.symbols.dot = '.';
+(function() {
 
-const _mocha = new Mocha({});
-_mocha.ui('bdd');
-_mocha.reporter('spec');
-_mocha.useColors(true);
-_mocha.suite.emit('pre-require', global, '', _mocha);
+  const fs = require('fs');
+  const Mocha = require('mocha');
+  Mocha.reporters.Base.window.width = ${process.stdout.columns || 80};
+  Mocha.reporters.Base.symbols.dot = '.';
 
-setTimeout(() => {
-  _mocha.run(errors => {
-    //process.exit(errors ? 1 : 0);
-  });
-}, 1);
+  const _mocha = new Mocha({});
+  _mocha.ui('bdd');
+  _mocha.reporter('spec');
+  _mocha.useColors(true);
+  _mocha.suite.emit('pre-require', global, '', _mocha);
+
+  setTimeout(function() {
+    _mocha.run(failures => {
+      process.send(JSON.stringify({
+        failures: failures,
+        coverage: global.__coverage__ //FIXME: this is a hack for tradie-plugin-coverage
+      }));
+      process.exit(failures ? 1 : 0);
+    });
+  }, 1);
+
+})();
 
 `;
 

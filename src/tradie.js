@@ -70,8 +70,12 @@ export default function() {
                 Promise.resolve(command.exec({...tradie, args}))
                   .then(
                     exitCode => {
-                      emitter.emit('command.finished', {...tradie, args, name: command.name, exitCode});
-                      resolve(exitCode);
+
+                      //allow plugins to modify the exit code
+                      const event = {...tradie, args, name: command.name, exitCode};
+                      emitter.emit('command.finished', event);
+                      resolve(event.exitCode);
+
                     },
                     error => reject(error)
                   )

@@ -7,7 +7,7 @@ describe('sum()', () => {
   });
 
   it('should fail', () => {
-    expect(sum(1, 2)).to.be.equal(4);
+    expect(sum(1, 2)).to.be.equal(3);
   });
 
 });

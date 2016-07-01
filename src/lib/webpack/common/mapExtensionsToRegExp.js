@@ -1,4 +1,5 @@
+import extRegex from 'ext-to-regex';
 
 export default function mapExtensionsToRegExp(extensions) {
-  return new RegExp(extensions.join('$|').replace('.', '\\.') + '$');
+  return extRegex(extensions);
 }

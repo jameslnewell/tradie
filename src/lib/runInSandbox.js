@@ -1,6 +1,6 @@
+/* eslint-disable */
 import fs from 'fs';
 import vm from 'vm';
-import path from 'path';
 import resolve from 'resolve';
 
 function createContext(filename) {
@@ -8,20 +8,21 @@ function createContext(filename) {
   //https://nodejs.org/api/globals.html
   const context = {
 
-    global: context,
-
     process: {
+      version: process.version,
       env: {},
       cwd: () => '.',
       argv: '',
       stdin: {},
       stdout: process.stdout,
-      stderr: process.stdin
+      stderr: process.stderr //TODO: get stdout/err working
     },
+    process,
 
-    require: createSandboxedRequire({
-      basedir: path.dirname(filename)
-    }),
+    //require: createSandboxedRequire({
+    //  basedir: path.dirname(filename)
+    //}),
+    require: require,  //TODO: use a sandboxed version
 
     module: {
       paths: [],
@@ -68,7 +69,8 @@ const createSandboxedRequire = ({basedir = __dirname}) => {
 
       vm.runInNewContext(code, context, {
         filename: file,
-        displayErrors: true
+        displayErrors: true,
+        timeout: 2000
       });
 
       return context.module.exports;
@@ -78,12 +80,8 @@ const createSandboxedRequire = ({basedir = __dirname}) => {
   };
 };
 
-export default function runInSandbox(code) {
-
+export default function(code) {
   const context = createContext(__dirname); //FIXME:
-
-  const result = vm.runInNewContext(code, context);
-  console.log(result, context);
-
-  return Promise.resolve(0);
+  const result = vm.runInNewContext(code, context, {timeout: 2000});
+  return Promise.resolve(context);
 }
