@@ -11,6 +11,6 @@ module.exports = {
     bundles: ['./client.scss']
   },
 
-  plugins: [['copy', {files: ['index.html']}], 'serve', 'livereload', ['coverage', {thresholds: {statements: 1000}}]]
+  plugins: [['copy', {files: ['index.html']}], 'serve', 'livereload']
 
 };
