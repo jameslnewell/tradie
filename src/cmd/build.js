@@ -6,7 +6,7 @@ import bundleScripts from '../lib/bundle';
 export const name = 'build';
 export const desc = 'Lint and bundle script and style files';
 
-export function hint(yargs) {
+export const hint = yargs => {
   return yargs
     .option('w', {
       alias: 'watch',
@@ -17,9 +17,11 @@ export function hint(yargs) {
       default: false
     })
   ;
-}
+};
 
-export function exec(tradie) {
+export const context = args => Boolean(args.optimize) ? 'optimize' : null;
+
+export const exec = tradie => {
   const {root, args, config: {src}} = tradie;
   const buildLogger = logger(args);
 
@@ -64,4 +66,4 @@ export function exec(tradie) {
       }, 0))
   );
 
-}
+};

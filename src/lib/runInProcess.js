@@ -18,13 +18,17 @@ export default function(bundle) {
     let stdout = node.stdout;
     let stderr = node.stderr;
 
-    //extract the source map, replace URLs in stack traces from generated bundle with the URLs
-    // from the original source files, and pipe the output to the console
+    //if there is a source map, replace stack trace URLs from the generated bundle with the URLs from the original source file(s)
     const result = mapper.extract(contents);
-    const stream1 = mapper.stream(result.map);
-    const stream2 = mapper.stream(result.map);
-    stdout = stdout.pipe(stream1);
-    stderr = stderr.pipe(stream2);
+    if (result.map) {
+
+      //TODO: handle stream errors
+      const stream1 = mapper.stream(result.map);
+      stdout = stdout.pipe(stream1);
+      const stream2 = mapper.stream(result.map);
+      stderr = stderr.pipe(stream2);
+
+    }
 
     //pipe test results to the console
     stdout.pipe(process.stdout);

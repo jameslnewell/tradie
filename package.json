@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "autoprefixer": "^6.3.6",
+    "babel-loader": "^6.2.4",
     "chalk": "^1.1.1",
     "clean-css": "^3.4.8",
     "css-loader": "^0.23.1",

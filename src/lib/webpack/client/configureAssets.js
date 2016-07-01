@@ -5,7 +5,7 @@ export default function configureAssets(options, webpack) {
 
   webpack.module.loaders.push({
     test: mapExtensionsToRegExp(extensions),
-    loader: 'file'
+    loader: 'file-loader'
   });
 
 }

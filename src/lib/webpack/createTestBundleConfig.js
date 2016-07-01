@@ -19,9 +19,10 @@ _mocha.suite.emit('pre-require', global, '', _mocha);
 
 setTimeout(() => {
   _mocha.run(errors => {
-    process.exit(errors ? 1 : 0);
+    //process.exit(errors ? 1 : 0);
   });
 }, 1);
+
 `;
 
 export default function createTestConfig(options) {
