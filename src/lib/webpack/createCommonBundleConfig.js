@@ -14,7 +14,7 @@ export default function createCommonBundleConfig(options) {
       {
         test: mapExtensionsToRegExp(scriptExtensions),
         include: src,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           cacheDirectory: true
           //TODO: pass babel config
@@ -25,7 +25,7 @@ export default function createCommonBundleConfig(options) {
     //node and browserify loads JSON files like NodeJS does... emulate that for compatibility
     .concat({
       test: /\.json$/,
-      loader: 'json'
+      loader: 'json-loader'
     })
 
   ;

@@ -53,7 +53,7 @@ export default function configureStyleLoader(options, config) {
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
   config.module.loaders.push({
     test: mapExtensionsToRegExp(extensions),
-    loader: ExtractTextPlugin.extract('style', ['css?sourceMap', 'postcss?sourceMap', 'resolve-url?sourceMap', 'sass?sourceMap'])
+    loader: ExtractTextPlugin.extract('style', ['css-loader?sourceMap', 'postcss-loader?sourceMap', 'resolve-url-loader?sourceMap', 'sass-loader?sourceMap'])
   });
 
   config.plugins = config.plugins.concat([
