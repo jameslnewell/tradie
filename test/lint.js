@@ -22,7 +22,8 @@ function run(args, options) {
   });
 }
 
-describe('lint', () => {
+describe('lint', function() {
+  this.timeout(5000);
 
   it('should exit with 0 when there are no linting errors', () => {
     return run(['lint'], {cwd: path.resolve('./test/fixture/lint-ok')})
