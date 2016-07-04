@@ -31,6 +31,13 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
 
     `npm run test`
 
+### Loaders
+
+- `babel`
+- `json`
+- `css`, `postcss`, `resolve-url`, `sass`
+- `file`
+
 ## Tasks
 
 ### Clean
