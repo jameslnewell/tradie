@@ -22,11 +22,13 @@ const runner = `
 
   setTimeout(function() {
     _mocha.run(failures => {
-      process.send(JSON.stringify({
-        failures: failures,
-        coverage: global.__coverage__ //FIXME: this is a hack for tradie-plugin-coverage
-      }));
-      process.exit(failures ? 1 : 0);
+      process.send(
+        JSON.stringify({
+          failures: failures,
+          coverage: global.__coverage__ //FIXME: this is a hack for tradie-plugin-coverage
+        }),
+        () => process.exit(failures ? 1 : 0)
+      );
     });
   }, 1);
 
