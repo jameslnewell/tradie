@@ -6,7 +6,7 @@ export default function ignoreStyles(options, config) {
 
   config.plugins.push(new webpack.NormalModuleReplacementPlugin(
     mapExtensionsToRegExp(extensions),
-    'node-noop'
+    require.resolve('node-noop')
   ));
 
 }

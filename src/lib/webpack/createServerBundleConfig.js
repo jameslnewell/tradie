@@ -6,7 +6,7 @@ import ignoreStyles from './server/ignoreStyles';
 import deepMerge from '../util/deepMerge';
 
 export default function createServerConfig(options) {
-  const {optimize, src, dest, styles: {bundles, extensions: styleExtensions}, webpack: extraWebpackConfig} = options;
+  const {optimize, src, dest, scripts: {bundles}, styles: {extensions: styleExtensions}, webpack: extraWebpackConfig} = options;
 
   let config = createApplicationConfig(options);
 
