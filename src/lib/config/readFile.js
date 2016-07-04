@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 export default function(root) {
-  const file = path.resolve(root, '.tradie.js');
+  const file = path.resolve(root, 'tradie.config.js');
 
   //load the user config
   let config = {};
