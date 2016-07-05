@@ -2,8 +2,9 @@ import path from 'path';
 import webpack from 'webpack';
 
 import createApplicationConfig from './createApplicationConfig';
-import ignoreStyles from './server/ignoreStyles';
+import ignoreStyles from './ignoreStyles';
 import deepMerge from '../util/deepMerge';
+import configureAssets from './configureAssets';
 
 export default function createServerConfig(options) {
   const {optimize, src, dest, scripts: {bundles}, styles: {extensions: styleExtensions}, webpack: extraWebpackConfig} = options;
@@ -30,6 +31,9 @@ export default function createServerConfig(options) {
 
   //replace/ignore (S)CSS on the server - it doesn't get displayed
   ignoreStyles({extensions: styleExtensions}, config);
+
+  //assets
+  configureAssets({optimize}, config);
 
   //merge common and server config
   config = {

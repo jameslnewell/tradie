@@ -1,17 +1,12 @@
 import path from 'path';
 import fileName from 'file-name';
 import webpack from 'webpack';
-import getClientBundles from './common/getClientBundles';
+import getClientBundles from './getClientBundles';
 import createApplicationConfig from './createApplicationConfig';
 
-import configureStyleLoader from './client/configureStyleLoader';
-import configureAssets from './client/configureAssets';
+import configureStyleLoader from './configureStyleLoader';
+import configureAssets from './configureAssets';
 import deepMerge from '../util/deepMerge';
-
-const assetExtensions = [
-  '.jpeg', '.jpg', '.gif', '.png', '.svg',
-  '.woff', '.ttf', '.eot'
-];
 
 export default function createClientConfig(options) {
   const {
@@ -79,9 +74,7 @@ export default function createClientConfig(options) {
   }, config);
 
   //assets
-  configureAssets({
-    optimize, extensions: assetExtensions
-  }, config);
+  configureAssets({optimize}, config);
 
   //merge common and client config
   config = {

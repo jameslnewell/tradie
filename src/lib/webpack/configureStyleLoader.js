@@ -3,7 +3,7 @@ import path from 'path';
 import resolve from 'resolve';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import autoprefixer from 'autoprefixer';
-import mapExtensionsToRegExp from './../common/mapExtensionsToRegExp';
+import mapExtensionsToRegExp from './mapExtensionsToRegExp';
 
 export default function configureStyleLoader(options, config) {
   const {optimize, src, extensions} = options;

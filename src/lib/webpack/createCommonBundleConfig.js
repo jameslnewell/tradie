@@ -1,4 +1,4 @@
-import mapExtensionsToRegExp from './common/mapExtensionsToRegExp';
+import mapExtensionsToRegExp from './mapExtensionsToRegExp';
 
 export default function createCommonBundleConfig(options) {
   const {

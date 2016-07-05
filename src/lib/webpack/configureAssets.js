@@ -1,7 +1,11 @@
-import mapExtensionsToRegExp from './../common/mapExtensionsToRegExp';
+import mapExtensionsToRegExp from './mapExtensionsToRegExp';
+
+const extensions = [
+  '.jpeg', '.jpg', '.gif', '.png', '.svg',
+  '.woff', '.ttf', '.eot'
+];
 
 export default function configureAssets(options, webpack) {
-  const {minimize, extensions} = options;
 
   webpack.module.loaders.push({
     test: mapExtensionsToRegExp(extensions),

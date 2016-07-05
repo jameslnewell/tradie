@@ -4,11 +4,11 @@ import every from 'lodash.every';
 
 import runWebpack from './runWebpack';
 
-import getClientBundles from './webpack/common/getClientBundles';
+import getClientBundles from './webpack/getClientBundles';
 import createClientBundleConfig from './webpack/createClientBundleConfig';
 import createVendorBundleConfig from './webpack/createVendorBundleConfig';
 
-import getServerBundles from './webpack/common/getServerBundles';
+import getServerBundles from './webpack/getServerBundles';
 import createServerBundleConfig from './webpack/createServerBundleConfig';
 
 import getRevManifestFromStats from './webpack/getRevManifestFromStats';
