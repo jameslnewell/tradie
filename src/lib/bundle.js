@@ -124,7 +124,7 @@ export default function(tradie) {
 
     //FIXME:
     if (watch && stats.errors.length) {
-      console.log(stats.errors);
+      stats.errors.forEach(error => console.error(error));
     }
 
   };
