@@ -65,7 +65,7 @@ export default function(tradie) {
 
     if (debouncedOnChange + 50 < Date.now()) {
 
-      onChange(addedModules, changedModules);
+      onChange(debouncedAddedModules, debouncedChangedModules);
 
       //reset debounce
       debouncedOnChange = Date.now();
