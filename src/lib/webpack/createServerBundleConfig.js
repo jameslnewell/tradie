@@ -56,13 +56,14 @@ export default function createServerConfig(options) {
     },
 
     plugins: [
-      ...config.plugins,
+      ...config.plugins
 
       //make error traces use source maps
-      new webpack.BannerPlugin(
-        'require(\'source-map-support\').install();',
-        {raw: true, entryOnly: true}
-      )
+      //new webpack.BannerPlugin(
+      //  'require(\'source-map-support\').install();', //FIXME: this needs to be bundled so we can remove the
+      // node_modules dir in prod
+      //  {raw: true, entryOnly: true}
+      //)
 
     ]
 
