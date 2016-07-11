@@ -24,7 +24,10 @@ export default function createServerConfig(options) {
 
     return {
       ...accum,
-      [path.join(dirname, basename)]: bundle
+      [path.join(dirname, basename)]: [
+        'source-map-support/register', //make error stack traces use source maps for easy debugging
+        bundle
+      ]
     };
 
   }, {});
@@ -44,7 +47,9 @@ export default function createServerConfig(options) {
       __dirname: false,
       __filename: false
     },
-    devtool: optimize ? 'source-map' : 'cheap-module-source-map', //source-map-support only works with external maps - there is a PR to work with inline maps
+
+    //FIXME: source-map-support only works with external maps - there is a PR to work with inline maps
+    devtool: optimize ? 'source-map' : 'cheap-module-source-map',
 
     entry: entries,
     context: src,
@@ -53,19 +58,7 @@ export default function createServerConfig(options) {
       path: dest,
       filename: '[name].js',
       libraryTarget: 'commonjs'
-    },
-
-    plugins: [
-      ...config.plugins
-
-      //make error traces use source maps
-      //new webpack.BannerPlugin(
-      //  'require(\'source-map-support\').install();', //FIXME: this needs to be bundled so we can remove the
-      // node_modules dir in prod
-      //  {raw: true, entryOnly: true}
-      //)
-
-    ]
+    }
 
   };
 
