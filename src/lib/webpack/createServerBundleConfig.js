@@ -54,6 +54,13 @@ export default function createServerConfig(options) {
     entry: entries,
     context: src,
 
+    resolve: {
+      ...config.resolve,
+      alias: {
+        'source-map-support\/register': require.resolve('source-map-support/register')
+      }
+    },
+
     output: {
       path: dest,
       filename: '[name].js',
