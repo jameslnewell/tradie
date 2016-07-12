@@ -44,8 +44,13 @@ export default function createServerConfig(options) {
 
     target: 'node',
     node: {
+      console: false,
+      global: false,
+      process: false,
+      Buffer: false,
+      __filename: false,
       __dirname: false,
-      __filename: false
+      setImmediate: false
     },
 
     //FIXME: source-map-support only works with external maps - there is a PR to work with inline maps
