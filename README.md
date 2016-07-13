@@ -146,11 +146,12 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 - break: script files are linted using webpack which means only files included in the bundle are linted - test files are now linted during testing
 - break: `src` and `dist` are no longer configured individually for scripts and styles
 - break: `require` in `.mocharc` has been renamed to `requires`
-- break: removed `scripts.externals` due to specific browserify/webpack specific nature - you can specifiy extra webpack config at `webpack` 
+- break: removed `scripts.externals` due to specific browserify/webpack specific nature - you can specifiy extra webpack config at `webpack`
 - add: a `common.js` generated with modules common to multiple bundles
 - add: fingerprinting of clientside JS assets when `NODE_ENV=production`
 - add: a version command
 - add: ability to provide additional webpack configuration
+- add: display an error and exit with an error status code when conflicting versions of a package is used in a stylesheet
 
 **plugin:**
 
