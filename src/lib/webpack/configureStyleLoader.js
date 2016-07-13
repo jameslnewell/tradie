@@ -4,6 +4,7 @@ import resolve from 'resolve';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import mapExtensionsToRegExp from './mapExtensionsToRegExp';
+import CheckVersionConflictPlugin from './CheckVersionConflictPlugin';
 
 export default function configureStyleLoader(options, config) {
   const {optimize, src, extensions} = options;
@@ -19,7 +20,7 @@ export default function configureStyleLoader(options, config) {
         basedir,
 
         //look for SASS and CSS files
-        extensions: ['.scss', '.sass', '.css'],
+        extensions: extensions,
 
         //allow packages to define a SASS entry file using the "main.scss", "main.sass" or "main.css" keys
         packageFilter(pkg) {
@@ -30,16 +31,20 @@ export default function configureStyleLoader(options, config) {
       }, (resolveError, file) => {
         if (resolveError) {
           return done(resolveError);
-        } else if (path.extname(file) === '.css') {
-          fs.readFile(file, (readError, data) => {
-            if (readError) {
-              return done(readError);
-            } else {
-              return done({file, contents: data.toString()});
-            }
-          });
         } else {
-          return done({file});
+
+          if (path.extname(file) === '.css') {
+            fs.readFile(file, (readError, data) => {
+              if (readError) {
+                return done(readError);
+              } else {
+                return done({file, contents: data.toString()});
+              }
+            });
+          } else {
+            return done({file});
+          }
+
         }
       });
     }
@@ -53,11 +58,19 @@ export default function configureStyleLoader(options, config) {
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
   config.module.loaders.push({
     test: mapExtensionsToRegExp(extensions),
-    loader: ExtractTextPlugin.extract('style', ['css-loader?sourceMap', 'postcss-loader?sourceMap', 'resolve-url-loader?sourceMap', 'sass-loader?sourceMap'])
+    loader: ExtractTextPlugin.extract('style', [
+      'css-loader?sourceMap',
+      'postcss-loader?sourceMap',
+      'resolve-url-loader?sourceMap',
+      'sass-loader?sourceMap'
+    ])
   });
 
   config.plugins = config.plugins.concat([
-    new ExtractTextPlugin(optimize ? '[name].[contenthash].css' : '[name].css', {allChunks: true})
+    new ExtractTextPlugin(optimize ? '[name].[contenthash].css' : '[name].css', {allChunks: true}),
+    new CheckVersionConflictPlugin({
+      include: mapExtensionsToRegExp(extensions)
+    })
   ]);
 
 }
