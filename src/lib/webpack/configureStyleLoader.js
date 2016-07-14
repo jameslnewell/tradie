@@ -20,7 +20,7 @@ export default function configureStyleLoader(options, config) {
         basedir,
 
         //look for SASS and CSS files
-        extensions: extensions,
+        extensions,
 
         //allow packages to define a SASS entry file using the "main.scss", "main.sass" or "main.css" keys
         packageFilter(pkg) {

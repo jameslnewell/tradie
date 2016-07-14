@@ -9,4 +9,6 @@ export default function ignoreStyles(options, config) {
     require.resolve('node-noop')
   ));
 
+  //TODO: switch to `ignore-loader`?
+
 }
