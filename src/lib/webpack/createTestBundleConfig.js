@@ -1,6 +1,8 @@
 import path from 'path';
 import mergewith from 'lodash.mergewith';
 import webpack from 'webpack';
+import ignoreStyles from './ignoreStyles';
+import ignoreAssets from './ignoreAssets';
 
 import createCommonBundleConfig from './createCommonBundleConfig';
 import deepMerge from '../util/deepMerge';
@@ -36,9 +38,15 @@ const runner = `
 `;
 
 export default function createTestConfig(options) {
-  const {src, dest, files, webpack: extraWebpackConfig} = options;
+  const {src, dest, files, styles: {extensions: styleExtensions}, webpack: extraWebpackConfig} = options;
 
   let config = createCommonBundleConfig(options);
+
+  //replace/ignore (S)CSS in the tests - it doesn't get displayed
+  ignoreStyles({extensions: styleExtensions}, config);
+
+  //replace/ignore assets in the tests
+  ignoreAssets({}, config);
 
   config.plugins.push(
     new webpack.BannerPlugin(
