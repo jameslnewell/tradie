@@ -19,7 +19,7 @@ export const hint = yargs => {
   ;
 };
 
-export const context = args => {
+export const context = () => {
   if (process.env.NODE_ENV === 'production') {
     return 'optimize';
   } else {
