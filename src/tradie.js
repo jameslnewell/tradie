@@ -2,6 +2,7 @@ import yargs from 'yargs';
 import {EventEmitter} from 'events';
 import readConfig from './lib/config';
 import executePlugins from './lib/executePlugins';
+import deepMerge from './lib/util/deepMerge';
 
 import * as cleanCommand from './cmd/clean';
 import * as lintCommand from './cmd/lint';
@@ -86,8 +87,12 @@ export default function() {
               }
             };
 
-            //figure out the context
+            //figure out the context and merge the config
             tradie.context = command.context ? command.context(args) : null;
+            if (config.$ && config.$[tradie.context]) {
+              tradie.config = deepMerge(tradie.config, config.$ && config.$[tradie.context]);
+            }
+            delete tradie.config.$;
 
             //load the plugins
             executePlugins(tradie)
