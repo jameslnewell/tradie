@@ -50,7 +50,7 @@ export function exec(tradie) {
 
               //if we're not watching then we're done
               if (!watch) {
-                resolve(0);
+                resolve(result.exitCode);
               }
 
             })

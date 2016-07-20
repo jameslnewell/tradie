@@ -9,7 +9,7 @@ tradie()
   .then(code => process.exit(code))
   .catch(error => {
     console.error(chalk.red(error.stack));
-    process.exit(-1);
+    process.exit(1);
   })
 ;
 

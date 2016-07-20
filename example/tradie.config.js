@@ -11,14 +11,6 @@ module.exports = {
     bundles: ['./client.scss']
   },
 
-  plugins: [['copy', {files: ['index.html']}], 'serve', 'livereload'],
-
-  $: {
-    optimize: {
-      webpack: {
-        foobar: true
-      }
-    }
-  }
+  plugins: [['copy', {files: ['index.html']}], 'serve', 'livereload']
 
 };

@@ -14,11 +14,9 @@ export default function(bundle) {
     node
       .on('error', reject)
       .on('exit', exitCode => {
-        if (exitCode === 0) {
-          resolve(result);
-        } else {
-          reject();
-        }
+        result = result || {};
+        result.exitCode = exitCode;
+        resolve(result);
       })
       .on('message', data => {
         result = JSON.parse(data); //FIXME: this is a hack for `tradie-plugin-coverage`
