@@ -1,12 +1,11 @@
 import path from 'path';
-import readFile from './readFile';
-import shallowMerge from './../util/shallowMerge';
-import extendDefaultConfig from './extendDefaultConfig';
+import {extendDefaultConfig} from 'tradie-util';
+import readFromFile from './readFromFile';
 
 export default (root = process.cwd()) => {
 
   //load and merge the user's config with the default config
-  const config = extendDefaultConfig(readFile(root));
+  const config = extendDefaultConfig(readFromFile(root));
 
   //TODO: validate/lint the config
 

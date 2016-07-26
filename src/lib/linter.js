@@ -48,7 +48,7 @@ function lintScriptFiles(fileOrFiles, extensions) {
  * @returns {function}
  */
 export default function(tradie) {
-  const {config: {src, scripts: {extensions}}} = tradie;
+  const {config: {src, script: {extensions}}} = tradie;
   return scriptFiles => new Promise((resolve, reject) => {
 
     tradie.emit('scripts.linting.started');

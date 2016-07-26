@@ -1,8 +1,8 @@
 import path from 'path';
+import {createTestConfig} from 'tradie-webpack-config';
 import findTestFiles from '../lib/findTestFiles';
 import runWebpack from '../lib/runWebpack';
 import runTestBundle from '../lib/runInProcess';
-import createTestBundleConfig from '../lib/webpack/createTestBundleConfig';
 
 export const name = 'test';
 export const desc = 'Test script files';
@@ -17,7 +17,7 @@ export function hint(yargs) {
 export const context = () => 'test';
 
 export function exec(tradie) {
-  const {args: {watch}, config: {src, dest, scripts: {extensions}}} = tradie;
+  const {args: {watch}, config: {src, dest, script: {extensions}}} = tradie;
 
   const bundlePath = path.resolve(dest, 'tests.js'); //FIXME:
 
@@ -26,7 +26,7 @@ export function exec(tradie) {
     findTestFiles(src, {extensions})
       .then(testFiles => {
 
-        const webpackConfig = createTestBundleConfig({watch, optimize: false, files: testFiles, ...tradie.config});
+        const webpackConfig = createTestConfig({watch, optimize: false, files: testFiles, ...tradie.config});
 
         //plugin hook
         tradie.emit('test.webpack.config', webpackConfig);

@@ -2,16 +2,19 @@ import fs from 'fs';
 import path from 'path';
 import every from 'lodash.every';
 
+import {
+  getClientBundles,
+  getServerBundles
+} from 'tradie-util';
+
+import {
+  createVendorConfig,
+  createClientConfig,
+  createServerConfig
+} from 'tradie-webpack-config';
+
 import runWebpack from './runWebpack';
-
-import getClientBundles from './webpack/getClientBundles';
-import createClientBundleConfig from './webpack/createClientBundleConfig';
-import createVendorBundleConfig from './webpack/createVendorBundleConfig';
-
-import getServerBundles from './webpack/getServerBundles';
-import createServerBundleConfig from './webpack/createServerBundleConfig';
-
-import getRevManifestFromStats from './webpack/getRevManifestFromStats';
+import getRevManifestFromStats from './util/getRevManifestFromStats';
 
 /**
  * Create script bundles
@@ -33,7 +36,7 @@ import getRevManifestFromStats from './webpack/getRevManifestFromStats';
  * @param {function}      emitter
  */
 export default function(tradie) {
-  const {env, args: {watch}, config: {src, dest, scripts: {bundles, vendors}}, onChange} = tradie;
+  const {env, args: {watch}, config: {src, dest, script: {bundles, vendors}}, onChange} = tradie;
 
   const optimize = env === 'production';
   const promises = [];
@@ -130,7 +133,7 @@ export default function(tradie) {
   };
 
   const createVendorBundle = () => {
-    const vendorConfig = createVendorBundleConfig(
+    const vendorConfig = createVendorConfig(
       {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
     );
     return runWebpack(vendorConfig, {}, (err, stats) => {
@@ -142,7 +145,7 @@ export default function(tradie) {
   };
 
   const createClientBundle = () => {
-    const clientConfig = createClientBundleConfig(
+    const clientConfig = createClientConfig(
       {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
     );
     return runWebpack(clientConfig, {watch}, (err, stats) => {
@@ -156,7 +159,7 @@ export default function(tradie) {
   };
 
   const createServerBundle = () => {
-    const serverConfig = createServerBundleConfig(
+    const serverConfig = createServerConfig(
       {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
     );
     return runWebpack(serverConfig, {watch}, afterCompile);
