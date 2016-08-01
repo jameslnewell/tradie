@@ -5,7 +5,7 @@ import every from 'lodash.every';
 import {
   getClientBundles,
   getServerBundles
-} from 'tradie-util';
+} from 'tradie-utilities';
 
 import {
   createVendorConfig,
