@@ -1,4 +1,4 @@
-const isServerBundle = require('../lib/isServerBundle');
+const isServerBundle = require('./isServerBundle');
 
 describe('isServerBundle()', () => {
 

@@ -1,4 +1,4 @@
-const defaultConfig = require('../lib/extendDefaultConfig');
+const defaultConfig = require('./extendDefaultConfig');
 
 describe('extendDefaultConfig()', () => {
 

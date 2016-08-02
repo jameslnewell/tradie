@@ -65,7 +65,7 @@
     "sinon": "^1.17.3"
   },
   "bin": {
-    "tradie": "./dist/bin/tradie.js"
+    "tradie": "./dist/cli/index.js"
   },
   "scripts": {
     "clean": "rm -rf ./dist",

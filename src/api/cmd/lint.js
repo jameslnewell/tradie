@@ -1,5 +1,5 @@
-import logger from '../lib/logger';
-import linter from '../lib/linter';
+import logger from '../logger';
+import linter from '../linter';
 
 export const name = 'lint';
 export const desc = 'Lint script files';

@@ -1,11 +1,11 @@
 import path from 'path';
 import fileName from 'file-name';
 import webpack from 'webpack';
-import {getClientBundles} from 'tradie-util';
-import createApplicationConfig from './util/createAppConfig';
+import getClientBundles from '../util/getClientBundles';
+import createAppConfig from './util/createAppConfig';
 import configureStyleLoader from './util/configureStyles';
 import configureAssets from './util/configureAssets';
-import {deepMerge} from 'tradie-util';
+import deepMerge from '../util/deepMerge';
 
 export default function createClientConfig(options) {
   const {
@@ -22,7 +22,7 @@ export default function createClientConfig(options) {
     webpack: extraWebpackConfig
   } = options;
 
-  let config = createApplicationConfig(options);
+  let config = createAppConfig(options);
 
   //configure the client bundles
   const clientBundles = getClientBundles(scriptBundles);

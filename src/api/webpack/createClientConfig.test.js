@@ -1,11 +1,11 @@
-import createTestBundleConfig from './createTestConfig';
-import {extendDefaultConfig} from 'tradie-util';
+import createClientBundleConfig from './createClientConfig';
+import extendDefaultConfig from '../util/extendDefaultConfig';
 
-describe('createTestBundleConfig()', () => {
+describe('createClientBundleConfig()', () => {
 
   it('should merge extra webpack config', () => {
 
-    const config = createTestBundleConfig(extendDefaultConfig({
+    const config = createClientBundleConfig(extendDefaultConfig({
 
       watch: false, optimize: false,
 

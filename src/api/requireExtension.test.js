@@ -1,6 +1,6 @@
 import assert from 'assert';
 import sinon from 'sinon';
-import requireExtension from '../lib/requireExtension';
+import requireExtension from './requireExtension';
 
 describe('requireExtension()', () => {
 

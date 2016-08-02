@@ -2,16 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import every from 'lodash.every';
 
-import {
-  getClientBundles,
-  getServerBundles
-} from 'tradie-utilities';
+import getClientBundles from './util/getClientBundles';
+import getServerBundles from './util/getServerBundles';
 
-import {
-  createVendorConfig,
-  createClientConfig,
-  createServerConfig
-} from 'tradie-webpack-config';
+import createVendorConfig from './webpack/createVendorConfig';
+import createClientConfig from './webpack/createClientConfig';
+import createServerConfig from './webpack/createServerConfig';
 
 import runWebpack from './runWebpack';
 import getRevManifestFromStats from './util/getRevManifestFromStats';

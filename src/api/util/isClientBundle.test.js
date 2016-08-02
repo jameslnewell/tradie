@@ -1,4 +1,4 @@
-const isClientBundle = require('../lib/isClientBundle');
+const isClientBundle = require('./isClientBundle');
 
 describe('isClientBundle()', () => {
 

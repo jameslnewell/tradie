@@ -1,6 +1,6 @@
 import webpack from 'webpack';
 import colorsAreSupported from 'supports-color';
-import {deepMerge} from 'tradie-util';
+import deepMerge from '../util/deepMerge';
 
 import createCommonConfig from './util/createCommonConfig';
 import ignoreStyles from './util/ignoreStyles';

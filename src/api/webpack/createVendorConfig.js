@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-import {deepMerge} from 'tradie-util';
+import deepMerge from '../util/deepMerge';
 import createApplicationConfig from './util/createAppConfig';
 
 export default function createVendorConfig(options) {

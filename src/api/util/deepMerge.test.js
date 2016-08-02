@@ -1,4 +1,4 @@
-const deepMerge = require('../lib/deepMerge');
+const deepMerge = require('./deepMerge');
 
 describe('deepMerge()', () => {
 

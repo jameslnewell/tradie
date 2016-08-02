@@ -1,8 +1,8 @@
 import path from 'path';
-import {createTestConfig} from 'tradie-webpack-config';
-import findTestFiles from '../lib/findTestFiles';
-import runWebpack from '../lib/runWebpack';
-import runTestBundle from '../lib/runInProcess';
+import createTestConfig from '../webpack/createTestConfig';
+import findTestFiles from '../findTestFiles';
+import runWebpack from '../runWebpack';
+import runTestBundle from '../runInProcess';
 
 export const name = 'test';
 export const desc = 'Test script files';

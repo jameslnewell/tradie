@@ -1,5 +1,5 @@
 import createServerBundleConfig from './createServerConfig';
-import {extendDefaultConfig} from 'tradie-util';
+import extendDefaultConfig from '../util/extendDefaultConfig';
 
 describe('createServerBundleConfig()', () => {
 

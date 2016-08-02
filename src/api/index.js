@@ -1,8 +1,8 @@
 import yargs from 'yargs';
 import {EventEmitter} from 'events';
-import readConfig from './lib/config';
-import executePlugins from './lib/executePlugins';
-import deepMerge from './lib/util/deepMerge';
+import readConfig from './config';
+import executePlugins from './executePlugins';
+import deepMerge from './util/deepMerge';
 
 import * as cleanCommand from './cmd/clean';
 import * as lintCommand from './cmd/lint';

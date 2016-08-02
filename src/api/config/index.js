@@ -1,5 +1,5 @@
 import path from 'path';
-import {extendDefaultConfig} from 'tradie-utilities';
+import extendDefaultConfig from '../util/extendDefaultConfig';
 import readFromFile from './readFromFile';
 
 export default (root = process.cwd(), context = null) => {
