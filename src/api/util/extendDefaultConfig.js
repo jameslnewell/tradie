@@ -17,8 +17,14 @@ const defaultConfig = {
   },
 
   asset: {
-    extensions: ['.jpeg', '.jpg', '.gif', '.png', '.svg', '.woff', '.ttf', '.eot']
+    extensions: [
+      '.jpeg', '.jpg', '.gif', '.png', '.svg',
+      '.woff', '.ttf', '.eot'
+    ]
   },
+
+  eslint: {},
+  babel: {},
 
   plugins: [],
 

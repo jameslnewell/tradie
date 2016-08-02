@@ -51,7 +51,7 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
 
 ### Clean
 
-Clean generated script and style files.
+Clean bundled script, style and asset files.
 
     tradie clean
 
@@ -63,21 +63,17 @@ Lint script files.
 
     tradie lint
 
-Uses `eslint` to lint script files in the `src` directory. `eslint` may be configured using an `.eslintrc` file. Find out more about configuring `eslint` [here](http://eslint.org/docs/user-guide/configuring).
+Uses `eslint` to lint script files in the `src` directory.
 
 ### Building
 
-Lint and bundle script and style files
+Bundle script, style and asset files
 
-    tradie build --watch --verbose
-
-Uses `webpack` and `sass-composer` to bundle script and style files. Browserify transforms and plugins may be
-specified in your `.tradie.js` file. Styling rules are `autoprefix`ed.
+    tradie build --watch
 
 Use the `--watch` flag to re-bundle script and style files whenever they change.
 
-Set `NODE_ENV=production` to minify script and style files e.g. `cross-env NODE_ENV=production tradie build`
-
+Set `NODE_ENV=production` to optimize script, style and asset files e.g. `cross-env NODE_ENV=production tradie build`
 
 ### Testing
 
@@ -85,37 +81,41 @@ Test script files.
 
     tradie test --watch
 
-There's no need to setup extensions or compilers for `mocha`, this command bundles all your test files (`*.test{.js,.jsx,etc`) using your `webpack` loaders/plugins, then runs the generated test bundle with `mocha`.
+Bundles your test files using the same `webpack` configuration and runs the generated test bundle with `mocha`.
 
 Use the `--watch` flag to re-test script files whenever they change.
 
 ## Configuration
 
-```json
-{
+```js
+module.exports = {
 
-  "src": "./src/", //the directory where files are sourced relative to the .tradie.js file
-  "dest": "./dist/", //the directory where files are output relative to the .tradie.js file
+  src: './src/',
+  dest: './dist/',
+  tmp: './tmp',
 
-  "script": {
-    "bundles": ["./index.js"], //the script entry files relative to the `src` dir
-    "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
-    "extensions": [".js"] //the script extensions
+  script: {
+    bundles: ['./index.js'],
+    vendors: [],
+    extensions: ['.js']
   },
 
-  "style": {
-    "extensions": [".css", ".scss"]
+  style: {
+    extensions: ['.css', '.scss']
   },
 
   asset: {
-    "extensions": [".jpg"]
+    extensions: [
+      '.jpeg', '.jpg', '.gif', '.png', '.svg',
+      '.woff', '.ttf', '.eot'
+    ]
   },
 
   webpack: {},
 
-  "plugins": [] //the tradie plugins
+  plugins: []
 
-}
+};
 ```
 
 ## Related packages
@@ -138,6 +138,8 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 
 **user:**
 
+- break: errors are no longer hidden behind `--verbose` and are always displayed
+- break: renamed `scripts` to `script` and `styles` to `style`
 - break: migrated to `eslint` v2
 - break: switch `.tradierc` from JSON to JS and renamed it to `tradie.config.js`
 - break: remove `tradie init` command and templating - its really a separate concern and there's better tools out there that do the scaffolding, and having tradie installed locally and globally often lead to user errors
@@ -244,12 +246,9 @@ to allow privately scoped templates/plugins
 
 ## To do
 
-- move `scripts.src|dest` and `styles.src|dest` to `src|dest`
 - do we need to lint all files on re-bundle while watching? test files aren't watched so it makes it hard to check linting of test files. maybe we need to add a watch arg to the lint command that watches everything, not just what's being bundled
 - resolve `eslint` configs relative to the current working dir
-- handle errors on browserify object (not just the bundle)
-- make/find cache-bust and image optimisation CLIs
-- `npm install` after init
+- find image optimisation plugin
 - finish writing unit and integration tests
 - make a hmr plugin
 - make `autoprefixer` configurable

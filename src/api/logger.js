@@ -5,8 +5,6 @@ import filesize from 'file-size';
 
 export default function(options) {
 
-  const verbose = options.verbose;
-
   /**
    * Log an error
    * @param {string} msg
@@ -32,10 +30,6 @@ export default function(options) {
    * @param {object}  [result.size]
    */
   const bundleFinished = (type, result) => {
-
-    if (!verbose) {//FIXME:
-      return;
-    }
 
     const basename = path.basename(result.dest);
     const size = filesize(result.size).human('jedec').replace('Bytes', 'B');
