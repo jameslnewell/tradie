@@ -59,9 +59,11 @@ Uses `eslint` to lint script files in the `src` directory.
 
 ### Building
 
-Bundle script, style and asset files
+Bundle script, style and asset files.
 
     tradie build --watch
+
+Uses `webpack` to bundle script, style and asset files.
 
 Use the `--watch` flag to re-bundle script and style files whenever they change.
 
@@ -73,7 +75,7 @@ Test script files.
 
     tradie test --watch
 
-Bundles your test files using the same `webpack` configuration and runs the generated test bundle with `mocha`.
+Uses `webpack` to bundle test files and runs the generated bundle with `mocha`.
 
 Use the `--watch` flag to re-test script files whenever they change.
 
