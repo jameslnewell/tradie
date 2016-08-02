@@ -21,7 +21,16 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
 
 1. Setup your project:
 
-    Try a tradie generator (coming soon).
+    ```
+    src/
+        index.js
+        index.test.js
+
+    tradie.config.js
+    ```
+
+    Try a generator
+    e.g. [generator-tradie-react](https://www.npmjs.com/package/generator-tradie-react-app).
 
 2. Build your project with:
 
@@ -42,7 +51,7 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
 
 ### Clean
 
-Delete bundled script and style files.
+Clean generated script and style files.
 
     tradie clean
 
@@ -78,39 +87,34 @@ Test script files.
 
 There's no need to setup extensions or compilers for `mocha`, this command bundles all your test files (`*.test{.js,.jsx,etc`) using your `webpack` loaders/plugins, then runs the generated test bundle with `mocha`.
 
-Mocha options may be configured in a `.mocharc` file:
-
-```json
-{
-  "reporter": "spec",
-  "timeout": 2000,
-  "ui": "bdd",
-  "colors": true,
-  "require": []
-}
-```
-
 Use the `--watch` flag to re-test script files whenever they change.
 
 ## Configuration
 
 ```json
 {
+
   "src": "./src/", //the directory where files are sourced relative to the .tradie.js file
   "dest": "./dist/", //the directory where files are output relative to the .tradie.js file
-  "scripts": {
+
+  "script": {
     "bundles": ["./index.js"], //the script entry files relative to the `src` dir
     "vendors": [], //the third-party packages placed into `vendor.js` for long term caching
-    "loaders": [], //the webpack loaders
-    "plugins": [], //the webpack plugins
     "extensions": [".js"] //the script extensions
   },
-  "tests": { //these settings are merged with the `scripts` for test specific overrides
+
+  "style": {
+    "extensions": [".css", ".scss"]
   },
-  "styles": {
-    "bundles": ["./index.scss"] //the style entry files relative to the `src` dir
+
+  asset: {
+    "extensions": [".jpg"]
   },
+
+  webpack: {},
+
   "plugins": [] //the tradie plugins
+
 }
 ```
 
