@@ -10,8 +10,7 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
   - we setup new projects more quickly (e.g. no need for everyone to spend time researching specific tools and best practice for setting them up, just use `tradie` - we've done all the research and testing for you!)
   - we spend less time maintaining tooling (e.g. no need to keep all the tools up to date - just use `tradie`, a single dependency)
   - we are less impacted when we change tooling (e.g. no need to re-write all the tooling in your project - `tradie` will abstract (most of) the differences between the old and new tooling)
-- the project can still configure the tools
--
+  - the project can still configure the tools
 
 ## Installation
 
