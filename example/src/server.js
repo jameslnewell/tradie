@@ -7,8 +7,8 @@ import './client.scss';
 
 sum(1, 2, 3, 4, 5, 6, 7);
 
-console.log(renderToStaticMarkup(
+console.log(renderToStaticMarkup( //eslint-disable-line no-console
   <App>
     <h1>{data.msg}</h1>
   </App>
-)); //eslint-disable-line no-console
+));
