@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import humanize from 'humanize-duration';
 import filesize from 'file-size';
 
-export default function(options) {
+export default function() {
 
   /**
    * Log an error

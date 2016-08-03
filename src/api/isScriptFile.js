@@ -1,7 +1,7 @@
-const path = require('path');
-const extToRegex = require('ext-to-regex');
+import path from 'path';
+import extToRegex from 'ext-to-regex';
 
-module.exports = (file, config) => {
+export default (file, config) => {
 
   //exclude files not in the `./src` directory
   if (path.normalize(file).indexOf(path.normalize(config.src)) !== 0) {

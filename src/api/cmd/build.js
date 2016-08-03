@@ -1,6 +1,7 @@
 import path from 'path';
 import logger from '../logger';
-import linter from '../linter';
+import lint from '../lint';
+import findScriptFiles from '../findScriptFiles';
 import bundleScripts from '../bundle';
 
 export const name = 'build';
@@ -29,6 +30,7 @@ export const context = () => {
 
 export const exec = tradie => {
   const {root, args, config: {src}} = tradie;
+  const config = tradie.config;
   const buildLogger = logger(args);
 
   tradie
@@ -54,22 +56,51 @@ export const exec = tradie => {
     )
   ;
 
-  const lintScripts = linter(tradie);
+  let lintExitCode = 0;
 
-  return lintScripts(path.resolve(root, src))
+  return Promise.resolve()
+
+    //lint the scripts
+    .then(() => findScriptFiles(config)
+      .then(files => lint(files, config)
+        .then(result => {
+
+          //return an error exit code
+          if (result.errors !== 0) {
+            lintExitCode = 1;
+          }
+
+        })
+      )
+    )
+
+    //build the bundles
     .then(() => Promise.all([
       bundleScripts({
         ...tradie,
-        onChange: (addedModules, changedModules) => lintScripts([].concat(addedModules, changedModules))
+        onChange: (addedModules, changedModules) => lint([].concat(addedModules, changedModules), config)
       })
-    ])
-      .then(codes => codes.reduce((accum, next) => {
-        if (next !== 0) {
-          return next;
-        } else {
-          return accum;
-        }
-      }, 0))
-  );
+    ]))
+
+    //reduce the bundle exit codes
+    .then(codes => codes.reduce((accum, next) => {
+      if (next !== 0) {
+        return next;
+      } else {
+        return accum;
+      }
+    }, 0))
+
+    //return a single exit code
+    .then(bundleExitCodes => {
+
+      //return an error exit code
+      if (lintExitCode !== 0 || bundleExitCodes !== 0) {
+        throw null;
+      }
+
+    })
+
+  ;
 
 };

@@ -1,7 +1,7 @@
-const extToRegex = require('ext-to-regex');
-const isScriptFile = require('./isScriptFile')
+import extToRegex from 'ext-to-regex';
+import isScriptFile from './isScriptFile';
 
-module.exports = (file, config) => {
+export default (file, config) => {
 
   //exclude files which aren't scripts
   if (!isScriptFile(file, config)) {

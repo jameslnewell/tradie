@@ -9,8 +9,8 @@ const getClientBundles = require('./getClientBundles');
 const isServerBundle = require('./isServerBundle');
 const getServerBundles = require('./getServerBundles');
 
-const isScriptFile = require('./isScriptFile');
-const isTestScriptFile = require('./isTestScriptFile');
+const isScriptFile = require('./../isScriptFile');
+const isTestScriptFile = require('./../isTestScriptFile');
 
 module.exports = {
 

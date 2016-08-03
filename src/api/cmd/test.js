@@ -1,6 +1,6 @@
 import path from 'path';
 import createTestConfig from '../webpack/createTestConfig';
-import findTestFiles from '../findTestFiles';
+import findTestFiles from '../findTestScriptFiles';
 import runWebpack from '../runWebpack';
 import runTestBundle from '../runInProcess';
 
@@ -17,13 +17,14 @@ export function hint(yargs) {
 export const context = () => 'test';
 
 export function exec(tradie) {
-  const {args: {watch}, config: {src, dest, script: {extensions}}} = tradie;
+  const {args: {watch}, config: {dest}} = tradie;
+  const config = tradie.config;
 
   const bundlePath = path.resolve(dest, 'tests.js'); //FIXME:
 
   return new Promise((resolve, reject) => {
 
-    findTestFiles(src, {extensions})
+    findTestFiles(config)
       .then(testFiles => {
 
         const webpackConfig = createTestConfig({watch, optimize: false, files: testFiles, ...tradie.config});

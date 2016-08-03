@@ -105,12 +105,36 @@ module.exports = {
     ]
   },
 
+  eslint: {},
+  babel: {},
+
   webpack: {},
 
   plugins: []
 
 };
 ```
+
+### src
+### dest
+### tmp
+
+### script
+#### .bundles
+#### .vendors
+#### .extensions
+
+### style
+#### .extensions
+
+### asset
+#### .extensions
+
+### eslint
+### babel
+### webpack
+
+### plugins
 
 ## Related packages
 

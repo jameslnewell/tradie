@@ -1,16 +1,23 @@
-import logger from '../logger';
-import linter from '../linter';
+import lint from '../lint';
+import findScriptFiles from '../findScriptFiles';
 
 export const name = 'lint';
 export const desc = 'Lint script files';
 
 export function exec(tradie) {
-  const {args, config: {src}} = tradie;
+  const {config} = tradie;
 
-  tradie.on(
-    'scripts.linting.finished',
-    result => logger(args).lintingFinished(result)
-  );
+  return findScriptFiles(config)
+    .then(files => lint(files, config)
+      .then(result => {
 
-  return linter(tradie)(src);
+        //return an error exit code
+        if (result.errors !== 0) {
+          throw null;
+        }
+
+      })
+    )
+  ;
+
 }

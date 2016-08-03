@@ -8,7 +8,9 @@ sourceMapSupport.install();
 tradie()
   .then(code => process.exit(code))
   .catch(error => {
-    console.error(chalk.red(error.stack));
+    if (error && error.stack) {
+      console.error(chalk.red(error.stack));
+    }
     process.exit(1);
   })
 ;

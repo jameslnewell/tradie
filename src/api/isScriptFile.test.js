@@ -1,5 +1,5 @@
-const defaultConfig = require('./extendDefaultConfig');
-const isScriptFile = require('./isScriptFile');
+import defaultConfig from './util/extendDefaultConfig';
+import isScriptFile from './isScriptFile';
 
 describe('isScriptFile()', () => {
 

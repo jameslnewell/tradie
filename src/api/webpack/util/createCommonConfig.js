@@ -3,8 +3,10 @@ import extensionsToRegex from 'ext-to-regex';
 export default function createCommonBundleConfig(options) {
   const {
     src,
+    tmp,
     script: {extensions: scriptExtensions},
-    style: {extensions: styleExtensions}
+    style: {extensions: styleExtensions},
+    babel
   } = options;
 
   const loaders = []
@@ -17,8 +19,9 @@ export default function createCommonBundleConfig(options) {
         include: src,
         loader: 'babel-loader',
         query: {
-          cacheDirectory: true
-          //TODO: pass babel config
+          ...babel,
+          babelrc: false,
+          cacheDirectory: tmp
         }
       }
     )
