@@ -33,7 +33,10 @@ describe('extendDefaultConfig()', () => {
     expect(config)
       .has.a.property('asset')
       .has.a.property('extensions')
-      .and.is.deep.equal(['.jpeg', '.jpg', '.gif', '.png', '.svg', '.woff', '.ttf', '.eot'])
+      .and.is.deep.equal([
+        '.jpg', '.png', '.gif', '.svg',
+        '.eot', '.ttf', '.woff', '.woff2'
+      ])
     ;
 
   });

@@ -10,7 +10,7 @@ import requireExtension from './requireExtension';
  */
 function executePlugin(name, options, tradie) {
   return requireExtension(name, 'plugin')
-    .then((fn) => {
+    .then(fn => {
       //execute the plugin
       try {
         fn(tradie, options);

@@ -13,7 +13,7 @@ export default function() {
     console.log(chalk.red(msg));
   };
 
-  const lintingFinished = (args) => {
+  const lintingFinished = args => {
     const msg = ` => scripts linted in ${humanize(args.time)}`;
     if (args.errors === 0) {
       console.log(chalk.green(msg));

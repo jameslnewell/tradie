@@ -55,7 +55,7 @@ export default function() {
        * @param   {function}  command.exec
        * @returns {tradie}
        */
-      cmd: (command) => {
+      cmd: command => {
 
         argParser.command(
           command.name,
