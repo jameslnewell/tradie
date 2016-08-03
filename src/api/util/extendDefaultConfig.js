@@ -18,8 +18,8 @@ const defaultConfig = {
 
   asset: {
     extensions: [
-      '.jpeg', '.jpg', '.gif', '.png', '.svg',
-      '.woff', '.ttf', '.eot'
+      '.jpg', '.png', '.gif', '.svg',
+      '.eot', '.ttf', '.woff', '.woff2'
     ]
   },
 

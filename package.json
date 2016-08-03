@@ -22,6 +22,7 @@
   "dependencies": {
     "autoprefixer": "^6.3.6",
     "babel-loader": "^6.2.4",
+    "case-sensitive-paths-webpack-plugin": "^1.1.2",
     "chalk": "^1.1.1",
     "css-loader": "^0.23.1",
     "eslint": "^3.0.0",

@@ -148,4 +148,10 @@ module.exports = {
 - [tradie-plugin-serve](https://www.npmjs.com/package/tradie-plugin-serve)
 - [tradie-plugin-copy](https://www.npmjs.com/package/tradie-plugin-copy)
 
-### [Change log](./CHANGELOG.md)
+## Change log
+
+[CHANGELOG.md](https://github.com/jameslnewell/tradie/blob/webpack/CHANGELOG.md)
+
+## Roadmap
+
+[Milestones](https://github.com/jameslnewell/tradie/milestones)

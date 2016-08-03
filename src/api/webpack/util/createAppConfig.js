@@ -29,14 +29,23 @@ export default function createApplicationConfig(options) {
 
       //set env so non-prod code can be removed by uglify-js
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('production')
+        'process.env.NODE_ENV': `'production'`
       }),
 
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
-        output: {comments: false},
-        compress: {warnings: false}
+        compress: {
+          screw_ie8: true,
+          warnings: false
+        },
+        mangle: {
+          screw_ie8: true
+        },
+        output: {
+          comments: false,
+          screw_ie8: true
+        }
       })
 
     ]);

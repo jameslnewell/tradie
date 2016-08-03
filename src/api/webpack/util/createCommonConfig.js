@@ -1,11 +1,12 @@
 import extensionsToRegex from 'ext-to-regex';
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 
 export default function createCommonBundleConfig(options) {
   const {
+    optimize,
     src,
     tmp,
     script: {extensions: scriptExtensions},
-    style: {extensions: styleExtensions},
     babel
   } = options;
 
@@ -34,18 +35,30 @@ export default function createCommonBundleConfig(options) {
 
   ;
 
-  //TODO: enable/disable optimize/minimize
-  //new webpack.LoaderOptionsPlugin({
+  const plugins = [];
+
+  //enforce case sensitive paths to avoid issues between file systems
+  if (optimize) {
+    plugins.push(new CaseSensitivePathsPlugin());
+  }
+
+  //TODO: look for loaders in tradie's and user's node_modules
+  //config.resolveLoader = {root: [
+  // path.join(__dirname, "node_modules")
+  //]});
+
+  //TODO: in v2, enable/disable optimize/minimize
+  // new webpack.LoaderOptionsPlugin({
   //  minimize: true,
   //  debug: false
-  //})
+  // });
 
   return {
 
     entry: {},
 
     resolve: {
-      extensions: [''].concat(scriptExtensions, '.json', styleExtensions)
+      extensions: [''].concat(scriptExtensions, '.json')
     },
 
     module: {
@@ -56,7 +69,7 @@ export default function createCommonBundleConfig(options) {
 
     },
 
-    plugins: []
+    plugins: plugins
 
   };
 }
