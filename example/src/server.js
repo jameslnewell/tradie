@@ -11,4 +11,4 @@ console.log(renderToStaticMarkup(
   <App>
     <h1>{data.msg}</h1>
   </App>
-)); //eslint-disable render
+)); //eslint-disable-line no-console

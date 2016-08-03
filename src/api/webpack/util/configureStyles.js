@@ -51,7 +51,7 @@ export default function configureStyleLoader(options, config) {
   };
 
   config.postcss = [
-    autoprefixer({browsers: ['>4%, last 4 versions, Firefox ESR, not ie < 9']})
+    autoprefixer({browsers: ['> 4%', 'last 4 versions', 'Firefox ESR', 'not ie < 9']})
     //NOTE: css-loader looks for NODE_ENV=production and performs minification so we don't need cssnano
   ];
 
