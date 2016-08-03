@@ -70,7 +70,7 @@ export default function createClientConfig(options) {
     ...config,
 
     target: 'web',
-    devtool: optimize ? 'hidden-source-map' : 'cheap-module-eval-source-map',
+    devtool: optimize ? 'hidden-source-map' : 'cheap-module-eval-source-map', //needs to be inline-source-map for sass source maps to work
 
     context: src,
 

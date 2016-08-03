@@ -59,10 +59,10 @@ export default function configureStyleLoader(options, config) {
   config.module.loaders.push({
     test: extensionsToRegex(extensions),
     loader: ExtractTextPlugin.extract('style', [
-      'css-loader?-autoprefixer&sourceMap',
-      'postcss-loader?sourceMap',
-      'resolve-url-loader?sourceMap',
-      'sass-loader?sourceMap'
+      `css-loader?-autoprefixer${optimize ? '' : '&sourceMap'}`,
+      `postcss-loader${optimize ? '' : '?sourceMap'}`,
+      `resolve-url-loader${optimize ? '' : '?sourceMap'}`, //devtool: [inline-]source-map is required for CSS source maps to work
+      'sass-loader?sourceMap' //sourceMap required by resolve-url-loader
     ])
   });
 

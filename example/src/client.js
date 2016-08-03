@@ -11,5 +11,5 @@ render(
   <App>
     <h1>{data.msg}</h1>
   </App>,
-  document.body
+  document.getElementById('app')
 );

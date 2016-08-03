@@ -1,6 +1,8 @@
+import React from 'react';
 import placeholder from '../img/placeholder.svg';
 
-export function App() {
+export default function App(props) {
+  const {children} = props;
   return (
     <div>
       <h1>App</h1>
