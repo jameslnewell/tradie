@@ -147,3 +147,5 @@ module.exports = {
 - [tradie-plugin-livereload](https://www.npmjs.com/package/tradie-plugin-livereload)
 - [tradie-plugin-serve](https://www.npmjs.com/package/tradie-plugin-serve)
 - [tradie-plugin-copy](https://www.npmjs.com/package/tradie-plugin-copy)
+
+### [Change log](./CHANGELOG.md)
