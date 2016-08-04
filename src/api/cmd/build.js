@@ -2,6 +2,7 @@ import path from 'path';
 import logger from '../logger';
 import lint from '../lint';
 import findScriptFiles from '../findScriptFiles';
+import isScriptFile from '../isScriptFile';
 import bundleScripts from '../bundle';
 
 export const name = 'build';
@@ -78,7 +79,7 @@ export const exec = tradie => {
     .then(() => Promise.all([
       bundleScripts({
         ...tradie,
-        onChange: (addedModules, changedModules) => lint([].concat(addedModules, changedModules), config)
+        onChange: (addedModules, changedModules) => lint([].concat(addedModules, changedModules).filter(file => isScriptFile(file, config)), config)
       })
     ]))
 
