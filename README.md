@@ -61,13 +61,13 @@ Uses `eslint` to lint script files in the `src` directory.
 
 Bundle script, style and asset files.
 
-    tradie build --watch
+    tradie build --watch --optimize
 
 Uses `webpack` to bundle script, style and asset files.
 
 Use the `--watch` flag to re-bundle script and style files whenever they change.
 
-Set `NODE_ENV=production` to optimize script, style and asset files e.g. `cross-env NODE_ENV=production tradie build`
+Use the `--optimize` flag to optimize script, style and asset files.
 
 ### Testing
 

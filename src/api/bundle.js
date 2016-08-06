@@ -26,15 +26,14 @@ import getRevManifestFromStats from './util/getRevManifestFromStats';
  * @param {array}         [config.externals]
  *
  * @param {object}        args
- * @param {string}        [args.env]
  * @param {string}        [args.watch]
+ * @param {string}        [args.optimize]
  *
  * @param {function}      emitter
  */
 export default function(tradie) {
-  const {env, args: {watch}, config: {src, dest, script: {bundles, vendors}}, onChange} = tradie;
+  const {args: {watch, optimize}, config: {src, dest, script: {bundles, vendors}}, onChange} = tradie;
 
-  const optimize = env === 'production';
   const promises = [];
   const clientBundles = getClientBundles(bundles);
   const serverBundles = getServerBundles(bundles);

@@ -14,8 +14,7 @@ export const hint = yargs => {
       alias: 'watch',
       default: false
     })
-    .option('v', {
-      alias: 'verbose',
+    .option('optimize', {
       default: false
     })
   ;

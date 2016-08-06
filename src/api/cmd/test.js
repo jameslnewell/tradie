@@ -27,7 +27,7 @@ export function exec(tradie) {
     findTestFiles(config)
       .then(testFiles => {
 
-        const webpackConfig = createTestConfig({watch, optimize: false, files: testFiles, ...tradie.config});
+        const webpackConfig = createTestConfig({watch, files: testFiles, ...tradie.config});
 
         //plugin hook
         tradie.emit('test.webpack.config', webpackConfig);
