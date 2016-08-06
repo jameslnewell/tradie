@@ -19,7 +19,7 @@ describe('tradie test', function() {
   it('should exit with 1 when there are test failures', () => {
     return exec(['test'], {cwd: path.resolve('./test/fixture/test-fail')})
       .then(code => expect(code).to.be.equal(1))
-      ;
+    ;
   });
 
 });

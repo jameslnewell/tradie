@@ -32,7 +32,7 @@ export default function createApplicationConfig(options) {
         'process.env.NODE_ENV': `'production'`
       }),
 
-      new webpack.optimize.OccurenceOrderPlugin(),
+      // new webpack.optimize.OccurrenceOrderPlugin(), //no longer needed and is on by defaul  https://gist.github.com/sokra/27b24881210b56bbaff7#occurrence-order
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {

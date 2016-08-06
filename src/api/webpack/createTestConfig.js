@@ -55,8 +55,7 @@ export default function createTestConfig(options) {
 
   webpackConfig.plugins.push(
     new webpack.BannerPlugin(
-      runner,
-      {raw: true, entryOnly: true}
+      {banner: runner, raw: true, entryOnly: true}
     )
   );
 

@@ -58,16 +58,22 @@ export default function configureStyleLoader(options, config) {
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
   config.module.loaders.push({
     test: extensionsToRegex(extensions),
-    loader: ExtractTextPlugin.extract('style', [
-      `css-loader?-autoprefixer${optimize ? '' : '&sourceMap'}`,
-      `postcss-loader${optimize ? '' : '?sourceMap'}`,
-      `resolve-url-loader${optimize ? '' : '?sourceMap'}`, //devtool: [inline-]source-map is required for CSS source maps to work
-      'sass-loader?sourceMap' //sourceMap required by resolve-url-loader
-    ])
+    loader: ExtractTextPlugin.extract({
+      fallbackLoader: 'style-loader',
+      loader: [
+        `css-loader?-autoprefixer${optimize ? '' : '&sourceMap'}`,
+        `postcss-loader${optimize ? '' : '?sourceMap'}`,
+        `resolve-url-loader${optimize ? '' : '?sourceMap'}`, //devtool: [inline-]source-map is required for CSS source maps to work
+        'sass-loader?sourceMap' //sourceMap required by resolve-url-loader
+      ]
+    })
   });
 
   config.plugins = config.plugins.concat([
-    new ExtractTextPlugin(optimize ? '[name].[contenthash].css' : '[name].css', {allChunks: true}),
+    new ExtractTextPlugin({
+      allChunks: true,
+      filename: optimize ? '[name].[contenthash].css' : '[name].css'
+    }),
     new CheckVersionConflictPlugin({
       include: extensionsToRegex(extensions)
     })
