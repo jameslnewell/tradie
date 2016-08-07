@@ -7,6 +7,7 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 
 **user:**
 
+- break: plugins are no longer specified by name and loaded by tradie, they're passed to tradie as a function
 - break: use `--optimize` instead of `NODE_ENV="production"` to trigger a production build
 - break: moved eslint and babel config from `.eslintrc` and `.babelrc` into `tradie.config.js` 
 - break: errors are no longer hidden behind `--verbose` and are always displayed

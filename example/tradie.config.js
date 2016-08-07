@@ -1,3 +1,8 @@
+const copy = require('tradie-plugin-copy').default;
+const serve = require('tradie-plugin-serve').default;
+const livereload = require('tradie-plugin-livereload').default;
+
+const plugin = tradie => () => {};
 
 module.exports = {
 
@@ -16,6 +21,11 @@ module.exports = {
     plugins: ['transform-object-rest-spread', 'transform-class-properties']
   },
 
-  plugins: [['copy', {files: ['index.html']}], 'serve', 'livereload']
+  plugins: [
+    // copy({files: ['index.html']}),
+    // serve(),
+    // livereload()
+    plugin({})
+  ]
 
 };
