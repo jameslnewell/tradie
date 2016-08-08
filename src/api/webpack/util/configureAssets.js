@@ -1,15 +1,19 @@
 import extensionsToRegex from 'ext-to-regex';
 
-const extensions = [
-  '.jpeg', '.jpg', '.gif', '.png', '.svg',
-  '.woff', '.ttf', '.eot'
-];
+export default function configureAssets(options, webpackConfig) {
+  const {asset: {extensions, outputFilename}} = options;
 
-export default function configureAssets(options, webpack) {
+  //configure the asset filename
+  let filename = 'files/[hash].[ext]'; //optimize ? '[path][name].[hash].js' :
+  // '[path][name].[ext]'
+  if (outputFilename) {
+    filename = outputFilename;
+  }
 
-  webpack.module.loaders.push({
+  webpackConfig.module.loaders.push({
     test: extensionsToRegex(extensions),
-    loader: 'file-loader'
+    loader: 'file-loader',
+    query: {name: filename}
   });
 
 }

@@ -11,3 +11,7 @@ export default function App(props) {
     </div>
   );
 }
+
+App.propTypes = {
+  children: React.PropTypes.node
+};

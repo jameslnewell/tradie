@@ -26,10 +26,12 @@ export default function createServerConfig(options) {
   }, {});
 
   //replace/ignore (S)CSS on the server - it doesn't get displayed
+  //TODO: when we switch to css-modules we won't be able to ignore styles
   ignoreStyles({extensions: styleExtensions}, config);
 
   //assets
-  configureAssets({optimize}, config);
+  //TODO: prevent the assets from being emitted on the server
+  configureAssets(options, config);
 
   //merge common and server config
   config = {

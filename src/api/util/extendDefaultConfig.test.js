@@ -1,10 +1,10 @@
-const defaultConfig = require('./extendDefaultConfig');
+import extendDefaultConfig from './extendDefaultConfig';
 
 describe('extendDefaultConfig()', () => {
 
   it('should contain default properties', () => {
 
-    const config = defaultConfig({
+    const config = extendDefaultConfig({
 
       tmp: './temp/',
 
@@ -43,7 +43,7 @@ describe('extendDefaultConfig()', () => {
 
   it('should contain replaced properties', () => {
 
-    const config = defaultConfig({
+    const config = extendDefaultConfig({
 
       tmp: './temp/',
 

@@ -13,11 +13,8 @@ export default function createClientConfig(options) {
     src, dest, tmp,
     script: {
       bundles: scriptBundles,
-      vendors
-    },
-    style: {
-      bundles: styleBundles,
-      extensions: styleExtensions
+      vendors,
+      outputFilename
     },
     webpack: extraWebpackConfig
   } = options;
@@ -52,18 +49,22 @@ export default function createClientConfig(options) {
     config.plugins = config.plugins.concat([
       new webpack.DllReferencePlugin({
         context: dest,
-        manifest: require(path.join(tmp, 'vendor-manifest.json'))
+        manifest: require(path.join(tmp, 'vendor-manifest.json')) //eslint-disable-line global-require
       })
     ]);
   }
 
   //stylesheets
-  configureStyleLoader({
-    optimize, src, extensions: styleExtensions
-  }, config);
+  configureStyleLoader(options, config);
 
   //assets
-  configureAssets({optimize}, config);
+  configureAssets(options, config);
+
+  //configure the script filename
+  let filename = optimize ? '[name].[chunkhash].js' : '[name].js';
+  if (outputFilename) {
+    filename = outputFilename;
+  }
 
   //merge common and client config
   config = {
@@ -76,7 +77,7 @@ export default function createClientConfig(options) {
 
     output: {
       path: dest,
-      filename: optimize ? '[name].[chunkhash].js' : '[name].js'
+      filename
     }
 
   };

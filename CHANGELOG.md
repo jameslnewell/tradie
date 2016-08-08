@@ -7,6 +7,8 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 
 **user:**
 
+- add: added `script.outputFilename`, `style.outputFilename` and `asset.outputFilename` for overriding the output 
+filenames created by webpack
 - break: plugins are no longer specified by name and loaded by tradie, they're passed to tradie as a function
 - break: use `--optimize` instead of `NODE_ENV="production"` to trigger a production build
 - break: moved eslint and babel config from `.eslintrc` and `.babelrc` into `tradie.config.js` 

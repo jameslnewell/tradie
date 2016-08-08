@@ -1,4 +1,4 @@
-const shallowMerge = require('./shallowMerge');
+import shallowMerge from './shallowMerge';
 
 const defaultConfig = {
 
@@ -9,18 +9,21 @@ const defaultConfig = {
   script: {
     bundles: ['./index.js'],
     vendors: [],
-    extensions: ['.js']
+    extensions: ['.js'],
+    outputFilename: null
   },
 
   style: {
-    extensions: ['.css', '.scss']
+    extensions: ['.css', '.scss'],
+    outputFilename: null
   },
 
   asset: {
     extensions: [
       '.jpg', '.png', '.gif', '.svg',
       '.eot', '.ttf', '.woff', '.woff2'
-    ]
+    ],
+    outputFilename: null
   },
 
   eslint: {},
@@ -33,6 +36,4 @@ const defaultConfig = {
 
 };
 
-module.exports = (config) => {
-  return shallowMerge(defaultConfig, config || {});
-};
+export default (config) => shallowMerge(defaultConfig, config || {});

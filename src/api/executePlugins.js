@@ -1,5 +1,4 @@
 import TradieError from './TradieError';
-import requireExtension from './requireExtension';
 
 /**
  * Execute a plugin by name
@@ -12,7 +11,7 @@ function executePlugin(plugin, tradie) {
     plugin(tradie);
   } catch (error) {
     console.log(error);
-    throw new TradieError(`Cannot execute plugin "${name}". \n\n\t ${error}`);
+    throw new TradieError(`Cannot execute plugin". \n\n\t ${error}`);
   }
 }
 

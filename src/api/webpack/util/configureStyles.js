@@ -6,10 +6,16 @@ import autoprefixer from 'autoprefixer';
 import extensionsToRegex from 'ext-to-regex';
 import CheckVersionConflictPlugin from './CheckVersionConflictPlugin';
 
-export default function configureStyleLoader(options, config) {
-  const {optimize, src, extensions} = options;
+export default function configureStyleLoader(options, webpackConfig) {
+  const {optimize, src, style: {extensions, outputFilename}} = options;
 
-  config.sassLoader = {
+  //configure the style filename
+  let filename = optimize ? '[name].[contenthash].css' : '[name].css';
+  if (outputFilename) {
+    filename = outputFilename;
+  }
+
+  webpackConfig.sassLoader = {
     importer: (url, prev, done) => {
 
       //FIXME: pending https://github.com/jtangelder/sass-loader/issues/234
@@ -50,13 +56,13 @@ export default function configureStyleLoader(options, config) {
     }
   };
 
-  config.postcss = [
+  webpackConfig.postcss = [
     autoprefixer({browsers: ['> 4%', 'last 4 versions', 'Firefox ESR', 'not ie < 9']})
     //NOTE: css-loader looks for NODE_ENV=production and performs minification so we don't need cssnano
   ];
 
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
-  config.module.loaders.push({
+  webpackConfig.module.loaders.push({
     test: extensionsToRegex(extensions),
     loader: ExtractTextPlugin.extract({
       fallbackLoader: 'style-loader',
@@ -69,10 +75,10 @@ export default function configureStyleLoader(options, config) {
     })
   });
 
-  config.plugins = config.plugins.concat([
+  webpackConfig.plugins = webpackConfig.plugins.concat([
     new ExtractTextPlugin({
       allChunks: true,
-      filename: optimize ? '[name].[contenthash].css' : '[name].css'
+      filename
     }),
     new CheckVersionConflictPlugin({
       include: extensionsToRegex(extensions)
