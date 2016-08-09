@@ -2,8 +2,6 @@ const copy = require('tradie-plugin-copy').default;
 const serve = require('tradie-plugin-serve').default;
 const livereload = require('tradie-plugin-livereload').default;
 
-const plugin = tradie => () => {};
-
 module.exports = {
 
   script: {
@@ -17,7 +15,7 @@ module.exports = {
   },
 
   babel: {
-    presets: ['es2015', 'react'],
+    presets: [['es2015', {modules: false}], 'react'],
     plugins: ['transform-object-rest-spread', 'transform-class-properties']
   },
 
@@ -25,7 +23,6 @@ module.exports = {
     // copy({files: ['index.html']}),
     // serve(),
     // livereload()
-    plugin({})
   ]
 
 };

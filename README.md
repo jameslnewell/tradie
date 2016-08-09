@@ -10,7 +10,16 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
   - we setup new projects more quickly (e.g. no need for everyone to spend time researching specific tools and best practice for setting them up, just use `tradie` - we've done all the research and testing for you!)
   - we spend less time maintaining tooling (e.g. no need to keep all the tools up to date - just use `tradie`, a single dependency)
   - we are less impacted when we change tooling (e.g. no need to re-write all the tooling in your project - `tradie` will abstract (most of) the differences between the old and new tooling)
-  - the project can still configure the tools
+  - the project can still override some of the tools
+  - cater to common application types
+
+##### Why not `create-react-app`?
+
+[Create React App](https://github.com/facebookincubator/create-react-app) is a great tool and we'd highly recommend 
+giving it a go! 
+However
+`create-react-app` is tailored to a specific use-case and doesn't support `CSS` pre-processing (e.g. `SASS`), multiple 
+bundles or UniversalJS applications. Tradie supports `SASS` and a number of common application types.
 
 ## Installation
 
@@ -28,7 +37,7 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
     tradie.config.js
     ```
 
-    Try a generator
+    Use a generator rather than doing it manually!
     e.g. [generator-tradie-react](https://www.npmjs.com/package/generator-tradie-react-app).
 
 2. Build your project with:
@@ -67,7 +76,8 @@ Uses `webpack` to bundle script, style and asset files.
 
 Use the `--watch` flag to re-bundle script and style files whenever they change.
 
-Use the `--optimize` flag to optimize script, style and asset files.
+Use the `--optimize` flag to optimize script, style and asset files, including minification, dead-code removal, file 
+hashing etc.
 
 ### Testing
 
@@ -107,34 +117,180 @@ module.exports = {
 
   eslint: {},
   babel: {},
-
   webpack: {},
 
-  plugins: []
+  plugins: [],
+  
+  $: {
+    optimize: {},
+    test: {}
+  }
 
 };
 ```
 
 ### src
+
+The directory where your application sources exist.
+
+> Optional. A `string`. Defaults to `./src`.
+
 ### dest
+
+The directory where your application artifacts are output.
+
+> Optional. A `string`. Defaults to `./dist`.
+
 ### tmp
 
+The directory where temporary files will be generated.
+
+> Optional. A `string`. Defaults to `./tmp`.
+
 ### script
+
 #### .bundles
+
+A list of modules that will be bundled into script files.
+
+> Optional. An `array` of `string`s. Defaults to `['./index.js']`. 
+
+> Example: Multiple bundles
+
+You can create multiple bundles. Dependencies shared between all of the bundles will be bundled into a script file 
+named 
+`common.js`.
+
+```js
+module.exports = {
+  script: {
+    bundles: ['./campaign/abc/index.js', './campaign/xyz/index.js']
+  }
+};
+```
+
+> Example: UniversalJS bundles
+
+You can create a bundle to run on NodeJS by naming your bundle `server`. Use this when you're sharing the bulk of 
+your app code across both your server and client.
+
+```js
+module.exports = {
+  script: {
+    bundles: ['./server.js', './client.js']
+  }
+};
+```
+
 #### .vendors
+
+A list of modules that will be bundled into a script file named `vendor.js`.
+
+> Optional. An `array` of `string`s. Defaults to `[]`.
+
+> Example: Long-term-caching
+
+Bundle infrequently changing modules. These bundles usually make up a significant portion of your app and with 
+long-term-caching they won't need to be (re)downloaded by the browser each time your app is deployed.
+
+```js
+module.exports = {
+  script: {
+    vendors: ['react', 'react-dom']
+  }
+};
+```
+
 #### .extensions
+
+A list of extensions for script files.
+
+> Optional. An `array` of `string`s. Defaults to `['.js]`.
+
+> Example: Require script files ending in `.jsx` without specifying the extension
+
+Additional file extensions can be supported for parsing and requiring script files.
+
+```js
+module.exports = {
+  script: {
+    extensions: ['.js', '.jsx']
+  }
+};
+```
 
 ### style
 #### .extensions
 
+A list of extensions for style files.
+
+> Optional. An `array` of `string`s. Defaults to `['.css', '.scss']`.
+
 ### asset
 #### .extensions
 
+A list of extensions for asset files.
+
+> Optional. An `array` of `string`s. Defaults to `['.jpeg', '.jpg', '.gif', '.png', '.svg', '.woff', '.ttf', '.eot']`.
+
 ### eslint
+
+Configuration used for linting. See [Configuring ESLint](http://eslint.org/docs/user-guide/configuring).
+
+> Optional. An `object`. Defaults to `{}`.
+
 ### babel
+
+Configuration used for transpiling. See [Options](https://babeljs.io/docs/usage/options/).
+
+> Optional. An `object`. Defaults to `{}`.
+
 ### webpack
 
+Additional configuration passed to `webpack`. See [Configuration](https://webpack.github.io/docs/configuration.html).
+
+> Optional. An `object`. Defaults to `{}`.
+
+> Warning: Avoid using this escape hatch where possible, you'll be more susceptible to breaking changes when 
+`webpack` is updated.
+
 ### plugins
+
+A list of plugins that extend `tradie` to provide additional functionality.
+
+> Optional. An `array` of `function`s. Defaults to `[]`.
+
+> Example: Livereload
+
+```js
+var livereload = require('tradie-plugin-livereload');
+
+module.exports = {
+  plugins: [livereload()]
+};
+```
+
+### $
+
+#### .optimize
+
+Additional configuration applied when building an optimized bundle.
+
+> Optional. An `object`. Defaults to `{}`.
+
+#### .test
+
+Additional configuration applied when building and running test bundles.
+
+> Optional. An `object`. Defaults to `{}`.
+
+## Change log
+
+[CHANGELOG.md](https://github.com/jameslnewell/tradie/blob/webpack/CHANGELOG.md)
+
+## Roadmap
+
+[Milestones](https://github.com/jameslnewell/tradie/milestones)
 
 ## Related packages
 
@@ -147,11 +303,3 @@ module.exports = {
 - [tradie-plugin-livereload](https://www.npmjs.com/package/tradie-plugin-livereload)
 - [tradie-plugin-serve](https://www.npmjs.com/package/tradie-plugin-serve)
 - [tradie-plugin-copy](https://www.npmjs.com/package/tradie-plugin-copy)
-
-## Change log
-
-[CHANGELOG.md](https://github.com/jameslnewell/tradie/blob/webpack/CHANGELOG.md)
-
-## Roadmap
-
-[Milestones](https://github.com/jameslnewell/tradie/milestones)
