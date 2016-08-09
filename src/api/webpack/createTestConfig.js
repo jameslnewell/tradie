@@ -11,7 +11,7 @@ const runner = `
 (function() {
 
   const fs = require('fs');
-  const Mocha = require('${require.resolve('mocha')}');
+  const Mocha = require(${JSON.stringify(require.resolve('mocha'))});
   Mocha.reporters.Base.window.width = ${process.stdout.columns || 80};
   Mocha.reporters.Base.symbols.dot = '.';
 
