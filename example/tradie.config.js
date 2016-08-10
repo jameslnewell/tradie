@@ -15,7 +15,7 @@ module.exports = {
   },
 
   babel: {
-    presets: [['es2015', {modules: false}], 'react'],
+    presets: ['es2015', 'react'],
     plugins: ['transform-object-rest-spread', 'transform-class-properties']
   },
 

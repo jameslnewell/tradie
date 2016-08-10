@@ -9,6 +9,7 @@ import createVendorConfig from './webpack/createVendorConfig';
 import createClientConfig from './webpack/createClientConfig';
 import createServerConfig from './webpack/createServerConfig';
 
+import formatWebpackMessage from './formatWebpackMessage';
 import runWebpack from './runWebpack';
 import getRevManifestFromStats from './util/getRevManifestFromStats';
 
@@ -121,8 +122,10 @@ export default function(tradie) {
     ;
 
     //FIXME:
-    if (watch && stats.errors.length) {
-      stats.errors.forEach(error => console.error(error));
+    if (stats.errors.length) {
+      stats.errors.forEach(
+        error => console.error('\n', formatWebpackMessage(error), '\n')
+      );
     }
 
   };
@@ -195,26 +198,23 @@ export default function(tradie) {
     })
     .then(code => {
 
-      //FIXME: errors are getting output twice - once for scripts and errors
-
       if (!watch) {
         tradie.emit('scripts.bundling.finished', {
           src,
           dest,
           count: scriptsCount,
           time: scriptsTotalTime,
-          size: scriptsTotalSize,
-          errors: scriptsErrors //FIXME:
+          size: scriptsTotalSize
         });
         tradie.emit('styles.bundling.finished', {
           src,
           dest,
           count: stylesCount,
           time: stylesTotalTime,
-          size: stylesTotalSize,
-          errors: scriptsErrors //FIXME:
+          size: stylesTotalSize
         });
       }
+
       return code;
     })
   ;
