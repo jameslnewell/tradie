@@ -29,7 +29,7 @@ export default function createApplicationConfig(options) {
 
       //set env so non-prod code can be removed by uglify-js
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': `'production'`
+        'process.env.NODE_ENV': JSON.stringify('production')
       }),
 
       // new webpack.optimize.OccurrenceOrderPlugin(), //no longer needed and is on by defaul  https://gist.github.com/sokra/27b24881210b56bbaff7#occurrence-order
