@@ -121,13 +121,6 @@ export default function(tradie) {
       })
     ;
 
-    //FIXME:
-    if (stats.errors.length) {
-      stats.errors.forEach(
-        error => console.error('\n', formatWebpackMessage(error), '\n')
-      );
-    }
-
   };
 
   const createVendorBundle = () => {
@@ -198,20 +191,29 @@ export default function(tradie) {
     })
     .then(code => {
 
+      //print errors all together
+      if (scriptsErrors.length) {
+        scriptsErrors.forEach(
+          error => console.error('\n', formatWebpackMessage(tradie.config, error), '\n')
+        );
+      }
+
       if (!watch) {
         tradie.emit('scripts.bundling.finished', {
           src,
           dest,
           count: scriptsCount,
           time: scriptsTotalTime,
-          size: scriptsTotalSize
+          size: scriptsTotalSize,
+          errors: scriptsErrors
         });
         tradie.emit('styles.bundling.finished', {
           src,
           dest,
           count: stylesCount,
           time: stylesTotalTime,
-          size: stylesTotalSize
+          size: stylesTotalSize,
+          errors: scriptsErrors
         });
       }
 

@@ -10,6 +10,7 @@ export default (root = process.cwd(), context = null) => {
   //TODO: validate/lint the config
 
   //resolve paths
+  config.root = path.resolve(root);
   config.src = path.resolve(root, config.src);
   config.dest = path.resolve(root, config.dest);
   config.tmp = path.resolve(root, config.tmp);

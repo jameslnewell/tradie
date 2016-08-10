@@ -16,10 +16,16 @@ describe('tradie build', function() {
   //   ;
   // });
 
-  it('should exit with 1 when there are build errors', () => {
-    return exec(['build'], {cwd: path.resolve('./test/fixture/build-err')})
+  it('should exit with 1 when there are syntax errors', () => {
+    return exec(['build'], {cwd: path.resolve('./test/fixture/build-syntax-err')})
       .then(code => expect(code).to.be.equal(1))
     ;
+  });
+
+  it('should exit with 1 when there are resolve errors', () => {
+    return exec(['build'], {cwd: path.resolve('./test/fixture/build-resolve-err')})
+      .then(code => expect(code).to.be.equal(1))
+      ;
   });
 
 });

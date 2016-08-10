@@ -38,7 +38,6 @@ export default function() {
 
     if (result.error) {
       msg = chalk.red(msg);
-      msg += '\n\t' + chalk.red(result.error.stack);
     } else {
       msg = chalk.blue(msg);
     }
@@ -63,7 +62,7 @@ export default function() {
     let msg = ` => ${count} ${type}s bundled in ${duration} - ${size}`;
 
     if (result.errors && result.errors.length > 0) {
-      msg = chalk.bold.red(msg) + '\n' + result.errors;
+      msg = chalk.bold.red(msg);
     } else if (result.count) {
       msg = chalk.green(msg);
     }
