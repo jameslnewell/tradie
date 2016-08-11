@@ -1,6 +1,11 @@
 
 # Change log
 
+## 1.0.1
+
+- fix: webpack errors not displayed while watching
+- fix: plugins not called on exit
+
 ## 1.0.0
 
 Overall, the breaking changes are small and easily fixed. Continue reading about the minor breaking changes:

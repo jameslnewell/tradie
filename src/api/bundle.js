@@ -119,6 +119,13 @@ export default function(options) {
       })
     ;
 
+    //print errors immediately when watching
+    if (stats.errors.length && watch) {
+      stats.errors.forEach(
+        error => console.error('\n', formatWebpackMessage(options, error), '\n')
+      );
+    }
+
   };
 
   const createVendorBundle = () => {

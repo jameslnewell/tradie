@@ -10,19 +10,21 @@ const action = function() { //eslint-disable-line func-style
   const cmdOpts = this.opts(); //eslint-disable-line no-invalid-this
 
   //load the default config
-  getConfig({...cmdOpts, cmd: cmdName})
-
-    //init the plugins
+  getConfig({...cmdOpts, command: cmdName})
 
     //load and run the command
     .then(config => {
+
+      //init the plugins
+      config.plugins.forEach(plugin => plugin(config));
 
       //load the command
       const command = require(`../api/command/${cmdName}`).default; //eslint-disable-line global-require
 
       //run the command
-      return Promise.resolve(command(config));
-
+      return Promise.resolve(command(config))
+        .then(() => config.emit('exit'))
+      ;
     })
 
     //exit with errors

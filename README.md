@@ -62,6 +62,7 @@ dest/
 tmp/
     abcdefg.json.gzip
     vendor-manifest.json
+    
 ```
 
 ### src/
