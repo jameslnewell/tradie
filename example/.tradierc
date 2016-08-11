@@ -1,7 +1,0 @@
-{
-  "scripts": {
-    "libraries": ["react", "react-dom", "react-redux", "redux", "redux-thunk"],
-    "transforms": ["babelify"]
-  },
-  "plugins": ["livereload"]
-}
