@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import JSON5 from 'json5';
 import TradieError from '../../../api/TradieError';
 
 const readESLintConfig = (dir) => {
@@ -7,9 +8,9 @@ const readESLintConfig = (dir) => {
     fs.readFile(path.join(dir, '.eslintrc'), (readFileError, content) => {
       if (readFileError) return resolve({});
       try {
-        resolve(JSON.parse(content.toString()));
+        resolve(JSON5.parse(content.toString()));
       } catch (jsonParseError) {
-        reject(jsonParseError);
+        reject(new TradieError('Unable to read ".eslintrc"', jsonParseError));
       }
     });
   });
@@ -20,9 +21,9 @@ const readBabelConfig = (dir) => {
     fs.readFile(path.join(dir, '.babelrc'), (readFileError, content) => {
       if (readFileError) return resolve({});
       try {
-        resolve(JSON.parse(content.toString()));
+        resolve(JSON5.parse(content.toString()));
       } catch (jsonParseError) {
-        reject(jsonParseError);
+        reject(new TradieError('Unable to read ".babelrc"', jsonParseError));
       }
     });
   });

@@ -1,3 +1,4 @@
+import path from 'path';
 import webpack from 'webpack';
 import extensionsToRegex from 'ext-to-regex';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';

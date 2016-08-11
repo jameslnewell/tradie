@@ -38,6 +38,7 @@
     "glob": "^7.0.3",
     "humanize-duration": "^3.9.1",
     "json-loader": "^0.5.4",
+    "json5": "^0.5.0",
     "lodash.every": "^4.5.1",
     "lodash.mergewith": "^4.5.1",
     "make-error-cause": "^1.2.1",
