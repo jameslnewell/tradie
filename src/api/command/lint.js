@@ -10,11 +10,8 @@ export default options => {
 
         //return an error exit code
         if (result.errors) {
-          console.log(chalk.red('ERR!'));
           throw null;
-        } else if (result.warnings) {
-          console.log(chalk.yellow('OK.'));
-        } else {
+        } else if (result.errors === 0 && result.warnings == 0) {
           console.log(chalk.green('OK.'));
         }
 
