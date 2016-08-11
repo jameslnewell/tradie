@@ -5,35 +5,10 @@ import findScriptFiles from '../findScriptFiles';
 import isScriptFile from '../isScriptFile';
 import bundleScripts from '../bundle';
 
-export const name = 'build';
-export const desc = 'Lint and bundle script and style files';
+export default options => {
+  const buildLogger = logger({});
 
-export const hint = yargs => {
-  return yargs
-    .option('w', {
-      alias: 'watch',
-      default: false
-    })
-    .option('optimize', {
-      default: false
-    })
-  ;
-};
-
-export const context = ({optimize}) => {
-  if (optimize) {
-    return 'optimize';
-  } else {
-    return null;
-  }
-};
-
-export const exec = tradie => {
-  const {root, args, config: {src}} = tradie;
-  const config = tradie.config;
-  const buildLogger = logger(args);
-
-  tradie
+  options
     .once(
       'scripts.linting.finished',
       result => buildLogger.lintingFinished(result)
@@ -61,8 +36,8 @@ export const exec = tradie => {
   return Promise.resolve()
 
     //lint the scripts
-    .then(() => findScriptFiles(config)
-      .then(files => lint(files, config)
+    .then(() => findScriptFiles(options)
+      .then(files => lint(files, options)
         .then(result => {
 
           //return an error exit code
@@ -77,8 +52,8 @@ export const exec = tradie => {
     //build the bundles
     .then(() => Promise.all([
       bundleScripts({
-        ...tradie,
-        onChange: (addedModules, changedModules) => lint([].concat(addedModules, changedModules).filter(file => isScriptFile(file, config)), config)
+        ...options,
+        onChange: (addedModules, changedModules) => lint([].concat(addedModules, changedModules).filter(file => isScriptFile(file, options)), options)
       })
     ]))
 

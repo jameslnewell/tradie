@@ -7,6 +7,8 @@ Overall, the breaking changes are small and easily fixed. Continue reading about
 
 **user:**
 
+- break: remove concept of context based configuration (e.g. `$.optimize`, `$.test`) and added the ability to export a factory function for returning configuration
+- add: tradie will look for a `.eslintrc` or `.babelrc` file if no configuration is provided for `eslint` or `babel` keys
 - add: added `script.outputFilename`, `style.outputFilename` and `asset.outputFilename` for overriding the output 
 filenames created by webpack
 - break: plugins are no longer specified by name and loaded by tradie, they're passed to tradie as a function

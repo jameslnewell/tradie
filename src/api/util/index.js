@@ -1,6 +1,6 @@
 
 const deepMerge = require('./deepMerge');
-const shallowMerge = require('./shallowMerge');
+const shallowMerge = require('./../../cli/lib/config/shallowMerge');
 
 const extendDefaultConfig = require('./extendDefaultConfig');
 

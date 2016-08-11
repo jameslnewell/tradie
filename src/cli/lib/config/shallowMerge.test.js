@@ -1,4 +1,4 @@
-const mergeConfig = require('./shallowMerge');
+import mergeConfig from './shallowMerge';
 
 describe('shallowMerge()', () => {
 

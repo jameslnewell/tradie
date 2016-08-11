@@ -33,8 +33,6 @@ bundles or UniversalJS applications. Tradie supports `SASS` and a number of comm
     src/
         index.js
         index.test.js
-
-    tradie.config.js
     ```
 
     Use a generator rather than doing it manually!
@@ -48,55 +46,52 @@ bundles or UniversalJS applications. Tradie supports `SASS` and a number of comm
 
     `npm run test`
 
-## Commands
+## Project Structure
 
-### Clean
+```
+    
+src/
+    index.js
+    index.test.js
+    
+dest/
+    rev-manifest.json
+    index.abcdefg.js
+    vendor.abcdefg.js
+    
+tmp/
+    abcdefg.json.gzip
+    vendor-manifest.json
+```
 
-Clean bundled script, style and asset files.
+### src/
 
-    tradie clean
+The directory where your application source code lives. 
 
-Removes all files from the `dest` directory.
+> Place all your script, style, asset and test files here.
 
-### Linting
+### dest/
 
-Lint script files.
+The directory where your application artifacts are generated.
 
-    tradie lint
+> Don't change anything here! It'll be overwritten next time you build.
 
-Uses `eslint` to lint script files in the `src` directory.
+### tmp/
 
-### Building
+The directory where temporary files are generated.
 
-Bundle script, style and asset files.
-
-    tradie build --watch --optimize
-
-Uses `webpack` to bundle script, style and asset files.
-
-Use the `--watch` flag to re-bundle script and style files whenever they change.
-
-Use the `--optimize` flag to optimize script, style and asset files, including minification, dead-code removal, file 
-hashing etc.
-
-### Testing
-
-Test script files.
-
-    tradie test --watch
-
-Uses `webpack` to bundle test files and runs the generated bundle with `mocha`.
-
-Use the `--watch` flag to re-test script files whenever they change.
+> Don't change anything here! It'll be overwritten next time you build.
 
 ## Configuration
 
+Tradie works out-of-the-box with no configuration. However, Tradie can be configured to support additional 
+functionality by placing a `tradie.config.js` file in the project root. The file must export an `object`, 
+or a `function` that returns an `object`. 
+
+The default configuration for Tradie looks like this:
+
 ```js
 module.exports = {
-
-  src: './src/',
-  dest: './dist/',
-  tmp: './tmp',
 
   script: {
     bundles: ['./index.js'],
@@ -119,33 +114,10 @@ module.exports = {
   babel: {},
   webpack: {},
 
-  plugins: [],
+  plugins: []
   
-  $: {
-    optimize: {},
-    test: {}
-  }
-
 };
 ```
-
-### src
-
-The directory where your application sources exist.
-
-> Optional. A `string`. Defaults to `./src`.
-
-### dest
-
-The directory where your application artifacts are output.
-
-> Optional. A `string`. Defaults to `./dist`.
-
-### tmp
-
-The directory where temporary files will be generated.
-
-> Optional. A `string`. Defaults to `./tmp`.
 
 ### script
 
@@ -237,13 +209,13 @@ A list of extensions for asset files.
 
 Configuration used for linting. See [Configuring ESLint](http://eslint.org/docs/user-guide/configuring).
 
-> Optional. An `object`. Defaults to `{}`.
+> Optional. An `object`. Defaults to the contents of your `.eslintrc` file.
 
 ### babel
 
 Configuration used for transpiling. See [Options](https://babeljs.io/docs/usage/options/).
 
-> Optional. An `object`. Defaults to `{}`.
+> Optional. An `object`. Defaults to the contents of your `.babelrc` file.
 
 ### webpack
 
@@ -270,19 +242,46 @@ module.exports = {
 };
 ```
 
-### $
+## Commands
 
-#### .optimize
+### Clean
 
-Additional configuration applied when building an optimized bundle.
+Remove bundled script, style and asset files.
 
-> Optional. An `object`. Defaults to `{}`.
+    tradie clean
 
-#### .test
+Removes all files from the `dest` directory.
 
-Additional configuration applied when building and running test bundles.
+### Linting
 
-> Optional. An `object`. Defaults to `{}`.
+Lint script files.
+
+    tradie lint
+
+Uses `eslint` to lint script files in the `src` directory.
+
+### Building
+
+Bundle script, style and asset files.
+
+    tradie build --watch --optimize
+
+Uses `webpack` to bundle script, style and asset files.
+
+Use the `--watch` flag to re-bundle script and style files whenever they change.
+
+Use the `--optimize` flag to optimize script, style and asset files, including minification, dead-code removal, file 
+hashing etc.
+
+### Testing
+
+Test script files.
+
+    tradie test --watch
+
+Uses `webpack` to bundle test files and runs the generated bundle with `mocha`.
+
+Use the `--watch` flag to re-test script files whenever they change.
 
 ## Change log
 

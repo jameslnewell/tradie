@@ -11,28 +11,30 @@ export default function createCommonBundleConfig(options) {
     babel
   } = options;
 
-  const loaders = [
+  const loaders = []
 
-    //transpile project scripts with the babel loader
-    {
-      test: extensionsToRegex(scriptExtensions),
-      //TODO: pass babel config
-      include: src,
-      loader: 'babel-loader',
-      query: {
-        ...babel,
-        babelrc: false,
-        cacheDirectory: tmp
+  //transpile project scripts with the babel loader
+  if (Object.keys(babel).length) {
+    loaders.push(
+      {
+        test: extensionsToRegex(scriptExtensions),
+        //TODO: pass babel config
+        include: src,
+        loader: 'babel-loader',
+        query: {
+          ...babel,
+          babelrc: false,
+          cacheDirectory: tmp
+        }
       }
-    },
+    );
+  }
 
-    //node and browserify loads JSON files like NodeJS does... emulate that for compatibility
-    {
-      test: /\.json$/,
-        loader: 'json-loader'
-    }
-
-  ];
+  //node and browserify loads JSON files like NodeJS does... emulate that for compatibility
+  loaders.push({
+    test: /\.json$/,
+    loader: 'json-loader'
+  });
 
   const plugins = [
 

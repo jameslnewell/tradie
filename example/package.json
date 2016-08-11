@@ -14,10 +14,10 @@
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-react": "^6.11.1",
     "chai": "^3.5.0",
-    "eslint-config-jameslnewell": "^1.0.0-rc.8",
-    "tradie-plugin-copy": "^0.2.0-preview.1",
-    "tradie-plugin-livereload": "^0.1.2",
-    "tradie-plugin-serve": "^0.2.0-preview.1"
+    "eslint-config-jameslnewell": "^1.0.0-rc.9",
+    "tradie-plugin-copy": "^1.0.0-preview.1",
+    "tradie-plugin-livereload": "^1.0.0-preview.2",
+    "tradie-plugin-serve": "^1.0.0-preview.1"
   },
   "scripts": {
     "clean": "tradie clean",

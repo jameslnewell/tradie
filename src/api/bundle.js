@@ -13,27 +13,25 @@ import formatWebpackMessage from './formatWebpackMessage';
 import runWebpack from './runWebpack';
 import getRevManifestFromStats from './util/getRevManifestFromStats';
 
-/**
- * Create script bundles
- *
- * @param {object}        config
- * @param {string}        [config.src]       The source directory
- * @param {string}        [config.dest]      The destination directory
- * @param {array}         [config.bundles]
- * @param {array}         [config.vendor]
- * @param {array}         [config.loaders]
- * @param {array}         [config.plugins]
- * @param {array}         [config.extensions]
- * @param {array}         [config.externals]
- *
- * @param {object}        args
- * @param {string}        [args.watch]
- * @param {string}        [args.optimize]
- *
- * @param {function}      emitter
- */
-export default function(tradie) {
-  const {args: {watch, optimize}, config: {src, dest, script: {bundles, vendors}}, onChange} = tradie;
+//stats.toJson(options) https://webpack.github.io/docs/node.js-api.html#stats-tojson
+// {
+//   hash: false,
+//     version: false,
+//   timings: false,
+//   assets: false,
+//   chunks: false,
+//   modules: false,
+//   reasons: false,
+//   children: false,
+//   source: false,
+//   errors: false,
+//   errorDetails: false,
+//   warnings: false,
+//   publicPath: false
+// }
+
+export default function(options) {
+  const {watch, optimize, src, dest, script: {bundles, vendors}, onChange} = options;
 
   const promises = [];
   const clientBundles = getClientBundles(bundles);
@@ -97,7 +95,7 @@ export default function(tradie) {
           scriptsCount += 1;
           scriptsTotalSize += asset.size;
 
-          tradie.emit('scripts.bundle.finished', {
+          options.emit('scripts.bundle.finished', {
             src: path.join(src, asset.name),
             dest: path.join(dest, asset.name),
             size: asset.size,
@@ -109,7 +107,7 @@ export default function(tradie) {
           stylesCount += 1;
           stylesTotalSize += asset.size;
 
-          tradie.emit('styles.bundle.finished', {
+          options.emit('styles.bundle.finished', {
             src: path.join(src, asset.name),
             dest: path.join(dest, asset.name),
             size: asset.size,
@@ -125,7 +123,7 @@ export default function(tradie) {
 
   const createVendorBundle = () => {
     const vendorConfig = createVendorConfig(
-      {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
+      {onFileChange: debounceOnChange, ...options}
     );
     return runWebpack(vendorConfig, {}, (err, stats) => {
       if (!err && optimize) {
@@ -137,7 +135,7 @@ export default function(tradie) {
 
   const createClientBundle = () => {
     const clientConfig = createClientConfig(
-      {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
+      {onFileChange: debounceOnChange, ...options}
     );
     return runWebpack(clientConfig, {watch}, (err, stats) => {
       if (!err && optimize) {
@@ -151,7 +149,7 @@ export default function(tradie) {
 
   const createServerBundle = () => {
     const serverConfig = createServerConfig(
-      {watch, optimize, onFileChange: debounceOnChange, ...tradie.config}
+      {onFileChange: debounceOnChange, ...options}
     );
     return runWebpack(serverConfig, {watch}, afterCompile);
   };
@@ -194,12 +192,12 @@ export default function(tradie) {
       //print errors all together
       if (scriptsErrors.length) {
         scriptsErrors.forEach(
-          error => console.error('\n', formatWebpackMessage(tradie.config, error), '\n')
+          error => console.error('\n', formatWebpackMessage(options, error), '\n')
         );
       }
 
       if (!watch) {
-        tradie.emit('scripts.bundling.finished', {
+        options.emit('scripts.bundling.finished', {
           src,
           dest,
           count: scriptsCount,
@@ -207,7 +205,7 @@ export default function(tradie) {
           size: scriptsTotalSize,
           errors: scriptsErrors
         });
-        tradie.emit('styles.bundling.finished', {
+        options.emit('styles.bundling.finished', {
           src,
           dest,
           count: stylesCount,

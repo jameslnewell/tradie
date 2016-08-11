@@ -4,33 +4,20 @@ import findTestFiles from '../findTestScriptFiles';
 import runWebpack from '../runWebpack';
 import runTestBundle from '../runInProcess';
 
-export const name = 'test';
-export const desc = 'Test script files';
-
-export function hint(yargs) {
-  return yargs.option('w', {
-    alias: 'watch',
-    default: false
-  });
-}
-
-export const context = () => 'test';
-
-export function exec(tradie) {
-  const {args: {watch}, config: {dest}} = tradie;
-  const config = tradie.config;
+export default options => {
+  const {watch, dest} = options;
 
   const bundlePath = path.resolve(dest, 'tests.js'); //FIXME:
 
   return new Promise((resolve, reject) => {
 
-    findTestFiles(config)
+    findTestFiles(options)
       .then(testFiles => {
 
-        const webpackConfig = createTestConfig({watch, files: testFiles, ...tradie.config});
+        const webpackConfig = createTestConfig({watch, files: testFiles, ...options});
 
         //plugin hook
-        tradie.emit('test.webpack.config', webpackConfig);
+        options.emit('test.webpack.config', webpackConfig);
 
         runWebpack(webpackConfig, {watch, virtual: true}, (err, stats, fs) => {
           if (err) return reject(err);
@@ -47,11 +34,13 @@ export function exec(tradie) {
           return runTestBundle(bundle.toString())
             .then(result => {
 
-              tradie.emit('test.result', result);
+              options.emit('test.result', result);
 
               //if we're not watching then we're done
               if (!watch) {
-                resolve(result.exitCode);
+                if (result.exitCode !== 0) {
+                  reject();
+                }
               }
 
             })

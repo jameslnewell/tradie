@@ -1,6 +1,4 @@
-import shallowMerge from '../../cli/lib/config/shallowMerge';
-
-const defaultConfig = {
+export default {
 
   src: './src/',
   dest: './dist/',
@@ -35,5 +33,3 @@ const defaultConfig = {
   webpack: {}
 
 };
-
-export default (config) => shallowMerge(defaultConfig, config || {});

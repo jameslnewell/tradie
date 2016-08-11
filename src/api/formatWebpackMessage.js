@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-const escapeRegExp = string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// const escapeRegExp = string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const stripStack
   = message => message.replace(/^\s*at\s.*:\d+:\d+[\s\)]*\n/gm, '')

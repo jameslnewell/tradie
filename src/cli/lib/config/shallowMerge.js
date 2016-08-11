@@ -5,7 +5,7 @@
  * @param   {object} objB
  * @returns {object} Returns a new object
  */
-module.exports = (objA, objB) => {
+export default (objA, objB) => {
 
   //make a copy of objA
   const config = Object.assign({}, objA);
