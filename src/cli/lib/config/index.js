@@ -33,10 +33,10 @@ export default args => {
       tmp: path.resolve(config.root, config.tmp),
 
       //merge the plugin methods
-      on: emitter.on,
-      once: emitter.once,
-      off: emitter.off,
-      emit: emitter.emit
+      on: (...args) => emitter.on(...args),
+      once: (...args) => emitter.once(...args),
+      off: (...args) => emitter.off(...args),
+      emit: (...args) => emitter.emit(...args)
 
     }))
   ;
