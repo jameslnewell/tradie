@@ -2,7 +2,7 @@
 
 A semi-opinionated build tool for frontend projects. Use it to lint, bundle and test your script, style and asset files.
 
-> Warning: This project is still experimental! Contributions welcome. Please [report any issues](https://github.com/jameslnewell/tradie/issues).
+> Contributions welcome. Please [report any issues](https://github.com/jameslnewell/tradie/issues).
 
 ##### Goals
 
