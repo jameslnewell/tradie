@@ -1,6 +1,10 @@
 
 # Change log
 
+## 1.0.3
+
+- fix: remove unintended `console.log`
+
 ## 1.0.2
 
 - fix: fix event functions to proxy to the emitter so they don't fail referring to `this`
