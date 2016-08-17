@@ -15,8 +15,8 @@ export default function(config, options, callback) {
 
   return new Promise((resolve, reject) => {
 
-    const compiler = webpack(config);
     let fs = null;
+    const compiler = webpack(config);
 
     if (virtual) {
       fs = new MemoryFS();
@@ -24,14 +24,14 @@ export default function(config, options, callback) {
     }
 
     const wrappedCallback = (err, stats) => {
-      if (err) {
-        callback(err, stats, fs); //eslint-disable-line callback-return
-        if (!watch) reject(err);
-      } else {
-        const jsonStats = stats.toJson();
-        callback(err, jsonStats, fs); //eslint-disable-line callback-return
-        if (!watch) resolve(jsonStats.errors.length > 0 ? -1 : 0);
+      if (err) return reject(err);
+
+      callback(stats, fs); //eslint-disable-line callback-return
+
+      if (!watch) {
+        resolve();
       }
+
     };
 
     if (watch) {
@@ -40,7 +40,7 @@ export default function(config, options, callback) {
 
       //stop watching and exit when the user presses CTL-C
       process.on('SIGINT', () => {
-        watcher.close(() => resolve(0));
+        watcher.close(() => resolve());
       });
 
     } else {

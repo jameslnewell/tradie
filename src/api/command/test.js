@@ -19,8 +19,7 @@ export default options => {
         //plugin hook
         options.emit('test.webpack.config', webpackConfig);
 
-        runWebpack(webpackConfig, {watch, virtual: true}, (err, stats, fs) => {
-          if (err) return reject(err);
+        runWebpack(webpackConfig, {watch, virtual: true}, (stats, fs) => {
 
           if (stats.errors.length > 0) {
             //TODO: figure out how to handle/display errors

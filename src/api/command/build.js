@@ -1,35 +1,10 @@
-import path from 'path';
-import logger from '../logger';
+
 import lint from '../lint';
 import findScriptFiles from '../findScriptFiles';
 import isScriptFile from '../isScriptFile';
 import bundleScripts from '../bundle';
 
 export default options => {
-  const buildLogger = logger({});
-
-  options
-    .once(
-      'scripts.linting.finished',
-      result => buildLogger.lintingFinished(result)
-    )
-    .on(
-      'scripts.bundle.finished',
-      result => buildLogger.scriptBundleFinished(result)
-    )
-    .on(
-      'scripts.bundling.finished',
-      result => buildLogger.scriptBundlingFinished(result)
-    )
-    .on(
-      'styles.bundle.finished',
-      result => buildLogger.styleBundleFinished(result)
-    )
-    .on(
-      'styles.bundling.finished',
-      result => buildLogger.styleBundlingFinished(result)
-    )
-  ;
 
   let lintExitCode = 0;
 
@@ -50,27 +25,16 @@ export default options => {
     )
 
     //build the bundles
-    .then(() => Promise.all([
-      bundleScripts({
-        ...options,
-        onChange: (addedModules, changedModules) => lint([].concat(addedModules, changedModules).filter(file => isScriptFile(file, options)), options)
-      })
-    ]))
-
-    //reduce the bundle exit codes
-    .then(codes => codes.reduce((accum, next) => {
-      if (next !== 0) {
-        return next;
-      } else {
-        return accum;
-      }
-    }, 0))
+    .then(() => bundleScripts({
+      ...options,
+      onChange: (addedModules, changedModules) => lint([].concat(addedModules, changedModules).filter(file => isScriptFile(file, options)), options)
+    }))
 
     //return a single exit code
-    .then(bundleExitCodes => {
+    .then(() => {
 
-      //return an error exit code
-      if (lintExitCode !== 0 || bundleExitCodes !== 0) {
+      //return an error exit code if the linting failed
+      if (lintExitCode !== 0) {
         throw null;
       }
 
