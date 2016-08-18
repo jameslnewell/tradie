@@ -15,6 +15,7 @@ export default function createCommonBundleConfig(options) {
   const loaders = []
 
   //transpile project scripts with the babel loader
+  console.log('BABEL OPTIONS', Object.keys(babel));
   if (Object.keys(babel).length) {
     loaders.push(
       {

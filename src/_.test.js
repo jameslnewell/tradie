@@ -1,6 +1,9 @@
-import {expect} from 'chai';
-import sourceMapSupport from 'source-map-support';
+import 'source-map-support/register';
+import chai, {expect} from 'chai';
+import chaiFiles from 'chai-files';
 
-sourceMapSupport.install();
+chai.use(chaiFiles);
 
 global.expect = expect;
+global.file = chaiFiles.file;
+global.dir = chaiFiles.dir;
