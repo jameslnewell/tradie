@@ -151,8 +151,8 @@ export default options => {
 
     //notify user
     const time = time => Math.max(time.vendor + time.client, time.server);
-    console.log(chalk[color](` => ${totals.script.count} scripts bundled in ${formatTime(time(totals.script.time))} @ ${formatSize(totals.script.size)}`));
-    console.log(chalk[color](` => ${totals.style.count} styles bundled in ${formatTime(time(totals.style.time))} @ ${formatSize(totals.style.size)}`));
+    console.log(chalk[color](` => ${totals.script.count} scripts bundled in ${formatTime(time(totals.script.time))} - ${formatSize(totals.script.size)}`));
+    console.log(chalk[color](` => ${totals.style.count} styles bundled in ${formatTime(time(totals.style.time))} - ${formatSize(totals.style.size)}`));
 
     //when not watching, print all compilation messages at the same time, so the asset+summary information is displayed together
     if (!options.watch) {
