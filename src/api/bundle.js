@@ -12,23 +12,6 @@ import runWebpack from './runWebpack';
 import getRevManifestFromStats from './util/getRevManifestFromStats';
 import createStatCollector from './createStatCollector';
 
-//stats.toJson(options) https://webpack.github.io/docs/node.js-api.html#stats-tojson
-// {
-//   hash: false,
-//     version: false,
-//   timings: false,
-//   assets: false,
-//   chunks: false,
-//   modules: false,
-//   reasons: false,
-//   children: false,
-//   source: false,
-//   errors: false,
-//   errorDetails: false,
-//   warnings: false,
-//   publicPath: false
-// }
-
 export default function(options) {
   const {watch, optimize, src, dest, script: {bundles, vendors}, onChange} = options;
 

@@ -1,8 +1,8 @@
 
 export default function(stats) {
   const manifest = {};
-
-  stats.chunks.forEach(chunk => {
+  const json = stats.toJson();
+  json.chunks.forEach(chunk => {
     chunk.names.forEach(chunkName => {
       chunk.files.forEach(chunkFile => {
 
