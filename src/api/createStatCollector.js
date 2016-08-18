@@ -43,12 +43,12 @@ export default options => {
 
   const totals = {
     script: {
-      time: {},
+      time: {vendor: 0, client: 0, server: 0},
       size: 0,
       count: 0
     },
     style: {
-      time: {},
+      time: {vendor: 0, client: 0, server: 0},
       size: 0,
       count: 0
     },
@@ -99,7 +99,7 @@ export default options => {
       if (/\.js$/.test(asset.name)) {
 
         //update totals
-        totals.script.time.foo = json.time;
+        totals.script.time[name] = json.time;
         totals.script.size += asset.size;
         totals.script.count++;
 
@@ -119,7 +119,7 @@ export default options => {
       if (/\.css$/.test(asset.name)) {
 
         //update totals
-        totals.style.time.foo = json.time;
+        totals.style.time[name] = json.time;
         totals.style.size += asset.size;
         totals.style.count++;
 
@@ -150,8 +150,9 @@ export default options => {
     let color = getMessageColor('green', errors, warnings);
 
     //notify user
-    console.log(chalk[color](` => ${totals.script.count} scripts bundled in ${formatTime(totals.script.time)} @ ${formatSize(totals.script.size)}`));
-    console.log(chalk[color](` => ${totals.style.count} styles bundled in ${formatTime(totals.script.time)} @ ${formatSize(totals.script.size)}`));
+    const time = time => Math.max(time.vendor + time.client, time.server);
+    console.log(chalk[color](` => ${totals.script.count} scripts bundled in ${formatTime(time(totals.script.time))} @ ${formatSize(totals.script.size)}`));
+    console.log(chalk[color](` => ${totals.style.count} styles bundled in ${formatTime(time(totals.style.time))} @ ${formatSize(totals.style.size)}`));
 
     //when not watching, print all compilation messages at the same time, so the asset+summary information is displayed together
     if (!options.watch) {
