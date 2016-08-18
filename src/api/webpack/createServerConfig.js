@@ -19,7 +19,7 @@ export default function createServerConfig(options) {
       ...accum,
       [key]: [
         'source-map-support/register', //make error stack traces use source maps for easy debugging
-        bundle
+        path.resolve(src, bundle)
       ]
     };
 

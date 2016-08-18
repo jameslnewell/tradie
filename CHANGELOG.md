@@ -1,6 +1,11 @@
 
 # Change log
 
+## 1.1.0
+
+- add: resolve bundle names to the `src` directory - this means the `./` prefix is not required and enforces the bundle 
+cannot be a dependency name
+
 ## 1.0.3
 
 - fix: remove unintended `console.log`

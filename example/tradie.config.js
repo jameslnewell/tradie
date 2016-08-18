@@ -5,7 +5,7 @@ const livereload = require('tradie-plugin-livereload').default;
 module.exports = {
 
   script: {
-    bundles: ['./client.js', './server.js'],
+    bundles: ['client.js', 'server.js'],
     vendors: ['react', 'react-dom', 'react-redux', 'redux', 'redux-thunk'],
     extensions: ['.js', '.jsx']
   },
