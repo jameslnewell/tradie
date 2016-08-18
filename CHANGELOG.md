@@ -6,6 +6,7 @@
 - add: resolve bundle names to the `src` directory - this means the `./` prefix is not required and enforces the bundle 
 cannot be a dependency name
 - fix: tests were exiting when there was a bundling error
+- fix: only extract styles from the main chunk to avoid bloating the intital bundle size
 
 ## 1.0.3
 
