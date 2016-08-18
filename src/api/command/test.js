@@ -25,7 +25,19 @@ export default options => {
           if (stats.errors.length > 0) {
             //TODO: figure out how to handle/display errors
             stats.errors.forEach(moduleError => console.error(moduleError));
-            return reject(-1);
+
+            if (watch) {
+
+              //if we're watching we might recover if the file is fixed
+              return;
+
+            } else {
+
+              //if we're not watching then we can't recover so fail
+              return reject();
+
+            }
+
           }
 
           //TODO: what if webpack splits it into more than one chunk?)
