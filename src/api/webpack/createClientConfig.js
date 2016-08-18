@@ -27,7 +27,7 @@ export default function createClientConfig(options) {
     const key = path.join(path.dirname(bundle), fileName(bundle));
     return {
       ...accum,
-      [key]: bundle
+      [key]: path.resolve(src, bundle)
     };
   }, {});
 

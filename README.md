@@ -95,7 +95,7 @@ The default configuration for Tradie looks like this:
 module.exports = {
 
   script: {
-    bundles: ['./index.js'],
+    bundles: ['index.js'],
     vendors: [],
     extensions: ['.js']
   },
@@ -124,9 +124,11 @@ module.exports = {
 
 #### .bundles
 
-A list of modules that will be bundled into script files.
+A list of module paths that will be bundled into script files.
 
-> Optional. An `array` of `string`s. Defaults to `['./index.js']`. 
+Module paths are relative to your project's `src` directory.
+
+> Optional. An `array` of `string`s. Defaults to `['index.js']`. 
 
 > Example: Multiple bundles
 
@@ -137,7 +139,7 @@ named
 ```js
 module.exports = {
   script: {
-    bundles: ['./campaign/abc/index.js', './campaign/xyz/index.js']
+    bundles: ['campaign/abc/index.js', 'campaign/xyz/index.js']
   }
 };
 ```
@@ -150,7 +152,7 @@ your app code across both your server and client.
 ```js
 module.exports = {
   script: {
-    bundles: ['./server.js', './client.js']
+    bundles: ['server.js', 'client.js']
   }
 };
 ```
