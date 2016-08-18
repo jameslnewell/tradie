@@ -5,6 +5,7 @@
 
 - add: resolve bundle names to the `src` directory - this means the `./` prefix is not required and enforces the bundle 
 cannot be a dependency name
+- fix: tests were exiting when there was a bundling error
 
 ## 1.0.3
 

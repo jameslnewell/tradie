@@ -15,7 +15,7 @@ export default function createVendorConfig(options) {
     target: 'web',
     devtool: optimize ? 'hidden-source-map' : 'cheap-module-eval-source-map',
 
-    entry: {vendor: vendors},
+    entry: {vendor: [].concat(vendors)},
     context: src,
 
     output: {

@@ -33,9 +33,9 @@ export default options => {
     //return a single exit code
     .then(() => {
 
-      //return an error exit code if the linting failed
-      if (lintExitCode !== 0) {
-        throw null;
+      //return an error exit code
+      if (lintExitCode !== 0 ) {
+        throw Promise.reject();
       }
 
     })
