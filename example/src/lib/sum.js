@@ -6,5 +6,3 @@
 export default function(...args) {
   return args.reduce((total, next) => (total + next), 0);
 }
-
-;;

@@ -8,7 +8,6 @@ import createVendorConfig from './webpack/createVendorConfig';
 import createClientConfig from './webpack/createClientConfig';
 import createServerConfig from './webpack/createServerConfig';
 
-import formatWebpackMessage from './formatWebpackMessage';
 import runWebpack from './runWebpack';
 import getRevManifestFromStats from './util/getRevManifestFromStats';
 import createStatCollector from './createStatCollector';
@@ -124,7 +123,7 @@ export default function(options) {
 
       //handle errors
       if (collector.hasErrors()) {
-        throw null;
+        return Promise.resolve();
       }
 
     })

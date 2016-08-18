@@ -6,7 +6,7 @@ import bundleScripts from '../bundle';
 
 export default options => {
 
-  let lintExitCode = 0;
+  let lintErrors = false;
 
   return Promise.resolve()
 
@@ -17,7 +17,7 @@ export default options => {
 
           //return an error exit code
           if (result.errors !== 0) {
-            lintExitCode = 1;
+            lintErrors = true;
           }
 
         })
@@ -34,8 +34,8 @@ export default options => {
     .then(() => {
 
       //return an error exit code
-      if (lintExitCode !== 0 ) {
-        throw Promise.reject();
+      if (lintErrors) {
+        return Promise.reject();
       }
 
     })
