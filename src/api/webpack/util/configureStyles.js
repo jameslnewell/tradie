@@ -77,7 +77,8 @@ export default function configureStyleLoader(options, webpackConfig) {
 
   webpackConfig.plugins = webpackConfig.plugins.concat([
     new ExtractTextPlugin({
-      allChunks: true,
+      //other chunks should have styles in the JS and load the styles automatically onto the page (that way styles make use of code splitting) e.g. https://github.com/facebookincubator/create-react-app/issues/408
+      allChunks: false,
       filename
     }),
     new CheckVersionConflictPlugin({
