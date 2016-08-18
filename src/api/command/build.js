@@ -71,7 +71,7 @@ export default options => {
 
       //return an error exit code
       if (lintExitCode !== 0 || bundleExitCodes !== 0) {
-        throw null;
+        throw Promise.reject();
       }
 
     })

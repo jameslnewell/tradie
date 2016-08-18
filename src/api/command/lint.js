@@ -10,7 +10,7 @@ export default options => {
 
         //return an error exit code
         if (result.errors) {
-          throw null;
+          return Promise.reject();
         } else if (result.errors === 0 && result.warnings == 0) {
           console.log(chalk.green('OK.'));
         }
