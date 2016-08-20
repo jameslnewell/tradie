@@ -5,6 +5,14 @@ import createFixture from './util/createFixture';
 describe('tradie build', function() {
   this.timeout(5000);
 
+  let fixture;
+
+  afterEach(() => {
+    if (fixture) {
+      return fixture.clean();
+    }
+  });
+
   it('should exit with 0 when there are no build warnings and no build errors', () => {
     return exec(['build'], {cwd: path.resolve('./test/fixture/build-ok')})
       .then(code => expect(code).to.be.equal(0))
@@ -30,34 +38,44 @@ describe('tradie build', function() {
     ;
   });
 
-  describe('a single script and style bundle', () => {
+  describe('create a single script and style bundle', () => {
+
+    beforeEach(() => {
+      fixture = createFixture('build-single-bundle-ok');
+    });
 
     it('should exit with 0 when the bundles are created', () => {
-      return exec(['build'], {cwd: path.resolve('./test/fixture/build-single-bundle')})
+      return exec(['build'], {cwd: fixture.root()})
         .then(code => expect(code).to.be.equal(0))
       ;
     });
 
     it('should create a script and style bundle', () => {
-      return exec(['build'], {cwd: path.resolve('./test/fixture/build-single-bundle')})
+      return exec(['build'], {cwd: fixture.root()})
         .then(() => {
-          expect(file(path.resolve('./test/fixture/build-single-bundle/dist/index.js'))).to.exist;
-          expect(file(path.resolve('./test/fixture/build-single-bundle/dist/index.css'))).to.exist;
+          expect(file(fixture.dest('index.js'))).to.exist;
+          expect(file(fixture.dest('index.css'))).to.exist;
         })
       ;
     });
 
-  });
 
-  describe('a single script and style bundle AND a vendor bundle', () => {
-    let fixture;
-
-    beforeEach(() => {
-      fixture = createFixture('build-single-bundle-with-vendor');
+    it('should create a script and style bundle with the expected hash when built for production', () => {
+      return exec(['build', '--optimize'], {cwd: fixture.root()})
+        .then(() => {
+          expect(file(fixture.dest('rev-manifest.json'))).to.exist;
+          expect(file(fixture.dest('index.917576b91549624940fd.js'))).to.exist; //FIXME: hashes should be consistent across the different types of files
+          expect(file(fixture.dest('index.ffc15b4006947ca83a6c42e007aba534.css'))).to.exist;
+        })
+        ;
     });
 
-    afterEach(() => {
-      return fixture.clean();
+  });
+
+  describe('create a single vendor, script and style bundle', () => {
+
+    beforeEach(() => {
+      fixture = createFixture('build-single-bundle-with-vendor-ok');
     });
 
     it('should exit with 0 when the bundles are created', () => {
@@ -81,8 +99,31 @@ describe('tradie build', function() {
         .then(() => {
           expect(file(fixture.dest('rev-manifest.json'))).to.exist;
           expect(file(fixture.dest('vendor.b342f9c09dbb3f5e4851.js'))).to.exist; //FIXME: hashes should be consistent across the different types of files
-          expect(file(fixture.dest('index.6bff2f82c28e4ba1e04d.js'))).to.exist;
+          expect(file(fixture.dest('index.ab59ecf2a4dda1c2c150.js'))).to.exist;
           expect(file(fixture.dest('index.ffc15b4006947ca83a6c42e007aba534.css'))).to.exist;
+        })
+        ;
+    });
+
+  });
+
+  describe('extract assets from script and style files', () => {
+
+    beforeEach(() => {
+      fixture = createFixture('build-assets-ok');
+    });
+
+    it('should exit with 0 when the bundles are created', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(code => expect(code).to.be.equal(0))
+        ;
+    });
+
+    it('should create the assets', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(() => {
+          expect(file(fixture.dest('files/a55c935a7e0ac63269b2187fe7cd6ce6.jpg'))).to.exist;
+          expect(file(fixture.dest('files/bccb8b559921cd4bdf6a8d85881e5f7c.jpg'))).to.exist;
         })
         ;
     });
