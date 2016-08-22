@@ -17,7 +17,10 @@ export default options => {
         //return an error exit code
         if (result.errors) {
           return Promise.reject();
-        } else if (result.errors === 0 && result.warnings == 0) {
+        }
+
+        //exit successfully with a message (because the linter doesn't show any messages)
+        if (result.errors === 0 && result.warnings === 0) {
           console.log(chalk.green('OK.'));
         }
 

@@ -268,7 +268,7 @@ Uses `eslint` to lint script files in the `src` directory.
 > Example: Run linting rules on a subset of script files
  
 ```bash
-tradie lint "components/**"
+tradie lint "components/**" "containers/**"
 ```
 
 ### Building
@@ -299,7 +299,7 @@ Use the `--watch` flag to re-test script files whenever they change.
 > Example: Run tests on a subset of script files
  
 ```bash
-tradie test "components/**"
+tradie test "components/**" "containers/**"
 ```
 
 ## Change log
