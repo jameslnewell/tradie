@@ -8,7 +8,7 @@ cannot be a dependency name
 - fix: tests were exiting when there was a bundling error
 - fix: only extract styles from the main chunk to avoid bloating the intital bundle size
 - fix: script and style build times are reported correctly - they're no-longer naively summed together ignoring the fact some of them run in parallel 
-- add: the ability to specify one or more globs to restrict which tests get run 
+- add: the ability to specify one or more globs to restrict which files are linted/tested by the lint/test commands
 
 ## 1.0.3
 

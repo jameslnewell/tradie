@@ -259,9 +259,17 @@ Removes all files from the `dest` directory.
 
 Lint script files.
 
-    tradie lint
+    tradie lint [glob...]
 
 Uses `eslint` to lint script files in the `src` directory.
+
+`glob`s are relative to the `src` directory.
+
+> Example: Run linting rules on a subset of script files
+ 
+```bash
+tradie lint "components/**"
+```
 
 ### Building
 

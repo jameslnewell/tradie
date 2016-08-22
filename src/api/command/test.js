@@ -10,6 +10,7 @@ import runTestBundle from '../runInProcess';
  *
  * @param   {object}          options
  * @param   {boolean}         [options.watch=false]
+ * @param   {function}        [options.exclude=undefined]   A filter function for excluding files from being tested
  * @returns {Promise}
  */
 export default options => {
