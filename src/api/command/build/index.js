@@ -1,8 +1,8 @@
 
-import lint from '../lint';
-import findScriptFiles from '../findScriptFiles';
-import isScriptFile from '../isScriptFile';
-import bundleScripts from '../bundle';
+import lint from '../../lint';
+import findScriptFiles from '../../findScriptFiles';
+import isScriptFile from '../../isScriptFile';
+import bundleScripts from './bundle';
 
 export default options => {
 

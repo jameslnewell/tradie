@@ -1,15 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 
-import getClientBundles from './util/getClientBundles';
-import getServerBundles from './util/getServerBundles';
+import getClientBundles from '../../util/getClientBundles';
+import getServerBundles from '../../util/getServerBundles';
 
-import createVendorConfig from './webpack/createVendorConfig';
-import createClientConfig from './webpack/createClientConfig';
-import createServerConfig from './webpack/createServerConfig';
+import createVendorConfig from '../../webpack/createVendorConfig';
+import createClientConfig from '../../webpack/createClientConfig';
+import createServerConfig from '../../webpack/createServerConfig';
 
-import runWebpack from './runWebpack';
-import getRevManifestFromStats from './util/getRevManifestFromStats';
+import runWebpack from '../../runWebpack';
+import getRevManifestFromStats from '../../util/getRevManifestFromStats';
 import createStatCollector from './createStatCollector';
 
 export default function(options) {
