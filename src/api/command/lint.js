@@ -9,7 +9,6 @@ import findScriptFiles from '../findScriptFiles';
  * @returns {Promise}
  */
 export default options => {
-
   return findScriptFiles(options)
     .then(files => lint(files, options)
       .then(result => {
@@ -27,5 +26,4 @@ export default options => {
       })
     )
   ;
-
 }
