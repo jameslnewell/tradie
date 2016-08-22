@@ -3,8 +3,8 @@ import 'source-map-support/register';
 import chalk from 'chalk';
 import commander from 'commander';
 import metadata from '../../package.json';
-import createFileFilter from './lib/createFileFilter';
 import getConfig from './lib/config';
+import createExcludeFileFilter from './lib/createExcludeFileFilter';
 
 const createAction = function() { //eslint-disable-line func-style
   const command = this.name(); //eslint-disable-line no-invalid-this
@@ -17,13 +17,13 @@ const createAction = function() { //eslint-disable-line func-style
 
 };
 
-const createActionWithFilter = function(globs) { //eslint-disable-line func-style
+const createActionWithGlobs = function(globs) { //eslint-disable-line func-style
   const command = this.name(); //eslint-disable-line no-invalid-this
   const options = this.opts(); //eslint-disable-line no-invalid-this
 
   runAction({
     command,
-    filter: createFileFilter(globs),
+    exclude: createExcludeFileFilter(globs),
     ...options
   });
 
@@ -80,7 +80,7 @@ commander
 commander
   .command('lint [files...]')
   .description('lint script files')
-  .action(createActionWithFilter)
+  .action(createActionWithGlobs)
 ;
 
 commander
@@ -95,7 +95,7 @@ commander
   .command('test [files...]')
   .description('test script files')
   .option('--watch', 're-test script files whenever they change', false)
-  .action(createActionWithFilter)
+  .action(createActionWithGlobs)
 ;
 
 commander

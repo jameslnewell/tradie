@@ -10,15 +10,13 @@ import runTestBundle from '../runInProcess';
  *
  * @param   {object}          options
  * @param   {boolean}         [options.watch=false]
- * @param   {Array<string>}   [options.filter]      An array of globs
  * @returns {Promise}
  */
 export default options => {
   const {
     src,
     dest,
-    watch = false,
-    filter
+    watch = false
   } = options;
 
   const bundlePath = path.resolve(dest, 'tests.js'); //FIXME:
@@ -26,9 +24,6 @@ export default options => {
   return new Promise((resolve, reject) => {
 
     findTestFiles(options)
-
-      //exclude test files that are not included by the user's glob
-      .then(files => files.filter(file => filter(path.relative(src, file))))
 
       .then(files => {
 
