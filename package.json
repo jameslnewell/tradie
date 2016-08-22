@@ -43,6 +43,7 @@
     "lodash.mergewith": "^4.5.1",
     "make-error-cause": "^1.2.1",
     "memory-fs": "^0.3.0",
+    "minimatch": "^3.0.3",
     "mocha": "^3.0.0",
     "node-noop": "^1.0.0",
     "node-sass": "^3.8.0",

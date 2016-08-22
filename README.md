@@ -280,11 +280,19 @@ hashing etc.
 
 Test script files.
 
-    tradie test --watch
+    tradie test --watch [glob...]
 
 Uses `webpack` to bundle test files and runs the generated bundle with `mocha`.
 
 Use the `--watch` flag to re-test script files whenever they change.
+
+`glob`s are relative to the `src` directory.
+
+> Example: Run tests on a subset of script files
+ 
+```bash
+tradie test "components/**"
+```
 
 ## Change log
 

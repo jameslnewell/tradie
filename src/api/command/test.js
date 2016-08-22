@@ -1,29 +1,53 @@
+import fs from 'fs';
 import path from 'path';
+
 import createTestConfig from '../webpack/createTestConfig';
 import findTestFiles from '../findTestScriptFiles';
 import runWebpack from '../runWebpack';
 import runTestBundle from '../runInProcess';
 
+/**
+ *
+ * @param   {object}          options
+ * @param   {boolean}         [options.watch=false]
+ * @param   {Array<string>}   [options.filter]      An array of globs
+ * @returns {Promise}
+ */
 export default options => {
-  const {watch, dest} = options;
+  const {
+    src,
+    dest,
+    watch = false,
+    filter
+  } = options;
 
   const bundlePath = path.resolve(dest, 'tests.js'); //FIXME:
 
   return new Promise((resolve, reject) => {
 
     findTestFiles(options)
-      .then(testFiles => {
 
-        const webpackConfig = createTestConfig({watch, files: testFiles, ...options});
+      //exclude test files that are not included by the user's glob
+      .then(files => files.filter(file => filter(path.relative(src, file))))
+
+      .then(files => {
+
+        //include the setup file
+        if (fs.existsSync(path.join(src, '_.test.js'))) {
+          files.unshift(path.join(src, '_.test.js'));
+        }
+
+        const webpackConfig = createTestConfig({...options, watch, files});
 
         //plugin hook
         options.emit('test.webpack.config', webpackConfig);
 
-        runWebpack(webpackConfig, {watch, virtual: true}, (stats, fs) => {
+        return runWebpack(webpackConfig, {watch, virtual: true}, (stats, fs) => {
+          const json = stats.toJson();
 
-          if (stats.errors.length > 0) {
+          if (json.errors.length > 0) {
             //TODO: figure out how to handle/display errors
-            stats.errors.forEach(moduleError => console.error(moduleError));
+            json.errors.forEach(moduleError => console.error(moduleError));
 
             if (watch) {
 
@@ -51,6 +75,8 @@ export default options => {
               if (!watch) {
                 if (result.exitCode !== 0) {
                   reject();
+                } else {
+                  // resolve();
                 }
               }
 

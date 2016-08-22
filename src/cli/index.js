@@ -3,14 +3,36 @@ import 'source-map-support/register';
 import chalk from 'chalk';
 import commander from 'commander';
 import metadata from '../../package.json';
+import createFileFilter from './lib/createFileFilter';
 import getConfig from './lib/config';
 
-const action = function() { //eslint-disable-line func-style
-  const cmdName = this.name(); //eslint-disable-line no-invalid-this
-  const cmdOpts = this.opts(); //eslint-disable-line no-invalid-this
+const createAction = function() { //eslint-disable-line func-style
+  const command = this.name(); //eslint-disable-line no-invalid-this
+  const options = this.opts(); //eslint-disable-line no-invalid-this
+
+  runAction({
+    command,
+    ...options
+  });
+
+};
+
+const createActionWithFilter = function(globs) { //eslint-disable-line func-style
+  const command = this.name(); //eslint-disable-line no-invalid-this
+  const options = this.opts(); //eslint-disable-line no-invalid-this
+
+  runAction({
+    command,
+    filter: createFileFilter(globs),
+    ...options
+  });
+
+};
+
+const runAction = options => { //eslint-disable-line func-style
 
   //load the default config
-  getConfig({...cmdOpts, command: cmdName})
+  getConfig(options)
 
     //load and run the command
     .then(config => {
@@ -19,7 +41,7 @@ const action = function() { //eslint-disable-line func-style
       config.plugins.forEach(plugin => plugin(config));
 
       //load the command
-      const command = require(`../api/command/${cmdName}`).default; //eslint-disable-line global-require
+      const command = require(`../api/command/${options.command}`).default; //eslint-disable-line global-require
 
       //run the command
       return Promise.resolve(command(config))
@@ -52,13 +74,13 @@ commander
 commander
   .command('clean')
   .description('remove bundled script, style and asset files')
-  .action(action)
+  .action(createAction)
 ;
 
 commander
-  .command('lint')
+  .command('lint [files...]')
   .description('lint script files')
-  .action(action)
+  .action(createActionWithFilter)
 ;
 
 commander
@@ -66,14 +88,14 @@ commander
   .description('bundle script, style and asset files')
   .option('--watch', 're-bundle script, style and asset files whenever they change', false)
   .option('--optimize', 'optimize script, style and asset files, including minification, dead-code removal, file hashing etc', false)
-  .action(action)
+  .action(createAction)
 ;
 
 commander
-  .command('test')
+  .command('test [files...]')
   .description('test script files')
   .option('--watch', 're-test script files whenever they change', false)
-  .action(action)
+  .action(createActionWithFilter)
 ;
 
 commander
