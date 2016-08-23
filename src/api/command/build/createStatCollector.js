@@ -146,18 +146,21 @@ export default options => {
 
   const summarize = () => {
 
+    //doesn't make sense to summarise when stuff can be bundled multiple times whilst watching
+    if (options.watch) {
+      return;
+    }
+
     //workout what color notifications should be
     let color = getMessageColor('green', errors, warnings);
 
-    //notify user
+    //notify user of stats
     const time = time => Math.max(time.vendor + time.client, time.server);
     console.log(chalk[color](` => ${totals.script.count} scripts bundled in ${formatTime(time(totals.script.time))} - ${formatSize(totals.script.size)}`));
     console.log(chalk[color](` => ${totals.style.count} styles bundled in ${formatTime(time(totals.style.time))} - ${formatSize(totals.style.size)}`));
 
-    //when not watching, print all compilation messages at the same time, so the asset+summary information is displayed together
-    if (!options.watch) {
-      printMessages(errors, warnings);
-    }
+    //notify user of errors
+    printMessages(errors, warnings);
 
   };
 
