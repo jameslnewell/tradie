@@ -38,8 +38,8 @@ const printMessages = (errors, warnings) => {
  */
 export default options => {
 
-  const errors = false;
-  const warnings = false;
+  let errors = [];
+  let warnings = [];
 
   const totals = {
     script: {
@@ -83,10 +83,10 @@ export default options => {
 
     //batch up the messages
     if (json.errors.length) {
-      errors.concat(json.errors);
+      errors = errors.concat(json.errors);
     }
     if (json.warnings.length) {
-      warnings.concat(json.errors);
+      warnings = warnings.concat(json.errors);
     }
 
     //workout what color notifications should be

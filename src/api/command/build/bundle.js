@@ -110,5 +110,6 @@ export default function(options) {
       }
 
     })
+    .catch(err => console.log('err', err))
   ;
 }

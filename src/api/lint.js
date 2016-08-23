@@ -1,6 +1,6 @@
 import {CLIEngine} from 'eslint';
 
-export default function(files, config) {
+export default (files, config) => {
   const {eslint, script: {extensions}} = config;
 
   const engine = new CLIEngine({
@@ -20,4 +20,4 @@ export default function(files, config) {
     errors: report.errorCount,
     warnings: report.warningCount
   });
-}
+};

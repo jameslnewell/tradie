@@ -37,6 +37,7 @@ export default function configureStyleLoader(options, webpackConfig) {
       }, (resolveError, file) => {
         if (resolveError) {
           return done(resolveError);
+          return done({file: url}); //TODO: if we can't resolve it then let webpack resolve it
         } else {
 
           if (path.extname(file) === '.css') {

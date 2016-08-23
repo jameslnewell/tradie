@@ -6,29 +6,6 @@ import metadata from '../../package.json';
 import getConfig from './lib/config';
 import createExcludeFileFilter from './lib/createExcludeFileFilter';
 
-const createAction = function() { //eslint-disable-line func-style
-  const command = this.name(); //eslint-disable-line no-invalid-this
-  const options = this.opts(); //eslint-disable-line no-invalid-this
-
-  runAction({
-    command,
-    ...options
-  });
-
-};
-
-const createActionWithGlobs = function(globs) { //eslint-disable-line func-style
-  const command = this.name(); //eslint-disable-line no-invalid-this
-  const options = this.opts(); //eslint-disable-line no-invalid-this
-
-  runAction({
-    command,
-    exclude: createExcludeFileFilter(globs),
-    ...options
-  });
-
-};
-
 const runAction = options => { //eslint-disable-line func-style
 
   //load the default config
@@ -62,6 +39,29 @@ const runAction = options => { //eslint-disable-line func-style
     })
 
   ;
+
+};
+
+const createAction = function() { //eslint-disable-line func-style
+  const command = this.name(); //eslint-disable-line no-invalid-this
+  const options = this.opts(); //eslint-disable-line no-invalid-this
+
+  runAction({
+    command,
+    ...options
+  });
+
+};
+
+const createActionWithGlobs = function(globs) { //eslint-disable-line func-style
+  const command = this.name(); //eslint-disable-line no-invalid-this
+  const options = this.opts(); //eslint-disable-line no-invalid-this
+
+  runAction({
+    command,
+    exclude: createExcludeFileFilter(globs),
+    ...options
+  });
 
 };
 
