@@ -98,7 +98,7 @@ describe('tradie build', function() {
       return exec(['build', '--optimize'], {cwd: fixture.root()})
         .then(() => {
           expect(file(fixture.dest('rev-manifest.json'))).to.exist;
-          expect(file(fixture.dest('vendor.b342f9c09dbb3f5e4851.js'))).to.exist; //FIXME: hashes should be consistent across the different types of files
+          expect(file(fixture.dest('vendor.7869e40b61c93f2b4dac.js'))).to.exist; //FIXME: hashes should be consistent across the different types of files
           expect(file(fixture.dest('index.ab59ecf2a4dda1c2c150.js'))).to.exist;
           expect(file(fixture.dest('index.ffc15b4006947ca83a6c42e007aba534.css'))).to.exist;
         })
