@@ -3,12 +3,13 @@
 
 ## 1.1.0
 
-- add: resolve bundle names to the `src` directory - this means the `./` prefix is not required and enforces the bundle 
-cannot be a dependency name
 - fix: tests were exiting when there was a bundling error
 - fix: only extract styles from the main chunk to avoid bloating the intital bundle size
 - fix: script and style build times are reported correctly - they're no-longer naively summed together ignoring the fact some of them run in parallel 
 - add: the ability to specify one or more globs to restrict which files are linted/tested by the lint/test commands
+- add: `src` dir as the webpack `resolve.root` so you can reference files from the `src` dir no matter how deep a file is nested 
+- add: resolve bundle names to the `src` directory - this means the `./` prefix is not required and enforces the bundle 
+cannot be a dependency name
 
 ## 1.0.3
 

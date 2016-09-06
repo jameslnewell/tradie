@@ -59,6 +59,7 @@ export default function createCommonBundleConfig(options) {
     entry: {},
 
     resolve: {
+      root: src,
       extensions: [''].concat(scriptExtensions, '.json')
     },
 
