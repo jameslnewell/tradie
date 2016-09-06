@@ -12,7 +12,7 @@ export default function createCommonBundleConfig(options) {
     babel
   } = options;
 
-  const loaders = []
+  const loaders = [];
 
   //transpile project scripts with the babel loader
   if (Object.keys(babel).length) {
@@ -59,7 +59,7 @@ export default function createCommonBundleConfig(options) {
     entry: {},
 
     resolve: {
-      root: src,
+      modules: [src],
       extensions: [''].concat(scriptExtensions, '.json')
     },
 
