@@ -23,6 +23,7 @@
     "clean": "tradie clean",
     "lint": "tradie lint",
     "build": "tradie build",
+    "watch": "tradie build --watch",
     "test": "tradie test"
   }
 }
