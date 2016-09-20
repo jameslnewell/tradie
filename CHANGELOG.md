@@ -10,6 +10,7 @@
 - add: `src` dir as the webpack `resolve.root` (modules in v2) so you can reference files from the `src` dir no matter how deep a file is nested 
 - add: resolve bundle names to the `src` directory - this means the `./` prefix is not required and enforces the bundle 
 cannot be a dependency name
+- fix: pin webpack version to prevent breaking changes in v2 preview
 
 ## 1.0.3
 
