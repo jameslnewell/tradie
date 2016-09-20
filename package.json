@@ -1,6 +1,6 @@
 {
   "name": "tradie",
-  "version": "1.1.0-preview.4",
+  "version": "1.1.0-preview.5",
   "description": "A semi-opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.",
   "keywords": [
     "tradie",
@@ -58,7 +58,7 @@
     "source-mapper": "^2.0.0",
     "style-loader": "^0.13.1",
     "supports-color": "^3.1.2",
-    "webpack": "^2.1.0-beta.21",
+    "webpack": "2.1.0-beta.21",
     "webpack-bundle-update-hook-plugin": "^1.0.2"
   },
   "devDependencies": {
