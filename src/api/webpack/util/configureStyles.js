@@ -18,8 +18,7 @@ export default function configureStyleLoader(options, webpackConfig) {
   webpackConfig.sassLoader = {
     importer: (url, prev, done) => {
 
-      //FIXME: pending https://github.com/jtangelder/sass-loader/issues/234
-      const basedir = prev === 'stdin' ? src : path.dirname(prev);
+      const basedir = path.dirname(prev);
 
       resolve(url, {
 
@@ -36,8 +35,7 @@ export default function configureStyleLoader(options, webpackConfig) {
 
       }, (resolveError, file) => {
         if (resolveError) {
-          return done(resolveError);
-          return done({file: url}); //TODO: if we can't resolve it then let webpack resolve it
+          return done({file: url}); //if we can't resolve it then let webpack resolve it
         } else {
 
           if (path.extname(file) === '.css') {

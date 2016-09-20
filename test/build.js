@@ -107,10 +107,54 @@ describe('tradie build', function() {
 
   });
 
-  describe('extract assets from script and style files', () => {
+  describe('extract assets from script files', () => {
 
     beforeEach(() => {
-      fixture = createFixture('build-assets-ok');
+      fixture = createFixture('build-script-assets-ok');
+    });
+
+    it('should exit with 0 when the bundles are created', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(code => expect(code).to.be.equal(0))
+        ;
+    });
+
+    it('should create the asset', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(() => {
+          expect(file(fixture.dest('files/bccb8b559921cd4bdf6a8d85881e5f7c.jpg'))).to.exist;
+        })
+        ;
+    });
+
+  });
+
+  describe('extract assets from style files', () => {
+
+    beforeEach(() => {
+      fixture = createFixture('build-style-assets-ok');
+    });
+
+    it('should exit with 0 when the bundles are created', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(code => expect(code).to.be.equal(0))
+        ;
+    });
+
+    it('should create the asset', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(() => {
+          expect(file(fixture.dest('files/a55c935a7e0ac63269b2187fe7cd6ce6.jpg'))).to.exist;
+        })
+        ;
+    });
+
+  });
+
+  describe('sass-loader imports should still work', () => {
+
+    beforeEach(() => {
+      fixture = createFixture('build-sass-loader-imports-ok');
     });
 
     it('should exit with 0 when the bundles are created', () => {
@@ -122,8 +166,7 @@ describe('tradie build', function() {
     it('should create the assets', () => {
       return exec(['build'], {cwd: fixture.root()})
         .then(() => {
-          expect(file(fixture.dest('files/a55c935a7e0ac63269b2187fe7cd6ce6.jpg'))).to.exist;
-          expect(file(fixture.dest('files/bccb8b559921cd4bdf6a8d85881e5f7c.jpg'))).to.exist;
+          expect(file(fixture.dest('index.css'))).to.contain('Bootstrap v3.3.7');
         })
         ;
     });
