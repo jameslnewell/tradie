@@ -1,6 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import extensionsToRegex from 'ext-to-regex';
+import ResolveShortPathPlugin from 'webpack-resolve-short-path-plugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 
 export default function createCommonBundleConfig(options) {
@@ -60,7 +61,10 @@ export default function createCommonBundleConfig(options) {
 
     resolve: {
       modules: [src, 'node_modules'],
-      extensions: [''].concat(scriptExtensions, '.json')
+      extensions: [''].concat(scriptExtensions, '.json'),
+      plugins: [
+        new ResolveShortPathPlugin({rootPath: src})
+      ]
     },
 
     module: {

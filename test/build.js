@@ -151,7 +151,7 @@ describe('tradie build', function() {
 
   });
 
-  describe('sass-loader imports should still work', () => {
+  describe('sass-loader imports should work', () => {
 
     beforeEach(() => {
       fixture = createFixture('build-sass-loader-imports-ok');
@@ -163,10 +163,32 @@ describe('tradie build', function() {
         ;
     });
 
-    it('should create the assets', () => {
+    it('should include bootstrap', () => {
       return exec(['build'], {cwd: fixture.root()})
         .then(() => {
           expect(file(fixture.dest('index.css'))).to.contain('Bootstrap v3.3.7');
+        })
+        ;
+    });
+
+  });
+
+  describe('shortened imports should work', () => {
+
+    beforeEach(() => {
+      fixture = createFixture('build-shortened-imports-ok');
+    });
+
+    it('should exit with 0 when the bundles are created', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(code => expect(code).to.be.equal(0))
+        ;
+    });
+
+    it('should include shortend module', () => {
+      return exec(['build'], {cwd: fixture.root()})
+        .then(() => {
+          expect(file(fixture.dest('index.js'))).to.contain('This is the shortened module!');
         })
         ;
     });

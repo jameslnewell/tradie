@@ -7,7 +7,7 @@
 - fix: only extract styles from the main chunk to avoid bloating the intital bundle size
 - fix: script and style build times are reported correctly - they're no-longer naively summed together ignoring the fact some of them run in parallel 
 - add: the ability to specify one or more globs to restrict which files are linted/tested by the lint/test commands
-- add: `src` dir as the webpack `resolve.root` (modules in v2) so you can reference files from the `src` dir no matter how deep a file is nested 
+- add: require using shortened paths e.g. `~actions` maps to `src/actions` 
 - add: resolve bundle names to the `src` directory - this means the `./` prefix is not required and enforces the bundle 
 cannot be a dependency name
 - add: fallback to `sass-loader` importer (i.e. `~module/file`) when a module cannot be found using the `sass-composer` importer (i.e. `module/file`) 
