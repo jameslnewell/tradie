@@ -31,25 +31,38 @@ const readBabelConfig = (dir) => {
 
 const readTradieConfig = (dir, args) => {
   return new Promise((resolve, reject) => {
+    const userConfigPath = path.join(dir, 'tradie.config.js');
     try {
 
-      let userConfig = require(path.join(dir, 'tradie.config.js'));
+      let userConfigData = require(userConfigPath);
 
-      if (typeof userConfig === 'function') {
-        userConfig = userConfig(args);
+      if (typeof userConfigData === 'function') {
+        userConfigData = userConfigData(args);
       }
 
-      resolve(userConfig);
+      resolve(userConfigData);
 
     } catch (requireError) {
       if (requireError.code === 'MODULE_NOT_FOUND') {
 
-        //return an empty config if the file does not exist (which will result in the default config being used)
-        resolve({});
+        //if the file does not exist, then ignore the error, otherwise it is a user config error
+        fs.stat(userConfigPath, err => {
+          if (err) {
+
+            //ignore the error if the user config file does not exist
+            resolve({});
+
+          } else {
+
+            //throw an error if the user config file exists but errors whilst executing it
+            reject(new TradieError('Unable to read "tradie.config.js"', requireError));
+
+          }
+        });
 
       } else {
 
-        //throw an error if the file exists with an error
+        //throw an error if the user config file exists but errors whilst executing it
         reject(new TradieError('Unable to read "tradie.config.js"', requireError));
 
       }

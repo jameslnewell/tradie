@@ -12,6 +12,7 @@
 cannot be a dependency name
 - add: fallback to `sass-loader` importer (i.e. `~module/file`) when a module cannot be found using the `sass-composer` importer (i.e. `module/file`) 
 - fix: pin webpack version to prevent breaking changes in v2 preview
+- fix: stop swallowing `MODULE_NOT_FOUND` errors in `tradie.config.js`
 
 ## 1.0.3
 
