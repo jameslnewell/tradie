@@ -59,6 +59,7 @@
     "supports-color": "^3.1.2",
     "webpack": "2.1.0-beta.21",
     "webpack-bundle-update-hook-plugin": "^1.0.2",
+    "webpack-dev-server": "^2.1.0-beta.7",
     "webpack-resolve-short-path-plugin": "^1.0.3"
   },
   "devDependencies": {

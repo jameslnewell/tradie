@@ -1,21 +1,23 @@
-@import "sass-grid";
+/*@import "sass-grid";*/
 
 body {
   background: url('img/placeholder.svg');
 }
 
 h1 {
-  color: green;
-  font-size: 16px;
+  color: blue;
+  font-size: 19px;
 }
-
-.feature-list {
-  @include grid();
-}
-
-.feature-list__item {
-  @include grid__unit();
-  @include grid__unit--cols(4);
-  color: white;
-  text-align: center;
-}
+/*
+//.feature-list {
+//  @include grid();
+//
+//  &__item {
+//    @include grid__unit();
+//    @include grid__unit--cols(4);
+//    color: white;
+//    text-align: center;
+//  }
+//
+//}
+*/

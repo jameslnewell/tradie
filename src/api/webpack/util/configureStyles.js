@@ -60,29 +60,46 @@ export default function configureStyleLoader(options, webpackConfig) {
     //NOTE: css-loader looks for NODE_ENV=production and performs minification so we don't need cssnano
   ];
 
-  //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
-  webpackConfig.module.loaders.push({
-    test: extensionsToRegex(extensions),
-    loader: ExtractTextPlugin.extract({
-      fallbackLoader: 'style-loader',
-      loader: [
-        `css-loader?-autoprefixer${optimize ? '' : '&sourceMap'}`,
-        `postcss-loader${optimize ? '' : '?sourceMap'}`,
-        `resolve-url-loader${optimize ? '' : '?sourceMap'}`, //devtool: [inline-]source-map is required for CSS source maps to work
-        'sass-loader?sourceMap' //sourceMap required by resolve-url-loader
-      ]
-    })
-  });
-
-  webpackConfig.plugins = webpackConfig.plugins.concat([
-    new ExtractTextPlugin({
-      //other chunks should have styles in the JS and load the styles automatically onto the page (that way styles make use of code splitting) e.g. https://github.com/facebookincubator/create-react-app/issues/408
-      allChunks: false,
-      filename
-    }),
+  webpackConfig.plugins.push(
     new CheckVersionConflictPlugin({
       include: extensionsToRegex(extensions)
     })
-  ]);
+  );
+
+  const loaders = [
+    `css-loader?-autoprefixer${optimize ? '' : '&sourceMap'}`,
+    `postcss-loader${optimize ? '' : '?sourceMap'}`,
+    // `resolve-url-loader${optimize ? '' : '?sourceMap'}`, //devtool: [inline-]source-map is required for CSS source maps to work
+    // 'sass-loader?sourceMap' //sourceMap required by resolve-url-loader
+  ];
+
+  if (optimize) {
+
+    //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
+    webpackConfig.module.loaders.push({
+      test: extensionsToRegex(extensions),
+      loader: ExtractTextPlugin.extract({
+        fallbackLoader: 'style-loader',
+        loader: loaders
+      })
+    });
+
+    webpackConfig.plugins = webpackConfig.plugins.push(
+      new ExtractTextPlugin({
+        //other chunks should have styles in the JS and load the styles automatically onto the page (that way styles make use of code splitting) e.g. https://github.com/facebookincubator/create-react-app/issues/408
+        allChunks: false,
+        filename
+      })
+    );
+
+  } else {
+
+    //parse SCSS, @import, extract assets, autoprefix and inline to the JS file
+    webpackConfig.module.loaders.push({
+      test: extensionsToRegex(extensions),
+      loader: ['style-loader', ...loaders]
+    });
+
+  }
 
 }

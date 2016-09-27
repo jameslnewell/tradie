@@ -22,6 +22,7 @@
   "scripts": {
     "clean": "tradie clean",
     "lint": "tradie lint",
+    "serve": "tradie serve",
     "build": "tradie build",
     "watch": "tradie build --watch",
     "test": "tradie test"

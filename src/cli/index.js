@@ -84,6 +84,12 @@ commander
 ;
 
 commander
+  .command('serve')
+  .description('bundle script, style and asset files as they change')
+  .action(createAction)
+;
+
+commander
   .command('build')
   .description('bundle script, style and asset files')
   .option('--watch', 're-bundle script, style and asset files whenever they change', false)
