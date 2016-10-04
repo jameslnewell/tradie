@@ -21,7 +21,7 @@ A semi-opinionated build tool for frontend projects. Use it to lint, bundle and 
 giving it a go! 
 However
 `create-react-app` is tailored to a specific use-case and doesn't support `CSS` pre-processing (e.g. `SASS`), multiple 
-bundles or UniversalJS applications. Tradie supports `SASS` and a number of common application types.
+targets or UniversalJS applications. Tradie supports `SASS` and a number of common application types.
 
 ## Installation
 
