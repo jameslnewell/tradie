@@ -106,10 +106,9 @@ export default function(options) {
 
       //handle errors
       if (collector.hasErrors()) {
-        return Promise.resolve();
+        return Promise.reject();
       }
 
     })
-    .catch(err => console.log('err', err))
   ;
 }
