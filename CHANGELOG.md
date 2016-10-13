@@ -1,6 +1,10 @@
 
 # Change log
 
+## 1.1.1
+
+- fix: `resolve()`ing instead of `reject()`ing when webpack reported errors resulting in a success exit-code instead of a failure
+
 ## 1.1.0
 
 - fix: tests were exiting when there was a bundling error
