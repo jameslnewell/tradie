@@ -1,7 +1,7 @@
 
 # Change log
 
-## 1.1.1
+## 1.1.2
 
 - pinned `extract-text-webpack-plugin` which has broken in a future version
 
