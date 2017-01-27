@@ -1,6 +1,10 @@
 
 # Change log
 
+## 1.1.1
+
+- pinned `extract-text-webpack-plugin` which has broken in a future version
+
 ## 1.1.0
 
 - fix: tests were exiting when there was a bundling error

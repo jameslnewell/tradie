@@ -1,6 +1,6 @@
 {
   "name": "tradie",
-  "version": "1.1.0-preview.6",
+  "version": "1.1.1",
   "description": "A semi-opinionated build tool for frontend projects. Use it to lint, bundle and test your script and style files.",
   "keywords": [
     "tradie",
@@ -30,7 +30,7 @@
     "css-loader": "^0.25.0",
     "eslint": "^3.2.2",
     "ext-to-regex": "^0.1.0",
-    "extract-text-webpack-plugin": "^2.0.0-beta.4",
+    "extract-text-webpack-plugin": "2.0.0-beta.4",
     "file-loader": "^0.9.0",
     "file-name": "^0.1.0",
     "file-size": "^1.0.0",
