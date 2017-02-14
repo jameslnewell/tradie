@@ -64,6 +64,7 @@ export default function createServerConfig(options) {
     output: {
       path: dest,
       filename: '[name].js',
+      chunkFilename: 'server.[id].js',
       libraryTarget: 'commonjs'
     }
 

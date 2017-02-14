@@ -31,9 +31,9 @@ describe('createClientBundleConfig()', () => {
     }));
 
     expect(config).to.have.property('module').to.have.property('loaders');
-    expect(config.module.loaders).to.contain({
+    expect(config.module.rules).to.contain({
       test: /\.foobar$/,
-      loader: 'foobar'
+      use: 'foobar'
     });
 
     expect(config).to.have.property('externals');

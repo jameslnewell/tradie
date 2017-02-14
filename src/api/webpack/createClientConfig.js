@@ -62,6 +62,7 @@ export default function createClientConfig(options) {
 
   //configure the script filename
   let filename = optimize ? '[name].[chunkhash].js' : '[name].js';
+  let chunkFilename = optimize ? 'client.[id].[chunkhash].js' : 'client.[id].js';
   if (outputFilename) {
     filename = outputFilename;
   }
@@ -77,7 +78,8 @@ export default function createClientConfig(options) {
 
     output: {
       path: dest,
-      filename
+      filename,
+      chunkFilename
     }
 
   };
