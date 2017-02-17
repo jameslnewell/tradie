@@ -49,6 +49,7 @@
     "node-sass": "^4.5.0",
     "object-values": "^1.0.0",
     "postcss": "^5.2.12",
+    "postcss-asset-webpack-plugin": "^1.0.0",
     "postcss-loader": "^1.2.2",
     "promised-del": "^1.0.2",
     "resolve": "^1.2.0",

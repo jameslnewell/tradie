@@ -1,11 +1,13 @@
 import path from 'path';
 import fileName from 'file-name';
 import webpack from 'webpack';
+import cssnano from 'cssnano';
 import getClientBundles from '../util/getClientBundles';
 import createAppConfig from './util/createAppConfig';
 import configureStyleLoader from './util/configureStyles';
 import configureAssets from './util/configureAssets';
 import deepMerge from '../util/deepMerge';
+import PostcssAssetWebpackPlugin from 'postcss-asset-webpack-plugin';
 
 export default function createClientConfig(options) {
   const {
@@ -65,6 +67,11 @@ export default function createClientConfig(options) {
   let chunkFilename = optimize ? 'client.[id].[chunkhash].js' : 'client.[id].js';
   if (outputFilename) {
     filename = outputFilename;
+  }
+
+  //dedupe css assets on production build
+  if (optimize) {
+    config.plugins.push(new PostcssAssetWebpackPlugin({postcss: [cssnano()]}));
   }
 
   //merge common and client config
