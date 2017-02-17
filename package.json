@@ -83,7 +83,8 @@
     "watch": "npm run build -- --watch",
     "test:unit": "mocha --require ./dist/_.test.js $(find ./dist -name '*.test.js')",
     "test:acceptance": "mocha --compilers js:babel-register --require ./dist/_.test.js",
-    "test": "npm run test:unit"
+    "test": "npm run test:unit",
+    "prepublish": "npm run lint && npm run clean && npm run build && npm run test"
   },
   "license": "MIT"
 }
