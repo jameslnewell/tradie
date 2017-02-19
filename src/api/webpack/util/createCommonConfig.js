@@ -13,23 +13,23 @@ export default function createCommonBundleConfig(options) {
     babel
   } = options;
 
-  const loaders = [];
+  const rules = [];
 
   //transpile project scripts with the babel loader
   if (Object.keys(babel).length) {
-    loaders.push(
+    rules.push(
       {
         test: extensionsToRegex(scriptExtensions),
         //TODO: pass babel config
         include: src,
-        use: [{
+        use: {
           loader: 'babel-loader',
           options: {
             ...babel,
             babelrc: false,
             cacheDirectory: tmp
           }
-        }]
+        }
       }
     );
   }
@@ -64,10 +64,10 @@ export default function createCommonBundleConfig(options) {
     },
 
     module: {
-      rules: loaders
+      rules
     },
 
-    plugins: plugins
+    plugins
 
   };
 }

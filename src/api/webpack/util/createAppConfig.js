@@ -1,7 +1,7 @@
 import getObjectValues from 'object-values';
 import webpack from 'webpack';
 import BundleUpdatePlugin from 'webpack-bundle-update-hook-plugin';
-import createCommonBundleConfig from './createCommonConfig';
+import createCommonConfig from './createCommonConfig';
 
 class BundleUpdatedPlugin {
 
@@ -20,7 +20,7 @@ class BundleUpdatedPlugin {
 export default function createApplicationConfig(options) {
   const {watch, optimize, onFileChange} = options;
 
-  const config = createCommonBundleConfig(options);
+  const config = createCommonConfig(options);
 
   //plugins
   if (optimize) {

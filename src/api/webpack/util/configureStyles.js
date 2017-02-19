@@ -76,20 +76,18 @@ export default function configureStyleLoader(options, webpackConfig) {
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
   webpackConfig.module.rules.push({
     test: extensionsToRegex(extensions),
-    use: {
-      loader: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: [
-          'css-loader?-autoprefixer',
-          'postcss-loader',
-          'resolve-url-loader',
-          'sass-loader?sourceMap' //`?sourceMap` isrequired by resolve-url-loader
-        ]
-      })
-    }
+    use: ExtractTextPlugin.extract({
+      fallback: 'style-loader',
+      use: [
+        'css-loader?-autoprefixer',
+        'postcss-loader',
+        'resolve-url-loader',
+        'sass-loader?sourceMap' //`?sourceMap` isrequired by resolve-url-loader
+      ]
+    })
   });
 
-  webpackConfig.plugins = webpackConfig.plugins.concat([
+  webpackConfig.plugins = webpackConfig.plugins.push(
     new ExtractTextPlugin({
       //other chunks should have styles in the JS and load the styles automatically onto the page (that way styles make use of code splitting) e.g. https://github.com/facebookincubator/create-react-app/issues/408
       allChunks: false,
@@ -98,6 +96,6 @@ export default function configureStyleLoader(options, webpackConfig) {
     new CheckVersionConflictPlugin({
       include: extensionsToRegex(extensions)
     })
-  ]);
+  );
 
 }
