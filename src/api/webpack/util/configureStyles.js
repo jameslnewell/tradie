@@ -76,15 +76,17 @@ export default function configureStyleLoader(options, webpackConfig) {
   //parse SCSS, @import, extract assets, autoprefix and extract to a separate *.css file
   webpackConfig.module.rules.push({
     test: extensionsToRegex(extensions),
-    loader: ExtractTextPlugin.extract({
-      fallback: 'style-loader',
-      use: [
-        'css-loader?-autoprefixer',
-        'postcss-loader',
-        'resolve-url-loader',
-        'sass-loader?sourceMap' //`?sourceMap` isrequired by resolve-url-loader
-      ]
-    })
+    use: {
+      loader: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [
+          'css-loader?-autoprefixer',
+          'postcss-loader',
+          'resolve-url-loader',
+          'sass-loader?sourceMap' //`?sourceMap` isrequired by resolve-url-loader
+        ]
+      })
+    }
   });
 
   webpackConfig.plugins = webpackConfig.plugins.concat([

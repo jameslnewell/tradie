@@ -1,7 +1,7 @@
 import createClientBundleConfig from './createClientConfig';
 import extendDefaultConfig from '../util/extendDefaultConfig';
 
-describe('createClientBundleConfig()', () => {
+describe('createClientConfig()', () => {
 
   it('should merge extra webpack config', () => {
 
@@ -12,10 +12,10 @@ describe('createClientBundleConfig()', () => {
       webpack: {
 
         module: {
-          loaders: [
+          rules: [
             {
               test: /\.foobar$/,
-              loader: 'foobar'
+              use: {loader: 'foobar'}
             }
           ]
         },
@@ -30,10 +30,10 @@ describe('createClientBundleConfig()', () => {
 
     }));
 
-    expect(config).to.have.property('module').to.have.property('loaders');
+    expect(config).to.have.property('module').to.have.property('rules');
     expect(config.module.rules).to.contain({
       test: /\.foobar$/,
-      use: 'foobar'
+      use: {loader: 'foobar'}
     });
 
     expect(config).to.have.property('externals');
