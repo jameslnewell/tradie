@@ -87,7 +87,7 @@ export default function configureStyleLoader(options, webpackConfig) {
     })
   });
 
-  webpackConfig.plugins = webpackConfig.plugins.push(
+  webpackConfig.plugins = webpackConfig.plugins.concat([
     new ExtractTextPlugin({
       //other chunks should have styles in the JS and load the styles automatically onto the page (that way styles make use of code splitting) e.g. https://github.com/facebookincubator/create-react-app/issues/408
       allChunks: false,
@@ -96,6 +96,6 @@ export default function configureStyleLoader(options, webpackConfig) {
     new CheckVersionConflictPlugin({
       include: extensionsToRegex(extensions)
     })
-  );
+  ]);
 
 }
