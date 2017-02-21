@@ -1,6 +1,10 @@
 
 # Change log
 
+## 2.0.0
+
+- upgraded to Webpack v2.2 which contains breaking changes from the betas
+
 ## 1.1.2
 
 - pinned `extract-text-webpack-plugin` which has broken in a future version
