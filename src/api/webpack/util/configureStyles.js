@@ -79,10 +79,10 @@ export default function configureStyleLoader(options, webpackConfig) {
     use: ExtractTextPlugin.extract({
       fallback: 'style-loader',
       use: [
-        'css-loader?-autoprefixer',
+        'css-loader',
         'postcss-loader',
         'resolve-url-loader',
-        'sass-loader?sourceMap' //`?sourceMap` isrequired by resolve-url-loader
+        {loader: 'sass-loader', options: {sourceMap: true}} //`sourceMap` isrequired by resolve-url-loader
       ]
     })
   });
