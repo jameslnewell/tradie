@@ -86,7 +86,8 @@ export default function createClientConfig(options) {
     output: {
       path: dest,
       filename,
-      chunkFilename
+      chunkFilename,
+      sourceMapFilename: '[file].map'
     }
 
   };

@@ -21,6 +21,7 @@ export default function createVendorConfig(options) {
     output: {
       path: dest,
       filename: optimize ? '[name].[chunkhash].js' : '[name].js',
+      sourceMapFilename: '[file].map',
       library: '[name]' //FIXME: '[name]_[chunkhash]' in prod
     },
 
