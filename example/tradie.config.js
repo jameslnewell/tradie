@@ -10,6 +10,10 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
 
+  asset: {
+    publicPath: 'public/'
+  },
+
   plugins: [
     copy({files: ['index.html']}),
     serve(),
