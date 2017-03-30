@@ -1,7 +1,7 @@
 import extensionsToRegex from 'ext-to-regex';
 
 export default function configureAssets(options, webpackConfig) {
-  const {asset: {extensions, outputFilename, publicPath}} = options;
+  const {asset: {extensions, outputFilename}} = options;
 
   //configure the asset filename
   let filename = 'files/[hash].[ext]'; //optimize ? '[path][name].[hash].js' :
@@ -14,10 +14,7 @@ export default function configureAssets(options, webpackConfig) {
     test: extensionsToRegex(extensions),
     use: {
       loader: 'file-loader',
-      options: {
-        name: filename,
-        publicPath: publicPath
-      }
+      options: {name: filename}
     }
   });
 
