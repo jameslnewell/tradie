@@ -1,5 +1,7 @@
 # tradie
 
+> You'll find v4 [here](https://github.com/jameslnewell/tradie-v4/tree/next).
+
 [![Build Status](https://travis-ci.org/jameslnewell/tradie.svg?branch=master)](https://travis-ci.org/jameslnewell/tradie)
 
 A semi-opinionated build tool for frontend projects. Use it to lint, bundle and test your script, style and asset files.
