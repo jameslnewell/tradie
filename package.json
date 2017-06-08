@@ -86,5 +86,6 @@
     "test": "npm run test:unit",
     "prepublish": "npm run lint && npm run clean && npm run build && npm run test"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": { "tag": "1.x" }
 }
