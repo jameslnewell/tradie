@@ -13,30 +13,26 @@ export default function createCommonBundleConfig(options) {
     babel
   } = options;
 
-  const loaders = [];
+  const rules = [];
 
   //transpile project scripts with the babel loader
   if (Object.keys(babel).length) {
-    loaders.push(
+    rules.push(
       {
         test: extensionsToRegex(scriptExtensions),
         //TODO: pass babel config
         include: src,
-        loader: 'babel-loader',
-        query: {
-          ...babel,
-          babelrc: false,
-          cacheDirectory: tmp
+        use: {
+          loader: 'babel-loader',
+          options: {
+            ...babel,
+            babelrc: false,
+            cacheDirectory: tmp
+          }
         }
       }
     );
   }
-
-  //node and browserify loads JSON files like NodeJS does... emulate that for compatibility
-  loaders.push({
-    test: /\.json$/,
-    loader: 'json-loader'
-  });
 
   const plugins = [
 
@@ -61,21 +57,17 @@ export default function createCommonBundleConfig(options) {
 
     resolve: {
       modules: [src, 'node_modules'],
-      extensions: [''].concat(scriptExtensions, '.json'),
+      extensions: [].concat(scriptExtensions, '.json'),
       plugins: [
         new ResolveShortPathPlugin({rootPath: src})
       ]
     },
 
     module: {
-
-      preLoaders: [],
-      loaders: loaders,
-      postLoaders: []
-
+      rules
     },
 
-    plugins: plugins
+    plugins
 
   };
 }

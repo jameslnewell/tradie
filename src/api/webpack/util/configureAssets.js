@@ -10,10 +10,12 @@ export default function configureAssets(options, webpackConfig) {
     filename = outputFilename;
   }
 
-  webpackConfig.module.loaders.push({
+  webpackConfig.module.rules.push({
     test: extensionsToRegex(extensions),
-    loader: 'file-loader',
-    query: {name: filename}
+    use: {
+      loader: 'file-loader',
+      options: {name: filename}
+    }
   });
 
 }

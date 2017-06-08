@@ -1,7 +1,7 @@
 import createServerBundleConfig from './createServerConfig';
 import extendDefaultConfig from '../util/extendDefaultConfig';
 
-describe('createServerBundleConfig()', () => {
+describe('createServerConfig()', () => {
 
   it('should merge extra webpack config', () => {
 
@@ -12,10 +12,10 @@ describe('createServerBundleConfig()', () => {
       webpack: {
 
         module: {
-          loaders: [
+          rules: [
             {
               test: /\.foobar$/,
-              loader: 'foobar'
+              use: {loader: 'foobar'}
             }
           ]
         },
@@ -30,10 +30,10 @@ describe('createServerBundleConfig()', () => {
 
     }));
 
-    expect(config).to.have.property('module').to.have.property('loaders');
-    expect(config.module.loaders).to.contain({
+    expect(config).to.have.property('module').to.have.property('rules');
+    expect(config.module.rules).to.contain({
       test: /\.foobar$/,
-      loader: 'foobar'
+      use: {loader: 'foobar'}
     });
 
     expect(config).to.have.property('externals');

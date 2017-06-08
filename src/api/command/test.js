@@ -29,7 +29,7 @@ export default options => {
       .then(files => {
 
         //include the setup file
-        if (fs.existsSync(path.join(src, '_.test.js'))) {
+        if (!fs.existsSync(path.join(src, '_.test.js'))) {
           files.unshift(path.join(src, '_.test.js'));
         }
 

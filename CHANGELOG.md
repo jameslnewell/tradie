@@ -1,9 +1,17 @@
 
 # Change log
 
+## 2.0.0
+
+- upgraded to Webpack v2.2 which contains breaking changes from the betas
+
 ## 1.1.1
 
 - fix: `resolve()`ing instead of `reject()`ing when webpack reported errors resulting in a success exit-code instead of a failure
+
+## 1.1.2
+
+- pinned `extract-text-webpack-plugin` which has broken in a future version
 
 ## 1.1.0
 
