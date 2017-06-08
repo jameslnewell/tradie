@@ -71,7 +71,7 @@ export default function createClientConfig(options) {
 
   //dedupe css assets on production build
   if (optimize) {
-    config.plugins.push(new PostcssAssetWebpackPlugin({postcss: [cssnano()]}));
+    config.plugins.push(new PostcssAssetWebpackPlugin({postcss: [cssnano({zindex: false})]}));
   }
 
   //merge common and client config
